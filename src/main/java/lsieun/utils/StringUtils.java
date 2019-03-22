@@ -1,5 +1,7 @@
 package lsieun.utils;
 
+import java.util.List;
+
 /**
  * 最初代码是从Commons-lang3复制过来的，中间再加入自己的代码
  * <p>Operations on {@link java.lang.String} that are
@@ -496,5 +498,21 @@ public class StringUtils {
             }
         }
         return str.substring(0, end);
+    }
+
+    public static String list2str(List<String> list, String separator) {
+        if(list == null || list.size() < 1) return "";
+
+        StringBuilder sb = new StringBuilder();
+
+        int size = list.size();
+        for(int i=0; i<size-1; i++) {
+            String item = list.get(i);
+            sb.append(item + separator);
+        }
+        String theLast = list.get(size-1);
+        sb.append(theLast);
+
+        return sb.toString();
     }
 }
