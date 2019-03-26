@@ -515,4 +515,17 @@ public class StringUtils {
 
         return sb.toString();
     }
+
+    public static String list2str(List<String> list, String start, String stop, String separator) {
+        if(list == null || list.size() < 1) return null;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(start);
+
+        String content = list2str(list, separator);
+        sb.append(content);
+
+        sb.append(stop);
+        return sb.toString();
+    }
 }
