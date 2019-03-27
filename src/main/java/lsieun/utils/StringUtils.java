@@ -500,23 +500,23 @@ public class StringUtils {
         return str.substring(0, end);
     }
 
-    public static String list2str(List<String> list, String separator) {
+    public static <T> String list2str(List<T> list, String separator) {
         if(list == null || list.size() < 1) return "";
 
         StringBuilder sb = new StringBuilder();
 
         int size = list.size();
         for(int i=0; i<size-1; i++) {
-            String item = list.get(i);
-            sb.append(item + separator);
+            T item = list.get(i);
+            sb.append(item.toString() + separator);
         }
-        String theLast = list.get(size-1);
+        String theLast = list.get(size-1).toString();
         sb.append(theLast);
 
         return sb.toString();
     }
 
-    public static String list2str(List<String> list, String start, String stop, String separator) {
+    public static <T> String list2str(List<T> list, String start, String stop, String separator) {
         if(list == null || list.size() < 1) return null;
 
         StringBuilder sb = new StringBuilder();

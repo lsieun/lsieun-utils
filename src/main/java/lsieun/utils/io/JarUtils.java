@@ -14,7 +14,7 @@ public class JarUtils {
      * @return
      */
     public static byte[] readBytes(String jarPath, String entryName) {
-        System.out.println("Read Jar: " + jarPath);
+        // System.out.println("Read Jar: " + jarPath);
 
         JarFile jarFile = null;
         InputStream in = null;
