@@ -2,6 +2,7 @@ package lsieun.utils.radix;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HexUtils {
@@ -85,5 +86,16 @@ public class HexUtils {
             sb.append(Integer.toHexString((bytes[i] & 0xFF) | 0x100).substring(1,3));
         }
         return sb.toString().toUpperCase();
+    }
+
+    public static String fromBytes(List<Byte> list) {
+        if(list == null || list.size() < 1) return null;
+        int size = list.size();
+        byte[] bytes = new byte[size];
+        for(int i=0; i<size; i++) {
+            Byte b = list.get(i);
+            bytes[i] = b;
+        }
+        return fromBytes(bytes);
     }
 }
