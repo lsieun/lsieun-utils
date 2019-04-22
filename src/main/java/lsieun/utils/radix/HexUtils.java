@@ -1,33 +1,18 @@
 package lsieun.utils.radix;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 规则一：方法命名方式为fromXXX和toXXX
+ * 规则二：使用小写的abcdef
+ */
 public class HexUtils {
-    public static final Map<Character, Integer> hex2IntMap;
-
-    static {
-        hex2IntMap = new HashMap<Character, Integer>();
-        hex2IntMap.put('0', Integer.valueOf(0));
-        hex2IntMap.put('1', Integer.valueOf(1));
-        hex2IntMap.put('2', Integer.valueOf(2));
-        hex2IntMap.put('3', Integer.valueOf(3));
-        hex2IntMap.put('4', Integer.valueOf(4));
-        hex2IntMap.put('5', Integer.valueOf(5));
-        hex2IntMap.put('6', Integer.valueOf(6));
-        hex2IntMap.put('7', Integer.valueOf(7));
-        hex2IntMap.put('8', Integer.valueOf(8));
-        hex2IntMap.put('9', Integer.valueOf(9));
-        hex2IntMap.put('A', Integer.valueOf(10));
-        hex2IntMap.put('B', Integer.valueOf(11));
-        hex2IntMap.put('C', Integer.valueOf(12));
-        hex2IntMap.put('D', Integer.valueOf(13));
-        hex2IntMap.put('E', Integer.valueOf(14));
-        hex2IntMap.put('F', Integer.valueOf(15));
-    }
-
+    static final String hexString = "0123456789abcdef";
+    static final char hexDigit[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     public static int toInt(String hexCode) {
         int base = 16;
@@ -35,7 +20,7 @@ public class HexUtils {
 
         for(int i=0; i<hexCode.length(); i++) {
             char ch = hexCode.charAt(i);
-            Integer value = hex2IntMap.get(Character.toUpperCase(ch));
+            int value = hexString.indexOf(ch);
 
             sum = sum * base + value;
         }
@@ -73,8 +58,8 @@ public class HexUtils {
         return result;
     }
 
-    private static byte toByte(char c) {
-        byte b = (byte) "0123456789abcdef".indexOf(c);
+    private static byte toByte(char ch) {
+        byte b = (byte) hexString.indexOf(ch);
         return b;
     }
 
@@ -85,7 +70,7 @@ public class HexUtils {
         for (int i = 0; i < bytes.length; ++i) {
             sb.append(Integer.toHexString((bytes[i] & 0xFF) | 0x100).substring(1,3));
         }
-        return sb.toString().toUpperCase();
+        return sb.toString();
     }
 
     public static String fromBytes(List<Byte> list) {
@@ -97,5 +82,56 @@ public class HexUtils {
             bytes[i] = b;
         }
         return fromBytes(bytes);
+    }
+
+    public static String fromChars(final char[] chars) {
+        if(chars == null || chars.length < 1) return "";
+        List<String> list = new ArrayList();
+        for(int i=0; i<chars.length; i++) {
+            char ch = chars[i];
+            list.add(charToHex(ch));
+        }
+        return reverse2String(list);
+    }
+
+    public static String fromInt(int value) {
+        if(value == 0) return "00";
+        List<String> list = new ArrayList();
+        while(value != 0) {
+            byte b = (byte) (value & 0xFF);
+            String hex = byteToHex(b);
+            list.add(hex);
+            value = value >>> 8;
+        }
+
+
+        return reverse2String(list);
+    }
+
+    private static String reverse2String(List<String> list) {
+        if(list == null || list.size() < 1) return "";
+
+        StringBuilder sb = new StringBuilder();
+        for(int i=list.size()-1; i>=0; i--) {
+            sb.append(list.get(i));
+        }
+        return sb.toString();
+    }
+
+    public static String byteToHex(byte b) {
+        char[] chars = {hexDigit[(b >>> 4) & 0x0F], hexDigit[b & 0x0F]};
+        return new String(chars);
+    }
+
+    public static String charToHex(char ch) {
+        byte hi = (byte) (ch >>> 8);
+        byte lo = (byte) (ch & 0xff);
+        return byteToHex(hi) + byteToHex(lo);
+    }
+
+    public static String intToHex(int i) {
+        char hi = (char) (i >>> 16);
+        char lo = (char) (i & 0xffff);
+        return charToHex(hi) + charToHex(lo);
     }
 }
