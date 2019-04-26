@@ -23,6 +23,12 @@ public class FileUtils {
         return filepath;
     }
 
+    public static String getFilePath(Class clazz, String className) {
+        String path = clazz.getResource("/").getPath();
+        String filepath = String.format("%s%s.class", path, className.replace('.', File.separatorChar));
+        return filepath;
+    }
+
     public static byte[] readBytes(String filename) {
         File file = new File(filename);
         if(!file.exists()) {
