@@ -134,4 +134,23 @@ public class HexUtils {
         char lo = (char) (i & 0xffff);
         return charToHex(hi) + charToHex(lo);
     }
+
+    public static String getPrettyFormat(String hexCode) {
+        if(hexCode == null || hexCode.length() < 1) return null;
+
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        for(int i=0; i<hexCode.length(); i++) {
+            char ch = hexCode.charAt(i);
+            count++;
+            sb.append(ch);
+            if(count % 2 == 0) {
+                sb.append(" ");
+            }
+            if(count % 32 == 0) {
+                sb.append("\r\n");
+            }
+        }
+        return sb.toString();
+    }
 }
