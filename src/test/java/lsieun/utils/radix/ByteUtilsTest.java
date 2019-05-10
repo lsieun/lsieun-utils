@@ -25,6 +25,24 @@ public class ByteUtilsTest {
     }
 
     @Test
+    public void testShort() {
+        testShort((short) 0);
+        testShort((short) 1);
+        testShort((short) -1);
+        testShort(Short.MAX_VALUE);
+        testShort(Short.MIN_VALUE);
+    }
+
+    private void testShort(short oldValue) {
+        System.out.println("Old Result: " + oldValue);
+        byte[] bytes = ByteUtils.fromShort(oldValue);
+        System.out.println("HexCode: " + HexUtils.fromBytes(bytes));
+        long newValue = ByteUtils.toShort(bytes);
+        System.out.println("New Result: " + newValue);
+        System.out.println("=======================");
+    }
+
+    @Test
     public void testInt() {
         testInt(0);
         testInt(1);
@@ -32,6 +50,7 @@ public class ByteUtilsTest {
         testInt(Integer.MAX_VALUE);
         testInt(Integer.MIN_VALUE);
     }
+
 
     private void testInt(int oldValue) {
         System.out.println("Old Result: " + oldValue);

@@ -6,6 +6,19 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class ByteUtils {
+    public static byte[] fromShort(short x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
+        buffer.putShort(x);
+        return buffer.array();
+    }
+
+    public static short toShort(byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
+        buffer.put(bytes);
+        buffer.flip();//need flip
+        return buffer.getShort();
+    }
+
     public static byte[] fromInt(int x) {
         ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
         buffer.putInt(x);

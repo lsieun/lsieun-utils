@@ -118,4 +118,28 @@ public class FileUtils {
 
         return null;
     }
+
+    public static byte[] readStream(final InputStream in, final boolean close) {
+        if (in == null) {
+            throw new IllegalArgumentException("inputStream is null!!!");
+        }
+
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            IOUtils.copy(in, out);
+            return out.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (close) {
+                IOUtils.closeQuietly(in);
+            }
+        }
+        return null;
+    }
+
+    public static InputStream getInputStream(String className) {
+        InputStream in = ClassLoader.getSystemResourceAsStream(className.replace('.', '/') + ".class");
+        return in;
+    }
 }

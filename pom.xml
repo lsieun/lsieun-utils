@@ -38,6 +38,21 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+            <!-- 生成source code的JAR包 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>default-source-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
