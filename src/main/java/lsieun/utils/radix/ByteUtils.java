@@ -88,6 +88,10 @@ public class ByteUtils {
         return bytes;
     }
 
+    public static int bytesToInt(final byte[] bytes) {
+        return bytesToInt(bytes, 0);
+    }
+
     public static int bytesToInt(final byte[] bytes, final int defaultValue) {
         if(bytes == null || bytes.length < 1) return defaultValue;
 
