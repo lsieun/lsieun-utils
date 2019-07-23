@@ -1,18 +1,6 @@
 package lsieun.utils.io;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +105,40 @@ public class FileUtils {
         }
 
         return null;
+    }
+
+    public static void writeLines(String filename, List<String> lines) {
+        if (lines == null || lines.size() < 1) return;
+
+        File file = new File(filename);
+        File dirFile = file.getParentFile();
+        if (!dirFile.exists()) {
+            throw new RuntimeException("Directory Not Exist: " + dirFile.getAbsolutePath());
+        }
+
+        OutputStream out = null;
+        Writer writer = null;
+        BufferedWriter bufferedWriter = null;
+
+        try {
+            out = new FileOutputStream(file);
+            writer = new OutputStreamWriter(out, "UTF8");
+            bufferedWriter = new BufferedWriter(writer);
+
+            for (String line : lines) {
+                bufferedWriter.write(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(bufferedWriter);
+            IOUtils.closeQuietly(writer);
+            IOUtils.closeQuietly(out);
+        }
     }
 
     public static byte[] readStream(final InputStream in, final boolean close) {
