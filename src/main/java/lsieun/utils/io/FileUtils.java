@@ -126,7 +126,7 @@ public class FileUtils {
             bufferedWriter = new BufferedWriter(writer);
 
             for (String line : lines) {
-                bufferedWriter.write(line);
+                bufferedWriter.write(line + System.lineSeparator());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
