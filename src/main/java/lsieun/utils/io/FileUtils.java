@@ -52,19 +52,15 @@ public class FileUtils {
             dir.mkdirs();
         }
 
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(filename);
-            out = new BufferedOutputStream(out);
-
-            out.write(bytes);
+        try (OutputStream out = new FileOutputStream(filename);
+             BufferedOutputStream buff = new BufferedOutputStream(out);){
+            buff.write(bytes);
+            buff.flush();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(out);
         }
     }
 
