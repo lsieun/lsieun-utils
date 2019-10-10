@@ -38,8 +38,12 @@ public class RegexUtils {
     }
 
     public static boolean matches(String str, String[] regex_array) {
+        return matches(str, regex_array, true);
+    }
+
+    public static boolean matches(String str, String[] regex_array, boolean defaultValue) {
         if (str == null) return false;
-        if (regex_array == null || regex_array.length < 1) return true;
+        if (regex_array == null || regex_array.length < 1) return defaultValue;
 
         for (String regex : regex_array) {
             if (matches(str, regex)) {
