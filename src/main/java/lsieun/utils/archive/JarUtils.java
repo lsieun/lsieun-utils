@@ -13,7 +13,7 @@ import lsieun.utils.io.IOUtils;
 
 public class JarUtils {
     public static List<String> getAllEntries(String filePath) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         try {
             JarFile jarFile = new JarFile(filePath);
             Enumeration<JarEntry> entries = jarFile.entries();
@@ -38,24 +38,22 @@ public class JarUtils {
     /**
      * Get Fully-Qualified Class Name
      *
-     * @param entryName
-     * @return
+     * @param entryName 例如，java/lang/Object.class
+     * @return 例如java.lang.Object
      */
     public static String getFQCN(String entryName) {
-        String className = entryName.replace(".class", "").replace("/", ".");
-        return className;
+        return entryName.replace(".class", "").replace("/", ".");
     }
 
     public static byte[] readClass(String jarPath, String entryName) {
         try (
-            JarFile jarFile = new JarFile(jarPath);
-            InputStream in = jarFile.getInputStream(jarFile.getJarEntry(entryName));
+                JarFile jarFile = new JarFile(jarPath);
+                InputStream in = jarFile.getInputStream(jarFile.getJarEntry(entryName))
         ) {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            IOUtils.copy(in, out);
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            IOUtils.copy(in, bao);
 
-            byte[] bytes = out.toByteArray();
-            return bytes;
+            return bao.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,7 +64,7 @@ public class JarUtils {
         if (jarPath == null || "".equals(jarPath)) return null;
         if (entryList == null || entryList.size() < 1) return null;
 
-        Map<String, ByteArrayOutputStream> map = new HashMap<String, ByteArrayOutputStream>();
+        Map<String, ByteArrayOutputStream> map = new HashMap<>();
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(jarPath);
@@ -79,7 +77,7 @@ public class JarUtils {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
 
                 byte[] buf = new byte[1024];
-                int len = -1;
+                int len;
                 while ((len = in.read(buf)) != -1) {
                     out.write(buf, 0, len);
                 }

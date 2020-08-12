@@ -1,10 +1,7 @@
 package lsieun.utils.radix;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 规则一：方法命名方式为fromXXX和toXXX
@@ -18,7 +15,7 @@ public class HexUtils {
         int base = 16;
         int sum = 0;
 
-        for(int i=0; i<hexCode.length(); i++) {
+        for (int i = 0; i < hexCode.length(); i++) {
             char ch = hexCode.charAt(i);
             int value = hexString.indexOf(ch);
 
@@ -28,22 +25,19 @@ public class HexUtils {
     }
 
     public static float toFloat(String hexCode) {
-        Long i = Long.parseLong(hexCode, 16);
-        Float f = Float.intBitsToFloat(i.intValue());
-        return f;
+        Long longValue = Long.parseLong(hexCode, 16);
+        return Float.intBitsToFloat(longValue.intValue());
     }
 
     public static double toDouble(String hexCode) {
-        Long i = Long.parseLong(hexCode, 16);
-        Double value = Double.longBitsToDouble(i);
-        return value;
+        Long longValue = Long.parseLong(hexCode, 16);
+        return Double.longBitsToDouble(longValue);
     }
 
     public static String toUtf8(String hexCode) {
         hexCode = hexCode.toLowerCase();
         byte[] bytes = toBytes(hexCode);
-        String str = new String(bytes, StandardCharsets.UTF_8);
-        return str;
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     public static byte[] toBytes(String hexCode) {
@@ -64,20 +58,20 @@ public class HexUtils {
     }
 
     public static String fromBytes(byte[] bytes) {
-        if(bytes == null || bytes.length < 1) return null;
+        if (bytes == null || bytes.length < 1) return null;
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; ++i) {
-            sb.append(Integer.toHexString((bytes[i] & 0xFF) | 0x100).substring(1,3));
+            sb.append(Integer.toHexString((bytes[i] & 0xFF) | 0x100).substring(1, 3));
         }
         return sb.toString();
     }
 
     public static String fromBytes(List<Byte> list) {
-        if(list == null || list.size() < 1) return null;
+        if (list == null || list.size() < 1) return null;
         int size = list.size();
         byte[] bytes = new byte[size];
-        for(int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             Byte b = list.get(i);
             bytes[i] = b;
         }
@@ -85,19 +79,18 @@ public class HexUtils {
     }
 
     public static String fromChars(final char[] chars) {
-        if(chars == null || chars.length < 1) return "";
-        List<String> list = new ArrayList();
-        for(int i=0; i<chars.length; i++) {
-            char ch = chars[i];
+        if (chars == null || chars.length < 1) return "";
+        List<String> list = new ArrayList<>();
+        for (char ch : chars) {
             list.add(charToHex(ch));
         }
         return reverse2String(list);
     }
 
     public static String fromInt(int value) {
-        if(value == 0) return "00";
-        List<String> list = new ArrayList();
-        while(value != 0) {
+        if (value == 0) return "00";
+        List<String> list = new ArrayList<>();
+        while (value != 0) {
             byte b = (byte) (value & 0xFF);
             String hex = byteToHex(b);
             list.add(hex);
@@ -109,10 +102,10 @@ public class HexUtils {
     }
 
     private static String reverse2String(List<String> list) {
-        if(list == null || list.size() < 1) return "";
+        if (list == null || list.size() < 1) return "";
 
         StringBuilder sb = new StringBuilder();
-        for(int i=list.size()-1; i>=0; i--) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             sb.append(list.get(i));
         }
         return sb.toString();
@@ -136,21 +129,98 @@ public class HexUtils {
     }
 
     public static String getPrettyFormat(String hexCode) {
-        if(hexCode == null || hexCode.length() < 1) return null;
+        if (hexCode == null || hexCode.length() < 1) return null;
 
         StringBuilder sb = new StringBuilder();
+        Formatter fm = new Formatter(sb);
         int count = 0;
-        for(int i=0; i<hexCode.length(); i++) {
+        for (int i = 0; i < hexCode.length(); i++) {
             char ch = hexCode.charAt(i);
             count++;
-            sb.append(ch);
-            if(count % 2 == 0) {
-                sb.append(" ");
+            fm.format("%c", ch);
+            if (count % 2 == 0) {
+                fm.format(" ");
             }
-            if(count % 32 == 0) {
-                sb.append("\r\n");
+            if (count % 32 == 0) {
+                fm.format("%n");
             }
         }
         return sb.toString();
+    }
+
+    public static String format(byte[] bytes, HexFormat format) {
+        String separator = format.separator;
+        int bytes_column = format.columns;
+        return format(bytes, separator, bytes_column);
+    }
+
+    public static String format(byte[] bytes, String separator, int bytes_column) {
+        if (bytes == null || bytes.length < 1) return "";
+
+        StringBuilder sb = new StringBuilder();
+        Formatter fm = new Formatter(sb);
+
+        int length = bytes.length;
+        for (int i = 0; i < length - 1; i++) {
+            int val = bytes[i] & 0xFF;
+            fm.format("%02X", val);
+            if (bytes_column > 0 && (i + 1) % bytes_column == 0) {
+                fm.format("%n");
+            } else {
+                fm.format("%s", separator);
+            }
+        }
+        {
+            int val = bytes[length - 1] & 0xFF;
+            fm.format("%02X", val);
+        }
+
+        return sb.toString();
+    }
+
+    public static byte[] parse(String str, HexFormat format) {
+        char[] chars = format.separator.toCharArray();
+        return parse(str, chars);
+    }
+
+    public static byte[] parse(String str, char[] chars) {
+        int length = str.length();
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            char ch = str.charAt(i);
+            if (is_in(ch, chars)) {
+                continue;
+            }
+            sb.append(ch);
+        }
+        String hex_str = sb.toString();
+        return parse(hex_str);
+    }
+
+    public static boolean is_in(char ch, char[] chars) {
+        for (char item : chars) {
+            if (item == ch) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static byte[] parse(String hex_str) {
+        int length = hex_str.length();
+        int count = length / 2;
+
+        byte[] bytes = new byte[count];
+        for (int i = 0; i < count; i++) {
+            String item = hex_str.substring(2 * i, 2 * i + 2);
+            int val = Integer.parseInt(item, 16);
+            bytes[i] = (byte) val;
+        }
+        return bytes;
+    }
+
+    public static String toHex(byte[] bytes) {
+        return format(bytes, HexFormat.FORMAT_FF_FF);
     }
 }

@@ -1,26 +1,25 @@
 package lsieun.utils.io;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
     public static String getFilePath(String relativePath) {
         String dir = FileUtils.class.getResource("/").getPath();
-        String filepath = dir + relativePath;
-        return filepath;
+        return dir + relativePath;
     }
 
-    public static String getFilePath(Class clazz, String className) {
+    public static String getFilePath(Class<?> clazz, String className) {
         String path = clazz.getResource("/").getPath();
-        String filepath = String.format("%s%s.class", path, className.replace('.', File.separatorChar));
-        return filepath;
+        return String.format("%s%s.class", path, className.replace('.', File.separatorChar));
     }
 
-    public static byte[] readBytes(String filename) {
-        File file = new File(filename);
-        if(!file.exists()) {
-            return null;
+    public static byte[] readBytes(String filepath) {
+        File file = new File(filepath);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("File Not Exist: " + filepath);
         }
 
         InputStream in = null;
@@ -29,49 +28,40 @@ public class FileUtils {
             in = new FileInputStream(file);
             in = new BufferedInputStream(in);
 
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            IOUtils.copy(in, out);
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            IOUtils.copy(in, bao);
 
-            byte[] bytes = out.toByteArray();
-            return bytes;
-        } catch (FileNotFoundException e) {
-            System.out.println("File Not Found: " + filename);
-            e.printStackTrace();
+            return bao.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             IOUtils.closeQuietly(in);
         }
         return null;
     }
 
-    public static void writeBytes(String filename, byte[] bytes) {
-        File file = new File(filename);
-        File dir = file.getParentFile();
-        if(!dir.exists()) {
-            dir.mkdirs();
-        }
+    public static void writeBytes(String filepath, byte[] bytes) {
+        File file = new File(filepath);
+        File dirFile = file.getParentFile();
+        mkdirs(dirFile);
 
-        try (OutputStream out = new FileOutputStream(filename);
-             BufferedOutputStream buff = new BufferedOutputStream(out);){
+        try (OutputStream out = new FileOutputStream(filepath);
+             BufferedOutputStream buff = new BufferedOutputStream(out)) {
             buff.write(bytes);
             buff.flush();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static List<String> readLines(String filename) {
-        return readLines(filename, "UTF8");
+    public static List<String> readLines(String filepath) {
+        return readLines(filepath, "UTF8");
     }
 
-    public static List<String> readLines(String filename, String charsetName) {
-        File file = new File(filename);
-        if(!file.exists()) {
-            return null;
+    public static List<String> readLines(String filepath, String charsetName) {
+        File file = new File(filepath);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("File Not Exist: " + filepath);
         }
 
         InputStream in = null;
@@ -82,19 +72,16 @@ public class FileUtils {
             in = new FileInputStream(file);
             reader = new InputStreamReader(in, charsetName);
             bufferReader = new BufferedReader(reader);
-            String line = null;
 
-            List<String> list = new ArrayList();
-            while((line = bufferReader.readLine()) != null) {
+            List<String> list = new ArrayList<>();
+            String line;
+            while ((line = bufferReader.readLine()) != null) {
                 list.add(line);
             }
             return list;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             IOUtils.closeQuietly(bufferReader);
             IOUtils.closeQuietly(reader);
             IOUtils.closeQuietly(in);
@@ -103,14 +90,12 @@ public class FileUtils {
         return null;
     }
 
-    public static void writeLines(String filename, List<String> lines) {
+    public static void writeLines(String filepath, List<String> lines) {
         if (lines == null || lines.size() < 1) return;
 
-        File file = new File(filename);
+        File file = new File(filepath);
         File dirFile = file.getParentFile();
-        if (!dirFile.exists()) {
-            throw new RuntimeException("Directory Not Exist: " + dirFile.getAbsolutePath());
-        }
+        mkdirs(dirFile);
 
         OutputStream out = null;
         Writer writer = null;
@@ -118,22 +103,38 @@ public class FileUtils {
 
         try {
             out = new FileOutputStream(file);
-            writer = new OutputStreamWriter(out, "UTF8");
+            writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
             bufferedWriter = new BufferedWriter(writer);
 
             for (String line : lines) {
-                bufferedWriter.write(line + System.lineSeparator());
+                bufferedWriter.write(line);
+                bufferedWriter.newLine();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(bufferedWriter);
             IOUtils.closeQuietly(writer);
             IOUtils.closeQuietly(out);
+        }
+    }
+
+    public static void mkdirs(File dirFile) {
+        boolean file_exists = dirFile.exists();
+
+        if (file_exists && dirFile.isDirectory()) {
+            return;
+        }
+
+        if (file_exists && dirFile.isFile()) {
+            throw new RuntimeException("Not A Directory: " + dirFile);
+        }
+
+        if (!file_exists) {
+            boolean flag = dirFile.mkdirs();
+            if (!flag) {
+                throw new RuntimeException("Create Directory Failed: " + dirFile.getAbsolutePath());
+            }
         }
     }
 
@@ -157,7 +158,6 @@ public class FileUtils {
     }
 
     public static InputStream getInputStream(String className) {
-        InputStream in = ClassLoader.getSystemResourceAsStream(className.replace('.', '/') + ".class");
-        return in;
+        return ClassLoader.getSystemResourceAsStream(className.replace('.', '/') + ".class");
     }
 }

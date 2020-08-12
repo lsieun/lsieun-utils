@@ -93,10 +93,10 @@ public class ByteUtils {
     }
 
     public static int bytesToInt(final byte[] bytes, final int defaultValue) {
-        if(bytes == null || bytes.length < 1) return defaultValue;
+        if (bytes == null || bytes.length < 1) return defaultValue;
 
         int value = 0;
-        for(int i=0; i<bytes.length; i++) {
+        for (int i = 0; i < bytes.length; i++) {
             byte b = bytes[i];
             value = (value << 8) + (b & 0xFF);
         }
@@ -106,7 +106,7 @@ public class ByteUtils {
     public static byte[] longToBytes(long l) {
         byte[] result = new byte[8];
         for (int i = 7; i >= 0; i--) {
-            result[i] = (byte)(l & 0xFF);
+            result[i] = (byte) (l & 0xFF);
             l >>= 8;
         }
         return result;
@@ -122,12 +122,12 @@ public class ByteUtils {
     }
 
     public static byte[] merge(byte[]... bytesArray) {
-        if(bytesArray == null || bytesArray.length < 1) return null;
+        if (bytesArray == null || bytesArray.length < 1) return null;
 
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        for(int i=0; i<bytesArray.length; i++) {
+        for (int i = 0; i < bytesArray.length; i++) {
             byte[] bytes = bytesArray[i];
-            if(bytes != null && bytes.length > 0) {
+            if (bytes != null && bytes.length > 0) {
                 try {
                     bao.write(bytes);
                 } catch (IOException e) {
@@ -137,5 +137,56 @@ public class ByteUtils {
         }
 
         return bao.toByteArray();
+    }
+
+    public static byte[] concatenate(byte[] bytes1, byte[] bytes2) {
+        int len1 = bytes1.length;
+        int len2 = bytes2.length;
+
+        byte[] result_bytes = new byte[len1 + len2];
+
+        System.arraycopy(bytes1, 0, result_bytes, 0, len1);
+        System.arraycopy(bytes2, 0, result_bytes, len1, len2);
+
+        return result_bytes;
+    }
+
+    public static byte[] concatenate(byte[] bytes1, byte[] bytes2, byte[] bytes3) {
+        int len1 = bytes1.length;
+        int len2 = bytes2.length;
+        int len3 = bytes3.length;
+
+        byte[] result_bytes = new byte[len1 + len2 + len3];
+
+        System.arraycopy(bytes1, 0, result_bytes, 0, len1);
+        System.arraycopy(bytes2, 0, result_bytes, len1, len2);
+        System.arraycopy(bytes3, 0, result_bytes, len1 + len2, len3);
+
+        return result_bytes;
+    }
+
+    public static String toBinary(byte[] bytes) {
+        if (bytes == null) return "";
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            byte b = bytes[i];
+            toBinary(sb, b);
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
+
+    public static String toBinary(byte b) {
+        StringBuilder sb = new StringBuilder();
+        toBinary(sb, b);
+        return sb.toString();
+    }
+
+    private static void toBinary(StringBuilder sb, byte b) {
+        for (int i = 7; i >= 0; i--) {
+            int val = (b >> i) & 0x01;
+            sb.append(val);
+        }
     }
 }
