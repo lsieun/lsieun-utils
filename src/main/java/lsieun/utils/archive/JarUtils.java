@@ -1,9 +1,8 @@
 package lsieun.utils.archive;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URI;
+import java.nio.file.*;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -99,5 +98,23 @@ public class JarUtils {
             }
         }
         return map;
+    }
+
+    public static void updateJar(String jar_path, Map<String, String> classFileMap) {
+        Map<String, String> env = new HashMap<>();
+        env.put("create", "false");
+        File jar_file = new File(jar_path);
+        URI uri = URI.create("jar:" + jar_file.toURI());
+
+        try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
+            for (Map.Entry<String, String> entry : classFileMap.entrySet()) {
+                Path pathInZipfile = zipfs.getPath(entry.getKey());
+                Path externalTxtFile = Paths.get(entry.getValue());
+                Files.copy(externalTxtFile, pathInZipfile, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException ex) {
+            // ex.printStackTrace();
+            // swallow exception
+        }
     }
 }
