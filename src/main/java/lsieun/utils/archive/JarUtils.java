@@ -2,15 +2,15 @@ package lsieun.utils.archive;
 
 import java.io.*;
 import java.net.URI;
+import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import lsieun.utils.RegexUtils;
-import lsieun.utils.io.IOUtils;
-
 public class JarUtils {
+    public static final int BUFFER_SIZE = 16 * 1024;
+
     public static List<String> getAllEntries(String filePath) {
         List<String> list = new ArrayList<>();
         try {
@@ -19,7 +19,6 @@ public class JarUtils {
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
                 list.add(entry.getName());
-                //System.out.println(entry.getName());
             }
             jarFile.close();
         } catch (IOException e) {
@@ -30,7 +29,14 @@ public class JarUtils {
 
     public static List<String> getClassEntries(String filepath) {
         List<String> list = getAllEntries(filepath);
-        RegexUtils.filter(list, "^.+\\.class$");
+        int size = list.size();
+        for (int i = size - 1; i >= 0; i--) {
+            String jarItem = list.get(i);
+            if (jarItem != null && jarItem.endsWith(".class")) {
+                continue;
+            }
+            list.remove(i);
+        }
         return list;
     }
 
@@ -50,8 +56,11 @@ public class JarUtils {
                 InputStream in = jarFile.getInputStream(jarFile.getJarEntry(entryName))
         ) {
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
-            IOUtils.copy(in, bao);
-
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int length;
+            while ((length = in.read(buffer)) != -1) {
+                bao.write(buffer, 0, length);
+            }
             return bao.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,7 +84,7 @@ public class JarUtils {
 
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-                byte[] buf = new byte[1024];
+                byte[] buf = new byte[BUFFER_SIZE];
                 int len;
                 while ((len = in.read(buf)) != -1) {
                     out.write(buf, 0, len);
@@ -100,21 +109,29 @@ public class JarUtils {
         return map;
     }
 
-    public static void updateJar(String jar_path, Map<String, String> classFileMap) {
+    public static void updateJar(String jarPath, Map<String, String> classFileMap) {
         Map<String, String> env = new HashMap<>();
         env.put("create", "false");
-        File jar_file = new File(jar_path);
+        File jar_file = new File(jarPath);
         URI uri = URI.create("jar:" + jar_file.toURI());
 
         try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
             for (Map.Entry<String, String> entry : classFileMap.entrySet()) {
                 Path pathInZipfile = zipfs.getPath(entry.getKey());
                 Path externalTxtFile = Paths.get(entry.getValue());
+                if (!Files.exists(pathInZipfile)) {
+                    Files.createDirectories(pathInZipfile);
+                }
                 Files.copy(externalTxtFile, pathInZipfile, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException ex) {
-            // ex.printStackTrace();
-            // swallow exception
+             ex.printStackTrace();
         }
+    }
+
+    public static void updateJar(String jarPath, String item, String filepath) {
+        Map<String, String> map = new HashMap<>();
+        map.put(item, filepath);
+        updateJar(jarPath, map);
     }
 }
