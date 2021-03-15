@@ -6,9 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
+    public static final int BUFFER_SIZE = 16 * 1024;
+
     public static String getFilePath(String relativePath) {
         String dir = FileUtils.class.getResource("/").getPath();
-        return dir + relativePath;
+        String filepath = dir + relativePath;
+        if (filepath.contains(":")) {
+            return filepath.substring(1);
+        }
+        return filepath;
     }
 
     public static String getFilePath(Class<?> clazz, String className) {
@@ -22,20 +28,19 @@ public class FileUtils {
             throw new IllegalArgumentException("File Not Exist: " + filepath);
         }
 
-        InputStream in = null;
-
-        try {
-            in = new FileInputStream(file);
-            in = new BufferedInputStream(in);
-
+        try (
+                FileInputStream fis = new FileInputStream(file);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+        ) {
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
-            IOUtils.copy(in, bao);
-
+            byte[] buf = new byte[BUFFER_SIZE];
+            int len;
+            while ((len = bis.read(buf)) != -1) {
+                bao.write(buf, 0, len);
+            }
             return bao.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(in);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         return null;
     }
@@ -64,15 +69,11 @@ public class FileUtils {
             throw new IllegalArgumentException("File Not Exist: " + filepath);
         }
 
-        InputStream in = null;
-        Reader reader = null;
-        BufferedReader bufferReader = null;
-
-        try {
-            in = new FileInputStream(file);
-            reader = new InputStreamReader(in, charsetName);
-            bufferReader = new BufferedReader(reader);
-
+        try (
+                InputStream in = new FileInputStream(file);
+                Reader reader = new InputStreamReader(in, charsetName);
+                BufferedReader bufferReader = new BufferedReader(reader);
+        ) {
             List<String> list = new ArrayList<>();
             String line;
             while ((line = bufferReader.readLine()) != null) {
@@ -81,12 +82,7 @@ public class FileUtils {
             return list;
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(bufferReader);
-            IOUtils.closeQuietly(reader);
-            IOUtils.closeQuietly(in);
         }
-
         return null;
     }
 
@@ -97,25 +93,18 @@ public class FileUtils {
         File dirFile = file.getParentFile();
         mkdirs(dirFile);
 
-        OutputStream out = null;
-        Writer writer = null;
-        BufferedWriter bufferedWriter = null;
-
-        try {
-            out = new FileOutputStream(file);
-            writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
-            bufferedWriter = new BufferedWriter(writer);
-
+        try (
+                OutputStream out = new FileOutputStream(file);
+                Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                BufferedWriter bufferedWriter = new BufferedWriter(writer);
+        ) {
             for (String line : lines) {
                 bufferedWriter.write(line);
                 bufferedWriter.newLine();
             }
+            bufferedWriter.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(bufferedWriter);
-            IOUtils.closeQuietly(writer);
-            IOUtils.closeQuietly(out);
         }
     }
 
@@ -138,20 +127,58 @@ public class FileUtils {
         }
     }
 
-    public static byte[] readStream(final InputStream in, final boolean close) {
+    public static void copy(String srcPath, String destPath) {
+        File srcFile = new File(srcPath);
+        if (!srcFile.exists()) {
+            throw new IllegalArgumentException("srcPath is not valid: " + srcPath);
+        }
+
+        File destFile = new File(destPath);
+        File dirFile = destFile.getParentFile();
+        mkdirs(dirFile);
+
+        try (
+                FileInputStream fis = new FileInputStream(srcFile);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                FileOutputStream fos = new FileOutputStream(destFile);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+        ) {
+            byte[] buf = new byte[BUFFER_SIZE];
+            int len;
+            while ((len = bis.read(buf)) != -1) {
+                bos.write(buf, 0, len);
+            }
+            bos.flush();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static byte[] readClassBytes(String className) {
+        InputStream in = getInputStream(className);
+        return readStream(in);
+    }
+
+    public static byte[] readStream(final InputStream in) {
         if (in == null) {
             throw new IllegalArgumentException("inputStream is null!!!");
         }
 
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            IOUtils.copy(in, out);
+            byte[] buf = new byte[BUFFER_SIZE];
+            int len;
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
             return out.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         } finally {
-            if (close) {
-                IOUtils.closeQuietly(in);
+            try {
+                in.close();
+            } catch (IOException e) {
+                //
             }
         }
         return null;
