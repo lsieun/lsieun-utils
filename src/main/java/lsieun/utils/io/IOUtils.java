@@ -31,7 +31,7 @@ public class IOUtils {
      * This method buffers the input internally, so there is no need to use a
      * <code>BufferedInputStream</code>.
      * <p>
-     * Large streams (over 2GB) will return a bytes copied value of
+     * Large streams (over 2 GB) will return a bytes copied value of
      * <code>-1</code> after the copy has completed since the correct
      * number of bytes cannot be returned as an int. For large streams
      * use the <code>copyLarge(InputStream, OutputStream)</code> method.
@@ -52,7 +52,7 @@ public class IOUtils {
     }
 
     /**
-     * Copies bytes from a large (over 2GB) <code>InputStream</code> to an
+     * Copies bytes from a large (over 2 GB) <code>InputStream</code> to an
      * <code>OutputStream</code>.
      * <p>
      * This method buffers the input internally, so there is no need to use a
@@ -91,7 +91,7 @@ public class IOUtils {
     }
 
     /**
-     * Copies bytes from a large (over 2GB) <code>InputStream</code> to an
+     * Copies bytes from a large (over 2 GB) <code>InputStream</code> to an
      * <code>OutputStream</code>.
      * <p>
      * This method uses the provided buffer, so there is no need to use a
@@ -117,7 +117,7 @@ public class IOUtils {
     }
 
     /**
-     * Copies chars from a large (over 2GB) <code>Reader</code> to a <code>Writer</code>.
+     * Copies chars from a large (over 2 GB) <code>Reader</code> to a <code>Writer</code>.
      * <p>
      * This method buffers the input internally, so there is no need to use a
      * <code>BufferedReader</code>.
@@ -136,7 +136,7 @@ public class IOUtils {
     }
 
     /**
-     * Copies chars from a large (over 2GB) <code>Reader</code> to a <code>Writer</code>.
+     * Copies chars from a large (over 2 GB) <code>Reader</code> to a <code>Writer</code>.
      * <p>
      * This method uses the provided buffer, so there is no need to use a
      * <code>BufferedReader</code>.

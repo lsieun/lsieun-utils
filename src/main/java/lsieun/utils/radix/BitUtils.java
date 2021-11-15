@@ -6,8 +6,7 @@ public class BitUtils {
         int rightShift = index - 1;
         int shiftValue = i >> rightShift;
         int andValue = shiftValue & 0x01;
-        if(andValue == 1) return true;
-        return false;
+        return andValue == 1;
     }
 
     /**

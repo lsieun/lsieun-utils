@@ -30,7 +30,7 @@ public class FileUtils {
 
         try (
                 FileInputStream fis = new FileInputStream(file);
-                BufferedInputStream bis = new BufferedInputStream(fis);
+                BufferedInputStream bis = new BufferedInputStream(fis)
         ) {
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             byte[] buf = new byte[BUFFER_SIZE];
@@ -72,7 +72,7 @@ public class FileUtils {
         try (
                 InputStream in = new FileInputStream(file);
                 Reader reader = new InputStreamReader(in, charsetName);
-                BufferedReader bufferReader = new BufferedReader(reader);
+                BufferedReader bufferReader = new BufferedReader(reader)
         ) {
             List<String> list = new ArrayList<>();
             String line;
@@ -96,7 +96,7 @@ public class FileUtils {
         try (
                 OutputStream out = new FileOutputStream(file);
                 Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
-                BufferedWriter bufferedWriter = new BufferedWriter(writer);
+                BufferedWriter bufferedWriter = new BufferedWriter(writer)
         ) {
             for (String line : lines) {
                 bufferedWriter.write(line);
@@ -141,7 +141,7 @@ public class FileUtils {
                 FileInputStream fis = new FileInputStream(srcFile);
                 BufferedInputStream bis = new BufferedInputStream(fis);
                 FileOutputStream fos = new FileOutputStream(destFile);
-                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                BufferedOutputStream bos = new BufferedOutputStream(fos)
         ) {
             byte[] buf = new byte[BUFFER_SIZE];
             int len;

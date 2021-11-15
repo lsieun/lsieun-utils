@@ -15,8 +15,7 @@ public class IntegerUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        byte[] buf = bao.toByteArray();
-        return buf;
+        return bao.toByteArray();
     }
 
     public static int fromBytes(byte[] bytes, int defaultValue) {
@@ -29,8 +28,7 @@ public class IntegerUtils {
         ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
         DataInputStream in = new DataInputStream(bai);
         try {
-            int i = in.readInt();
-            return i;
+            return in.readInt();
         } catch (IOException e) {
             e.printStackTrace();
             return defaultValue;

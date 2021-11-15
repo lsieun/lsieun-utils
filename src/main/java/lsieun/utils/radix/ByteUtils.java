@@ -96,8 +96,7 @@ public class ByteUtils {
         if (bytes == null || bytes.length < 1) return defaultValue;
 
         int value = 0;
-        for (int i = 0; i < bytes.length; i++) {
-            byte b = bytes[i];
+        for (byte b : bytes) {
             value = (value << 8) + (b & 0xFF);
         }
         return value;
@@ -125,12 +124,12 @@ public class ByteUtils {
         if (bytesArray == null || bytesArray.length < 1) return null;
 
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        for (int i = 0; i < bytesArray.length; i++) {
-            byte[] bytes = bytesArray[i];
+        for (byte[] bytes : bytesArray) {
             if (bytes != null && bytes.length > 0) {
                 try {
                     bao.write(bytes);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -169,8 +168,7 @@ public class ByteUtils {
         if (bytes == null) return "";
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            byte b = bytes[i];
+        for (byte b : bytes) {
             toBinary(sb, b);
             sb.append(" ");
         }

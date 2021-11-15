@@ -8,8 +8,8 @@ import java.util.*;
  * 规则二：使用小写的abcdef
  */
 public class HexUtils {
-    static final String hexString = "0123456789abcdef";
-    static final char hexDigit[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private static final String HEX_STRING = "0123456789abcdef";
+    private static final char[] HEX_DIGIT = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     public static int toInt(String hexCode) {
         int base = 16;
@@ -17,7 +17,7 @@ public class HexUtils {
 
         for (int i = 0; i < hexCode.length(); i++) {
             char ch = hexCode.charAt(i);
-            int value = hexString.indexOf(ch);
+            int value = HEX_STRING.indexOf(ch);
 
             sum = sum * base + value;
         }
@@ -25,12 +25,12 @@ public class HexUtils {
     }
 
     public static float toFloat(String hexCode) {
-        Long longValue = Long.parseLong(hexCode, 16);
-        return Float.intBitsToFloat(longValue.intValue());
+        int intValue = Integer.parseInt(hexCode, 16);
+        return Float.intBitsToFloat(intValue);
     }
 
     public static double toDouble(String hexCode) {
-        Long longValue = Long.parseLong(hexCode, 16);
+        long longValue = Long.parseLong(hexCode, 16);
         return Double.longBitsToDouble(longValue);
     }
 
@@ -53,16 +53,15 @@ public class HexUtils {
     }
 
     private static byte toByte(char ch) {
-        byte b = (byte) hexString.indexOf(ch);
-        return b;
+        return (byte) HEX_STRING.indexOf(ch);
     }
 
     public static String fromBytes(byte[] bytes) {
         if (bytes == null || bytes.length < 1) return null;
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; ++i) {
-            sb.append(Integer.toHexString((bytes[i] & 0xFF) | 0x100).substring(1, 3));
+        for (byte b : bytes) {
+            sb.append(Integer.toHexString((b & 0xFF) | 0x100), 1, 3);
         }
         return sb.toString();
     }
@@ -112,7 +111,7 @@ public class HexUtils {
     }
 
     public static String byteToHex(byte b) {
-        char[] chars = {hexDigit[(b >>> 4) & 0x0F], hexDigit[b & 0x0F]};
+        char[] chars = {HEX_DIGIT[(b >>> 4) & 0x0F], HEX_DIGIT[b & 0x0F]};
         return new String(chars);
     }
 
@@ -166,7 +165,8 @@ public class HexUtils {
             fm.format("%02X", val);
             if (bytes_column > 0 && (i + 1) % bytes_column == 0) {
                 fm.format("%n");
-            } else {
+            }
+            else {
                 fm.format("%s", separator);
             }
         }
