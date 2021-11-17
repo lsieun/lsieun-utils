@@ -8,4 +8,4 @@
  * </p>
  *
  */
-package lsieun.utils.radix;
+package lsieun.utils.number;

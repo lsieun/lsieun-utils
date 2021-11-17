@@ -1,85 +1,24 @@
-package lsieun.utils.radix;
+package lsieun.utils.number;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class ByteUtils {
-    public static byte[] fromShort(short x) {
-        ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
-        buffer.putShort(x);
-        return buffer.array();
+
+    public static byte[] fromShort(final short s) {
+        byte[] bytes = new byte[2];
+        bytes[0] = (byte) ((s >> 8) & 0xFF);
+        bytes[1] = (byte) (s & 0xFF);
+        return bytes;
     }
 
-    public static short toShort(byte[] bytes) {
-        ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
-        buffer.put(bytes);
-        buffer.flip();//need flip
-        return buffer.getShort();
+    public static short toShort(final byte[] bytes) {
+        return (short) toInt(bytes);
     }
 
-    public static byte[] fromInt(int x) {
-        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
-        buffer.putInt(x);
-        return buffer.array();
-    }
 
-    public static int toInt(byte[] bytes) {
-        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
-        buffer.put(bytes);
-        buffer.flip();//need flip
-        return buffer.getInt();
-    }
-
-    public static byte[] fromLong(long x) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.putLong(x);
-        return buffer.array();
-    }
-
-    public static long toLong(byte[] bytes) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.put(bytes);
-        buffer.flip();//need flip
-        return buffer.getLong();
-    }
-
-    public static byte[] fromFloat(float x) {
-        ByteBuffer buffer = ByteBuffer.allocate(Float.BYTES);
-        buffer.putFloat(x);
-        return buffer.array();
-    }
-
-    public static float toFloat(byte[] bytes) {
-        ByteBuffer buffer = ByteBuffer.allocate(Float.BYTES);
-        buffer.put(bytes);
-        buffer.flip();//need flip
-        return buffer.getFloat();
-    }
-
-    public static byte[] fromDouble(double x) {
-        ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES);
-        buffer.putDouble(x);
-        return buffer.array();
-    }
-
-    public static double toDouble(byte[] bytes) {
-        ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES);
-        buffer.put(bytes);
-        buffer.flip();//need flip
-        return buffer.getDouble();
-    }
-
-    public static byte[] fromUtf8(String str) {
-        return str.getBytes(StandardCharsets.UTF_8);
-    }
-
-    public static String toUtf8(byte[] bytes) {
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
-
-    public static byte[] intToBytes(final int i) {
+    public static byte[] fromInt(final int i) {
         byte[] bytes = new byte[4];
         bytes[0] = (byte) (i >> 24);
         bytes[1] = (byte) ((i >> 16) & 0xFF);
@@ -88,11 +27,11 @@ public class ByteUtils {
         return bytes;
     }
 
-    public static int bytesToInt(final byte[] bytes) {
-        return bytesToInt(bytes, 0);
+    public static int toInt(final byte[] bytes) {
+        return toInt(bytes, 0);
     }
 
-    public static int bytesToInt(final byte[] bytes, final int defaultValue) {
+    public static int toInt(final byte[] bytes, final int defaultValue) {
         if (bytes == null || bytes.length < 1) return defaultValue;
 
         int value = 0;
@@ -102,22 +41,49 @@ public class ByteUtils {
         return value;
     }
 
-    public static byte[] longToBytes(long l) {
+    public static byte[] fromLong(final long longValue) {
         byte[] result = new byte[8];
-        for (int i = 7; i >= 0; i--) {
-            result[i] = (byte) (l & 0xFF);
-            l >>= 8;
+        for (int i = 0; i < Long.BYTES; i++) {
+            result[i] = (byte) ((longValue >> (i * 8)) & 0xFF);
         }
         return result;
     }
 
-    public static long bytesToLong(byte[] b) {
+    public static long toLong(final byte[] bytes) {
         long result = 0;
         for (int i = 0; i < 8; i++) {
             result <<= 8;
-            result |= (b[i] & 0xFF);
+            result |= (bytes[i] & 0xFF);
         }
         return result;
+    }
+
+    public static byte[] fromFloat(final float floatValue) {
+        int intValue = Float.floatToIntBits(floatValue);
+        return fromInt(intValue);
+    }
+
+    public static float toFloat(final byte[] bytes) {
+        int intValue = toInt(bytes);
+        return Float.intBitsToFloat(intValue);
+    }
+
+    public static byte[] fromDouble(final double doubleValue) {
+        long longValue = Double.doubleToLongBits(doubleValue);
+        return fromLong(longValue);
+    }
+
+    public static double toDouble(final byte[] bytes) {
+        long longValue = toLong(bytes);
+        return Double.longBitsToDouble(longValue);
+    }
+
+    public static byte[] fromUtf8(final String str) {
+        return str.getBytes(StandardCharsets.UTF_8);
+    }
+
+    public static String toUtf8(final byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     public static byte[] merge(byte[]... bytesArray) {

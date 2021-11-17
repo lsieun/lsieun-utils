@@ -1,4 +1,4 @@
-package lsieun.utils.radix;
+package lsieun.utils.number;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -1,4 +1,4 @@
-package lsieun.utils.radix;
+package lsieun.utils.number;
 
 public enum HexFormat {
     FORMAT_FF_FF("", 0),

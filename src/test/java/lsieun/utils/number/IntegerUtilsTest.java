@@ -1,4 +1,4 @@
-package lsieun.utils.radix;
+package lsieun.utils.number;
 
 import org.junit.Test;
 
@@ -26,11 +26,11 @@ public class IntegerUtilsTest {
         System.out.println("ByteUtils: " + HexUtils.fromBytes(bytes2));
         int i1 = IntegerUtils.fromBytes(bytes1, 0);
         System.out.println("IntegerUtils: " + i1);
-        int i2 = ByteUtils.bytesToInt(bytes1, 0);
+        int i2 = ByteUtils.toInt(bytes1, 0);
         System.out.println("ByteUtils: " + i2);
         int i3 = IntegerUtils.fromBytes(bytes2, 0);
         System.out.println("IntegerUtils: " + i3);
-        int i4 = ByteUtils.bytesToInt(bytes2, 0);
+        int i4 = ByteUtils.toInt(bytes2, 0);
         System.out.println("ByteUtils: " + i4);
         System.out.println("=================================");
     }

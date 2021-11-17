@@ -1,4 +1,4 @@
-package lsieun.utils.radix;
+package lsieun.utils.number;
 
 public class BitUtils {
     public static boolean hasBit(int i, int index) {
