@@ -4,12 +4,17 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FileUtils {
     public static final int BUFFER_SIZE = 16 * 1024;
 
+    public static File getTempDirectory() {
+        return new File(System.getProperty("java.io.tmpdir"));
+    }
+
     public static String getFilePath(String relativePath) {
-        String dir = FileUtils.class.getResource("/").getPath();
+        String dir = Objects.requireNonNull(FileUtils.class.getResource("/")).getPath();
         String filepath = dir + relativePath;
         if (filepath.contains(":")) {
             return filepath.substring(1);
@@ -18,7 +23,7 @@ public class FileUtils {
     }
 
     public static String getFilePath(Class<?> clazz, String className) {
-        String path = clazz.getResource("/").getPath();
+        String path = Objects.requireNonNull(clazz.getResource("/")).getPath();
         return String.format("%s%s.class", path, className.replace('.', File.separatorChar));
     }
 
