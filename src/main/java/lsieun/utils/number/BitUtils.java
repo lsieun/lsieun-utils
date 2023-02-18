@@ -27,20 +27,20 @@ public class BitUtils {
         boolean isSet1 = hasBit(b, index1);
         boolean isSet2 = hasBit(b, index2);
         if (isSet1 ^ isSet2) {
-            int set_shift;
-            int clear_shift;
+            int setShift;
+            int clearShift;
             if (isSet1) {
-                set_shift = 8 - index2;
-                clear_shift = 8 - index1;
+                setShift = 8 - index2;
+                clearShift = 8 - index1;
             }
             else {
-                set_shift = 8 - index1;
-                clear_shift = 8 - index2;
+                setShift = 8 - index1;
+                clearShift = 8 - index2;
             }
 
-            int set_bitmask = 1 << set_shift;
-            int clear_bitmask = (~(1 << clear_shift)) & 0xFF;
-            return (byte) (((b & 0xFF) | set_bitmask) & clear_bitmask);
+            int setBitmask = 1 << setShift;
+            int clearBitmask = (~(1 << clearShift)) & 0xFF;
+            return (byte) (((b & 0xFF) | setBitmask) & clearBitmask);
         }
         else {
             return b;
@@ -55,7 +55,9 @@ public class BitUtils {
     }
 
     public static boolean hasBit(int i, int index) {
-        if (index > Integer.SIZE || index < 1) return false;
+        if (index > Integer.SIZE || index < 1) {
+            return false;
+        }
         int rightShift = index - 1;
         int shiftValue = i >> rightShift;
         int andValue = shiftValue & 0x01;
@@ -120,10 +122,14 @@ public class BitUtils {
     }
 
     public static String fromByteArray(byte[] byteArray) {
-        if (byteArray == null) return EMPTY;
+        if (byteArray == null) {
+            return EMPTY;
+        }
 
         int length = byteArray.length;
-        if (length == 0) return EMPTY;
+        if (length == 0) {
+            return EMPTY;
+        }
 
         int totalSize = length * Byte.SIZE;
         byte[] bytes = new byte[totalSize];
@@ -141,7 +147,9 @@ public class BitUtils {
         int result = 0;
         for (int i = 0; i < length; i++) {
             char ch = str.charAt(i);
-            if (ch != '1' && ch != '0') continue;
+            if (ch != '1' && ch != '0') {
+                continue;
+            }
             int bit = (ch == '1' ? 1 : 0);
             result = (result << 1) | bit;
         }
@@ -153,7 +161,9 @@ public class BitUtils {
         long result = 0;
         for (int i = 0; i < length; i++) {
             char ch = str.charAt(i);
-            if (ch != '1' && ch != '0') continue;
+            if (ch != '1' && ch != '0') {
+                continue;
+            }
             long bit = (ch == '1' ? 1 : 0);
             result = (result << 1) | bit;
         }

@@ -165,9 +165,9 @@ public class ByteDashboard {
     }
 
 
-    public static byte[] readBytes(byte[] code_bytes, int offset, int n) {
+    public static byte[] readBytes(byte[] codeBytes, int offset, int n) {
         byte[] array = new byte[n];
-        System.arraycopy(code_bytes, offset, array, 0, n);
+        System.arraycopy(codeBytes, offset, array, 0, n);
         return array;
     }
 }

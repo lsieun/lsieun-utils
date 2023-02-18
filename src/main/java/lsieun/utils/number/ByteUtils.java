@@ -32,7 +32,9 @@ public class ByteUtils {
     }
 
     public static int toInt(final byte[] bytes, final int defaultValue) {
-        if (bytes == null || bytes.length < 1) return defaultValue;
+        if (bytes == null || bytes.length < 1) {
+            return defaultValue;
+        }
 
         int value = 0;
         for (byte b : bytes) {
@@ -51,9 +53,9 @@ public class ByteUtils {
 
     public static long toLong(final byte[] bytes) {
         long result = 0;
-        for (int i = 0; i < 8; i++) {
+        for (byte b : bytes) {
             result <<= 8;
-            result |= (bytes[i] & 0xFF);
+            result |= (b & 0xFF);
         }
         return result;
     }
@@ -86,7 +88,7 @@ public class ByteUtils {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
-    public static String toModifiedUTF8(byte[] bytes) {
+    public static String toModifiedUtf8(byte[] bytes) {
         int length = bytes.length;
         char[] chars = new char[length];
         int strLength = 0;
@@ -131,22 +133,22 @@ public class ByteUtils {
                 }
             }
             return bao.toByteArray();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static byte[] merge(byte[]... bytesArray) {
-        if (bytesArray == null || bytesArray.length < 1) return null;
+        if (bytesArray == null || bytesArray.length < 1) {
+            return null;
+        }
 
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         for (byte[] bytes : bytesArray) {
             if (bytes != null && bytes.length > 0) {
                 try {
                     bao.write(bytes);
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -159,12 +161,12 @@ public class ByteUtils {
         int len1 = bytes1.length;
         int len2 = bytes2.length;
 
-        byte[] result_bytes = new byte[len1 + len2];
+        byte[] resultBytes = new byte[len1 + len2];
 
-        System.arraycopy(bytes1, 0, result_bytes, 0, len1);
-        System.arraycopy(bytes2, 0, result_bytes, len1, len2);
+        System.arraycopy(bytes1, 0, resultBytes, 0, len1);
+        System.arraycopy(bytes2, 0, resultBytes, len1, len2);
 
-        return result_bytes;
+        return resultBytes;
     }
 
     public static byte[] concatenate(byte[] bytes1, byte[] bytes2, byte[] bytes3) {
@@ -172,17 +174,19 @@ public class ByteUtils {
         int len2 = bytes2.length;
         int len3 = bytes3.length;
 
-        byte[] result_bytes = new byte[len1 + len2 + len3];
+        byte[] resultBytes = new byte[len1 + len2 + len3];
 
-        System.arraycopy(bytes1, 0, result_bytes, 0, len1);
-        System.arraycopy(bytes2, 0, result_bytes, len1, len2);
-        System.arraycopy(bytes3, 0, result_bytes, len1 + len2, len3);
+        System.arraycopy(bytes1, 0, resultBytes, 0, len1);
+        System.arraycopy(bytes2, 0, resultBytes, len1, len2);
+        System.arraycopy(bytes3, 0, resultBytes, len1 + len2, len3);
 
-        return result_bytes;
+        return resultBytes;
     }
 
     public static String toBinary(byte[] bytes) {
-        if (bytes == null) return "";
+        if (bytes == null) {
+            return "";
+        }
 
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
@@ -199,7 +203,7 @@ public class ByteUtils {
     }
 
     private static void toBinary(StringBuilder sb, byte b) {
-        for (int i = 7; i >= 0; i--) {
+        for (int i = Byte.SIZE - 1; i >= 0; i--) {
             int val = (b >> i) & 0x01;
             sb.append(val);
         }

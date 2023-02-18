@@ -19,7 +19,9 @@ public class IntegerUtils {
     }
 
     public static int fromBytes(byte[] bytes, int defaultValue) {
-        if(bytes == null || bytes.length < 1) return defaultValue;
+        if(bytes == null || bytes.length < 1) {
+            return defaultValue;
+        }
         if(bytes.length != 4) {
             System.out.println("IntegerUtils#fromBytes(byte[],int): bytes' length is not 4. It's length is " + bytes.length);
             System.out.println("bytes' Hexcode = '" + HexUtils.fromBytes(bytes) + "'");

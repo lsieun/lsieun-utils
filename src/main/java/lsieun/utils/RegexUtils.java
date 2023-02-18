@@ -4,8 +4,12 @@ import java.util.List;
 
 public class RegexUtils {
     public static void filter(List<String> list, String regex) {
-        if (list == null || list.size() < 1) return;
-        if (regex == null || "".equals(regex)) return;
+        if (list == null || list.size() < 1) {
+            return;
+        }
+        if (regex == null || "".equals(regex)) {
+            return;
+        }
 
         int size = list.size();
         for(int index = size -1; index >=0; index--) {
@@ -16,36 +20,47 @@ public class RegexUtils {
         }
     }
 
-    public static void filter(List<String> list, String[] regex_array) {
-        if (list == null || list.size() < 1) return;
-        if (regex_array == null || regex_array.length < 1) return;
+    public static void filter(List<String> list, String[] regexArray) {
+        if (list == null || list.size() < 1) {
+            return;
+        }
+        if (regexArray == null || regexArray.length < 1) {
+            return;
+        }
 
         int size = list.size();
         for(int index = size -1; index >=0; index--) {
             String item = list.get(index);
-            if (!matches(item, regex_array)) {
+            if (!matches(item, regexArray)) {
                 list.remove(index);
             }
         }
     }
 
     public static boolean matches(String str, String regex) {
-        if (str == null) return false;
-        if (regex == null) return true;
+        if (str == null) {
+            return false;
+        }
+        if (regex == null) {
+            return true;
+        }
 
-        if (str.matches(regex)) return true;
-        return false;
+        return str.matches(regex);
     }
 
-    public static boolean matches(String str, String[] regex_array) {
-        return matches(str, regex_array, true);
+    public static boolean matches(String str, String[] regexArray) {
+        return matches(str, regexArray, true);
     }
 
-    public static boolean matches(String str, String[] regex_array, boolean defaultValue) {
-        if (str == null) return false;
-        if (regex_array == null || regex_array.length < 1) return defaultValue;
+    public static boolean matches(String str, String[] regexArray, boolean defaultValue) {
+        if (str == null) {
+            return false;
+        }
+        if (regexArray == null || regexArray.length < 1) {
+            return defaultValue;
+        }
 
-        for (String regex : regex_array) {
+        for (String regex : regexArray) {
             if (matches(str, regex)) {
                 return true;
             }

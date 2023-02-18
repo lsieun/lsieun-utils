@@ -92,7 +92,9 @@ public class FileUtils {
     }
 
     public static void writeLines(String filepath, List<String> lines) {
-        if (lines == null || lines.size() < 1) return;
+        if (lines == null || lines.size() < 1) {
+            return;
+        }
 
         File file = new File(filepath);
         File dirFile = file.getParentFile();
@@ -114,17 +116,17 @@ public class FileUtils {
     }
 
     public static void mkdirs(File dirFile) {
-        boolean file_exists = dirFile.exists();
+        boolean fileExists = dirFile.exists();
 
-        if (file_exists && dirFile.isDirectory()) {
+        if (fileExists && dirFile.isDirectory()) {
             return;
         }
 
-        if (file_exists && dirFile.isFile()) {
+        if (fileExists && dirFile.isFile()) {
             throw new RuntimeException("Not A Directory: " + dirFile);
         }
 
-        if (!file_exists) {
+        if (!fileExists) {
             boolean flag = dirFile.mkdirs();
             if (!flag) {
                 throw new RuntimeException("Create Directory Failed: " + dirFile.getAbsolutePath());

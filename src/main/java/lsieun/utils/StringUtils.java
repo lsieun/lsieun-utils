@@ -501,7 +501,9 @@ public class StringUtils {
     }
 
     public static <T> String list2str(List<T> list, String separator) {
-        if(list == null || list.size() < 1) return "";
+        if(list == null || list.size() < 1) {
+            return "";
+        }
 
         StringBuilder sb = new StringBuilder();
 
@@ -517,7 +519,9 @@ public class StringUtils {
     }
 
     public static <T> String list2str(List<T> list, String start, String stop, String separator) {
-        if(list == null || list.size() < 1) return null;
+        if(list == null || list.size() < 1) {
+            return null;
+        }
 
         StringBuilder sb = new StringBuilder();
         sb.append(start);

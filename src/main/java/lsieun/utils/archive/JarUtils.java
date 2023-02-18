@@ -46,7 +46,7 @@ public class JarUtils {
      * @param entryName 例如，java/lang/Object.class
      * @return 例如java.lang.Object
      */
-    public static String getFQCN(String entryName) {
+    public static String getFqcn(String entryName) {
         return entryName.replace(".class", "").replace("/", ".");
     }
 
@@ -69,10 +69,14 @@ public class JarUtils {
     }
 
     public static Map<String, ByteArrayOutputStream> getAllClasses(String jarPath, List<String> entryList) {
-        if (jarPath == null || "".equals(jarPath)) return null;
-        if (entryList == null || entryList.size() < 1) return null;
+        if (jarPath == null || "".equals(jarPath)) {
+            return null;
+        }
+        if (entryList == null || entryList.size() < 1) {
+            return null;
+        }
 
-        Map<String, ByteArrayOutputStream> map = new HashMap<>();
+        Map<String, ByteArrayOutputStream> map = new HashMap<>(16);
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(jarPath);
@@ -92,7 +96,7 @@ public class JarUtils {
 
                 in.close();
 
-                String className = getFQCN(entryName);
+                String className = getFqcn(entryName);
                 map.put(className, out);
             }
         } catch (IOException e) {
@@ -110,10 +114,10 @@ public class JarUtils {
     }
 
     public static void updateJar(String jarPath, Map<String, String> classFileMap) {
-        Map<String, String> env = new HashMap<>();
+        Map<String, String> env = new HashMap<>(16);
         env.put("create", "false");
-        File jar_file = new File(jarPath);
-        URI uri = URI.create("jar:" + jar_file.toURI());
+        File jarFile = new File(jarPath);
+        URI uri = URI.create("jar:" + jarFile.toURI());
 
         try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
             for (Map.Entry<String, String> entry : classFileMap.entrySet()) {
@@ -130,7 +134,7 @@ public class JarUtils {
     }
 
     public static void updateJar(String jarPath, String item, String filepath) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(16);
         map.put(item, filepath);
         updateJar(jarPath, map);
     }

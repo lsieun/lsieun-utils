@@ -25,7 +25,9 @@ public class DirectoryUtils {
         for (int i = 0; i < dirList.size(); i++) {
             File dirFile = dirList.get(i);
             File[] files = dirFile.listFiles();
-            if (files == null) continue;
+            if (files == null) {
+                continue;
+            }
 
             for (File f : files) {
                 if (f.isDirectory()) {
@@ -56,7 +58,7 @@ public class DirectoryUtils {
     }
 
     public static void main(String[] args) {
-        String dirPath = "D:\\Software\\Nexus\\nexus-3.40.1-01-win64\\nexus-3.40.1-01";
+        String dirPath = "D:\\software\\Nexus\\nexus-3.40.1-01-win64\\nexus-3.40.1-01";
         List<File> fileList = findAllFileInDirectory(dirPath);
 
         List<File> resultList = new ArrayList<>();

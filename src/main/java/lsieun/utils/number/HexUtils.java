@@ -57,7 +57,9 @@ public class HexUtils {
     }
 
     public static String fromBytes(byte[] bytes) {
-        if (bytes == null || bytes.length < 1) return null;
+        if (bytes == null || bytes.length < 1) {
+            return null;
+        }
 
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
@@ -67,7 +69,9 @@ public class HexUtils {
     }
 
     public static String fromBytes(List<Byte> list) {
-        if (list == null || list.size() < 1) return null;
+        if (list == null || list.size() < 1) {
+            return null;
+        }
         int size = list.size();
         byte[] bytes = new byte[size];
         for (int i = 0; i < size; i++) {
@@ -78,7 +82,9 @@ public class HexUtils {
     }
 
     public static String fromChars(final char[] chars) {
-        if (chars == null || chars.length < 1) return "";
+        if (chars == null || chars.length < 1) {
+            return "";
+        }
         List<String> list = new ArrayList<>();
         for (char ch : chars) {
             list.add(charToHex(ch));
@@ -87,7 +93,9 @@ public class HexUtils {
     }
 
     public static String fromInt(int value) {
-        if (value == 0) return "00";
+        if (value == 0) {
+            return "00";
+        }
         List<String> list = new ArrayList<>();
         while (value != 0) {
             byte b = (byte) (value & 0xFF);
@@ -101,7 +109,9 @@ public class HexUtils {
     }
 
     private static String reverse2String(List<String> list) {
-        if (list == null || list.size() < 1) return "";
+        if (list == null || list.size() < 1) {
+            return "";
+        }
 
         StringBuilder sb = new StringBuilder();
         for (int i = list.size() - 1; i >= 0; i--) {
@@ -128,7 +138,9 @@ public class HexUtils {
     }
 
     public static String getPrettyFormat(String hexCode) {
-        if (hexCode == null || hexCode.length() < 1) return null;
+        if (hexCode == null || hexCode.length() < 1) {
+            return null;
+        }
 
         StringBuilder sb = new StringBuilder();
         Formatter fm = new Formatter(sb);
@@ -149,12 +161,14 @@ public class HexUtils {
 
     public static String format(byte[] bytes, HexFormat format) {
         String separator = format.separator;
-        int bytes_column = format.columns;
-        return format(bytes, separator, bytes_column);
+        int bytesColumn = format.columns;
+        return format(bytes, separator, bytesColumn);
     }
 
-    public static String format(byte[] bytes, String separator, int bytes_column) {
-        if (bytes == null || bytes.length < 1) return "";
+    public static String format(byte[] bytes, String separator, int bytesColumn) {
+        if (bytes == null || bytes.length < 1) {
+            return "";
+        }
 
         StringBuilder sb = new StringBuilder();
         Formatter fm = new Formatter(sb);
@@ -163,7 +177,7 @@ public class HexUtils {
         for (int i = 0; i < length - 1; i++) {
             int val = bytes[i] & 0xFF;
             fm.format("%02X", val);
-            if (bytes_column > 0 && (i + 1) % bytes_column == 0) {
+            if (bytesColumn > 0 && (i + 1) % bytesColumn == 0) {
                 fm.format("%n");
             }
             else {
@@ -189,16 +203,16 @@ public class HexUtils {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
             char ch = str.charAt(i);
-            if (is_in(ch, chars)) {
+            if (isIn(ch, chars)) {
                 continue;
             }
             sb.append(ch);
         }
-        String hex_str = sb.toString();
-        return parse(hex_str);
+        String hexStr = sb.toString();
+        return parse(hexStr);
     }
 
-    public static boolean is_in(char ch, char[] chars) {
+    public static boolean isIn(char ch, char[] chars) {
         for (char item : chars) {
             if (item == ch) {
                 return true;
@@ -207,13 +221,13 @@ public class HexUtils {
         return false;
     }
 
-    public static byte[] parse(String hex_str) {
-        int length = hex_str.length();
+    public static byte[] parse(String hexStr) {
+        int length = hexStr.length();
         int count = length / 2;
 
         byte[] bytes = new byte[count];
         for (int i = 0; i < count; i++) {
-            String item = hex_str.substring(2 * i, 2 * i + 2);
+            String item = hexStr.substring(2 * i, 2 * i + 2);
             int val = Integer.parseInt(item, 16);
             bytes[i] = (byte) val;
         }
