@@ -2,6 +2,8 @@ package lsieun.utils.io;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +57,7 @@ public class FileUtils {
         File dirFile = file.getParentFile();
         mkdirs(dirFile);
 
-        try (OutputStream out = new FileOutputStream(filepath);
+        try (OutputStream out = Files.newOutputStream(Paths.get(filepath));
              BufferedOutputStream buff = new BufferedOutputStream(out)) {
             buff.write(bytes);
             buff.flush();
@@ -75,7 +77,7 @@ public class FileUtils {
         }
 
         try (
-                InputStream in = new FileInputStream(file);
+                InputStream in = Files.newInputStream(file.toPath());
                 Reader reader = new InputStreamReader(in, charsetName);
                 BufferedReader bufferReader = new BufferedReader(reader)
         ) {
@@ -101,7 +103,7 @@ public class FileUtils {
         mkdirs(dirFile);
 
         try (
-                OutputStream out = new FileOutputStream(file);
+                OutputStream out = Files.newOutputStream(file.toPath());
                 Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
                 BufferedWriter bufferedWriter = new BufferedWriter(writer)
         ) {
