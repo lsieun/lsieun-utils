@@ -1,5 +1,7 @@
 package lsieun.utils.io;
 
+import lsieun.utils.number.ByteUtils;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -155,6 +157,37 @@ public class FileUtils {
             byte[] buf = new byte[BUFFER_SIZE];
             int len;
             while ((len = bis.read(buf)) != -1) {
+                bos.write(buf, 0, len);
+            }
+            bos.flush();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void negateCopy(String srcPath, String destPath) {
+        File srcFile = new File(srcPath);
+        if (!srcFile.exists()) {
+            throw new IllegalArgumentException("srcPath is not valid: " + srcPath);
+        }
+
+        File destFile = new File(destPath);
+        File dirFile = destFile.getParentFile();
+        mkdirs(dirFile);
+
+        try (
+                FileInputStream fis = new FileInputStream(srcFile);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                FileOutputStream fos = new FileOutputStream(destFile);
+                BufferedOutputStream bos = new BufferedOutputStream(fos)
+        ) {
+            byte[] buf = new byte[BUFFER_SIZE];
+            int len;
+            while ((len = bis.read(buf)) != -1) {
+                for (int i = 0; i < len; i++) {
+                    byte b = buf[i];
+                    buf[i] = ByteUtils.negate(b);
+                }
                 bos.write(buf, 0, len);
             }
             bos.flush();

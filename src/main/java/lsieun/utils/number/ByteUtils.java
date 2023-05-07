@@ -1,7 +1,6 @@
 package lsieun.utils.number;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class ByteUtils {
@@ -96,11 +95,9 @@ public class ByteUtils {
             byte b = bytes[i++];
             if ((b & 0x80) == 0) {
                 chars[strLength++] = (char) (b & 0x7F);
-            }
-            else if ((b & 0xE0) == 0xC0) {
+            } else if ((b & 0xE0) == 0xC0) {
                 chars[strLength++] = (char) (((b & 0x1F) << 6) + (bytes[i++] & 0x3F));
-            }
-            else {
+            } else {
                 chars[strLength++] = (char) (((b & 0xF) << 12) + ((bytes[i++] & 0x3F) << 6) + (bytes[i++] & 0x3F));
             }
         }
@@ -117,14 +114,12 @@ public class ByteUtils {
                     byte[] bytes = new byte[1];
                     bytes[0] = (byte) charValue;
                     bao.write(bytes);
-                }
-                else if (charValue <= 0x07FF) {
+                } else if (charValue <= 0x07FF) {
                     byte[] bytes = new byte[2];
                     bytes[0] = (byte) (0xC0 | charValue >> 6 & 0x1F);
                     bytes[1] = (byte) (0x80 | charValue & 0x3F);
                     bao.write(bytes);
-                }
-                else {
+                } else {
                     byte[] bytes = new byte[3];
                     bytes[0] = (byte) (0xE0 | charValue >> 12 & 0xF);
                     bytes[1] = (byte) (0x80 | charValue >> 6 & 0x3F);
@@ -208,4 +203,10 @@ public class ByteUtils {
             sb.append(val);
         }
     }
+
+    public static byte negate(byte b) {
+        return (byte) ((~b) & 0xFF);
+    }
+
+
 }
