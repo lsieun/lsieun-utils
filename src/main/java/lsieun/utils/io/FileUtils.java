@@ -31,6 +31,15 @@ public class FileUtils {
         return String.format("%s%s.class", path, className.replace('.', File.separatorChar));
     }
 
+    public static boolean exists(String filepath) {
+        if (filepath == null) {
+            return false;
+        }
+
+        File file = new File(filepath);
+        return file.exists() && file.isFile();
+    }
+
     public static byte[] readBytes(String filepath) {
         File file = new File(filepath);
         if (!file.exists()) {
