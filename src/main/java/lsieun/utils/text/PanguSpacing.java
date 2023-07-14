@@ -1,9 +1,10 @@
 package lsieun.utils.text;
 
 public class PanguSpacing {
+    public static boolean COMPACT_SPACE = false;
     private static final String EMPTY = "";
     private static final String SPACE = " ";
-    private static final String SEPARATOR_STR = " *、，。：；！“”（）";
+    private static final String SEPARATOR_STR = "<>\" *、，。：:；！“”（）【】{}《》";
     public static final int[] SEPARATOR_ARRAY;
 
     static {
@@ -35,7 +36,7 @@ public class PanguSpacing {
             int preCodePoint = str.codePointAt(i - 1);
 
             // 如果是两个相邻的空格，就省略掉
-            if (bothSpace(preCodePoint, curCodePoint)) {
+            if (COMPACT_SPACE && bothSpace(preCodePoint, curCodePoint)) {
                 continue;
             }
 

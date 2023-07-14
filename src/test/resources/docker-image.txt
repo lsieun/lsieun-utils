@@ -1,0 +1,16 @@
+quay.io/tigera/operator:v1.30.4
+calico/typha:v3.26.1
+calico/kube-controllers:v3.26.1
+calico/apiserver:v3.26.1
+calico/cni:v3.26.1
+calico/node-driver-registrar:v3.26.1
+calico/csi:v3.26.1
+calico/pod2daemon-flexvol:v3.26.1
+calico/node:v3.26.1
+registry.aliyuncs.com/google_containers/kube-apiserver:v1.27.3
+registry.aliyuncs.com/google_containers/kube-scheduler:v1.27.3
+registry.aliyuncs.com/google_containers/kube-controller-manager:v1.27.3
+registry.aliyuncs.com/google_containers/kube-proxy:v1.27.3
+registry.aliyuncs.com/google_containers/coredns:v1.10.1
+registry.aliyuncs.com/google_containers/etcd:3.5.7-0
+registry.aliyuncs.com/google_containers/pause:3.9
