@@ -4,7 +4,7 @@ public class PanguSpacing {
     public static boolean COMPACT_SPACE = false;
     private static final String EMPTY = "";
     private static final String SPACE = " ";
-    private static final String SEPARATOR_STR = "<>\" *、，。：:；！“”（）【】{}《》";
+    private static final String SEPARATOR_STR = "'<>/\\\" *、,，.。：:；！？“”（）()[]【】{}《》";
     public static final int[] SEPARATOR_ARRAY;
 
     static {

@@ -12,6 +12,10 @@ public class DirectoryUtils {
             return Collections.emptyList();
         }
 
+        if (file.isFile()) {
+            return Collections.singletonList(file);
+        }
+
         List<File> dirList = new ArrayList<>();
         if (file.isDirectory()) {
             dirList.add(file);
