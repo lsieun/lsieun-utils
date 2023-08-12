@@ -12,7 +12,7 @@ public class RegexUtils {
         }
 
         int size = list.size();
-        for(int index = size -1; index >=0; index--) {
+        for (int index = size - 1; index >= 0; index--) {
             String item = list.get(index);
             if (!matches(item, regex)) {
                 list.remove(index);
@@ -29,7 +29,7 @@ public class RegexUtils {
         }
 
         int size = list.size();
-        for(int index = size -1; index >=0; index--) {
+        for (int index = size - 1; index >= 0; index--) {
             String item = list.get(index);
             if (!matches(item, regexArray)) {
                 list.remove(index);

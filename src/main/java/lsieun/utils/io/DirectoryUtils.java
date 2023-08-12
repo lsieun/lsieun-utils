@@ -6,7 +6,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class DirectoryUtils {
+
+
     public static List<File> findAllFileInDirectory(String dirPath) {
+        return findAllFileInDirectory(dirPath, true);
+    }
+
+    public static List<File> findAllFileInDirectory(String dirPath, boolean recursive) {
         File file = new File(dirPath);
         if (!file.exists()) {
             return Collections.emptyList();
@@ -24,6 +30,9 @@ public class DirectoryUtils {
         List<File> fileList = new ArrayList<>();
         if (file.isFile()) {
             fileList.add(file);
+        }
+        if (!recursive) {
+            return fileList;
         }
 
         for (int i = 0; i < dirList.size(); i++) {

@@ -28,7 +28,22 @@ public class JarUtils {
     }
 
     public static List<String> getClassEntries(String filepath) {
+        return getEntriesByExtension(filepath, ".class");
+    }
+
+    public static List<String> getEntriesByExtension(String filepath, String ext) {
         List<String> list = getAllEntries(filepath);
+        filterList(list, ext);
+        return list;
+    }
+
+    private static void filterList(List<String> list, String ext) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        if (ext == null || "".equals(ext)) {
+            return;
+        }
         int size = list.size();
         for (int i = size - 1; i >= 0; i--) {
             String jarItem = list.get(i);
@@ -37,7 +52,6 @@ public class JarUtils {
             }
             list.remove(i);
         }
-        return list;
     }
 
     /**
