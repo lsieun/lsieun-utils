@@ -2,7 +2,7 @@ package lsieun.utils.docker;
 
 
 import lsieun.utils.io.FileUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Formatter;
 import java.util.List;

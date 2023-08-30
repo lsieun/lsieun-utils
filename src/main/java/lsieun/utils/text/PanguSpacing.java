@@ -1,9 +1,12 @@
 package lsieun.utils.text;
 
+import static lsieun.utils.text.StrConst.EMPTY;
+import static lsieun.utils.text.StrConst.SPACE;
+import static lsieun.utils.text.UnicodeUtils.codePoint2Str;
+import static lsieun.utils.text.UnicodeUtils.isLatin;
+
 public class PanguSpacing {
     public static boolean COMPACT_SPACE = false;
-    private static final String EMPTY = "";
-    private static final String SPACE = " ";
     private static final String SEPARATOR_STR = "'<>/\\\" *、,，.。：:；！？“”（）()[]【】{}《》";
     public static final int[] SEPARATOR_ARRAY;
 
@@ -27,7 +30,7 @@ public class PanguSpacing {
         int length = str.length();
         for (int i = 0; i < length; i++) {
             int curCodePoint = str.codePointAt(i);
-            String value = code2Str(curCodePoint);
+            String value = codePoint2Str(curCodePoint);
             if (i == 0) {
                 sb.append(value);
                 continue;
@@ -71,14 +74,6 @@ public class PanguSpacing {
         return !isSpecial(codePoint1) && !isSpecial(codePoint2);
     }
 
-    private static String code2Str(int codePoint) {
-        char[] charArray = Character.toChars(codePoint);
-        return new String(charArray);
-    }
-
-    private static boolean isLatin(int codePoint) {
-        return codePoint < 256;
-    }
 
     private static boolean isSpecial(int codePoint) {
         for (int item : SEPARATOR_ARRAY) {

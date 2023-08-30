@@ -1,8 +1,8 @@
 package lsieun.utils.number;
 
-import java.util.Arrays;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import java.util.Arrays;
 
 public class ByteUtilsTest {
 

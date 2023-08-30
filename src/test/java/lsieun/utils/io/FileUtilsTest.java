@@ -1,9 +1,9 @@
 package lsieun.utils.io;
 
-import junit.framework.TestCase;
-import org.junit.Test;
 
-public class FileUtilsTest extends TestCase {
+import org.junit.jupiter.api.Test;
+
+public class FileUtilsTest {
     @Test
     public void testNegateCopy() {
         String name = "011";
