@@ -11,10 +11,10 @@ import java.util.jar.JarFile;
 public class JarUtils {
     public static final int BUFFER_SIZE = 16 * 1024;
 
-    public static List<String> getAllEntries(String filePath) {
+    public static List<String> getAllEntries(String jarPath) {
         List<String> list = new ArrayList<>();
         try {
-            JarFile jarFile = new JarFile(filePath);
+            JarFile jarFile = new JarFile(jarPath);
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
@@ -27,12 +27,12 @@ public class JarUtils {
         return list;
     }
 
-    public static List<String> getClassEntries(String filepath) {
-        return getEntriesByExtension(filepath, ".class");
+    public static List<String> getClassEntries(String jarPath) {
+        return getEntriesByExtension(jarPath, ".class");
     }
 
-    public static List<String> getEntriesByExtension(String filepath, String ext) {
-        List<String> list = getAllEntries(filepath);
+    public static List<String> getEntriesByExtension(String jarPath, String ext) {
+        List<String> list = getAllEntries(jarPath);
         filterList(list, ext);
         return list;
     }
