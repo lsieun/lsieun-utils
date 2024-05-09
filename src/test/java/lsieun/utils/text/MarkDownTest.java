@@ -2,7 +2,10 @@ package lsieun.utils.text;
 
 import lsieun.utils.io.DirectoryUtils;
 import lsieun.utils.io.FileUtils;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.io.File;
 import java.util.List;
@@ -10,10 +13,23 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MarkDownTest {
-    String dirPath = "D:\\git-repo\\lsieun.github.io\\_git";
+    String dirPath = "D:\\git-repo\\lsieun.github.io\\_java\\crypto";
     String fileExt = ".md";
 
+    String upLink = "[UP](/java-crypto.html)";
+
+    @Order(1)
+    @Test
+    public void testRemoveUpLink() {
+        process(dirPath, fileExt,
+                list -> MarkDown.removeLineByPrefix(list, "[UP]"),
+                FileUtils::writeLines
+        );
+    }
+
+    @Order(2)
     @Test
     public void testProcessSpace() {
         PanguSpacing.COMPACT_SPACE = false;
@@ -25,6 +41,7 @@ class MarkDownTest {
         );
     }
 
+    @Order(3)
     @Test
     public void testNormalizeBlank() {
         process(dirPath, fileExt,
@@ -33,24 +50,17 @@ class MarkDownTest {
         );
     }
 
+    @Order(4)
     @Test
-    public void testProcessFolder() {
-        String content = "[UP](/git.html)";
-
+    public void testAddUpLink() {
         process(dirPath, fileExt,
-                list -> MarkDown.addText(list, content),
+                list -> MarkDown.addText(list, upLink),
                 FileUtils::writeLines
 //                FileUtils::print
         );
     }
 
-    @Test
-    public void testRemoveLine() {
-        process(dirPath, fileExt,
-                list -> MarkDown.removeLineByPrefix(list, "[UP]"),
-                FileUtils::writeLines
-        );
-    }
+
 
 
 

@@ -102,10 +102,18 @@ public class BitUtils {
     }
 
     public static String fromInt(int intValue) {
-        int length = Integer.SIZE;
-        byte[] bytes = new byte[length];
-        for (int i = 0; i < length; i++) {
-            int val = ((intValue << i) < 0) ? 0x31 : 0x30;
+        return fromInt(intValue, Integer.SIZE);
+    }
+
+    public static String fromInt(int num, int count) {
+        if(count < 1 || count > 32) {
+            throw new IllegalArgumentException("count must be between 1 and 32");
+        }
+
+        byte[] bytes = new byte[count];
+        for (int i = 0; i < count; i++) {
+            int rightShift = count - 1 - i;
+            int val = ((num >>> rightShift) & 1) == 1 ? 0x31 : 0x30;
             bytes[i] = (byte) val;
         }
         return new String(bytes);
