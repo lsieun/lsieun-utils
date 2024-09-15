@@ -7,7 +7,7 @@ import static lsieun.utils.text.UnicodeUtils.isLatin;
 
 public class PanguSpacing {
     public static boolean COMPACT_SPACE = false;
-    private static final String SEPARATOR_STR = "'<>/\\\" *、,，.。：:；！？“”（）()[]【】{}《》";
+    private static final String SEPARATOR_STR = "'<>/\\\" _*、,，.。：:；！？“”（）()[]【】{}《》";
     public static final int[] SEPARATOR_ARRAY;
 
     static {

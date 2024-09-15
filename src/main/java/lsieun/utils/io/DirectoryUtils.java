@@ -1,9 +1,7 @@
 package lsieun.utils.io;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class DirectoryUtils {
 
@@ -45,9 +43,11 @@ public class DirectoryUtils {
             for (File f : files) {
                 if (f.isDirectory()) {
                     dirList.add(f);
-                } else if (f.isFile()) {
+                }
+                else if (f.isFile()) {
                     fileList.add(f);
-                } else {
+                }
+                else {
                     System.out.println("file: " + f.getAbsolutePath());
                 }
             }
@@ -70,21 +70,44 @@ public class DirectoryUtils {
         }
     }
 
-    public static void main(String[] args) {
-        String dirPath = "D:\\software\\Nexus\\nexus-3.40.1-01-win64\\nexus-3.40.1-01";
-        List<File> fileList = findAllFileInDirectory(dirPath);
-
-        List<File> resultList = new ArrayList<>();
-        for (File f : fileList) {
-            String filename = f.getName();
-            boolean flag = FileName.hasExtension(filename, "jar");
-            if (flag) {
-                String filepath = f.getAbsolutePath();
-                System.out.println(filepath);
-                resultList.add(f);
+    public static void printDuplicateFileByName(String dirPath) {
+        List<File> fileList = findAllFileInDirectory(dirPath, true);
+        Map<String, List<File>> map = new HashMap<>();
+        for (File file : fileList) {
+            String absolutePath = file.getAbsolutePath().replaceAll("\\\\", "/");
+            int index = absolutePath.lastIndexOf("/");
+            String filename = absolutePath.substring(index + 1);
+            List<File> list = map.get(filename);
+            if (list == null) {
+                list = new ArrayList<>();
+                list.add(file);
+                map.put(filename, list);
+            }
+            else {
+                list.add(file);
             }
         }
 
-        copyFileList2Directory(resultList, "D:\\tmp\\lib");
+        List<String> fileNameList = new ArrayList<>();
+        Set<Map.Entry<String, List<File>>> entries = map.entrySet();
+        for (Map.Entry<String, List<File>> entry : entries) {
+            String key = entry.getKey();
+            List<File> list = entry.getValue();
+            if (list.size() > 1) {
+                fileNameList.add(key);
+            }
+        }
+
+        if (fileNameList.isEmpty()) {
+            System.out.println("EMPTY");
+            return;
+        }
+        for (String filename : fileNameList) {
+            List<File> list = map.get(filename);
+            System.out.println(filename);
+            for (File file : list) {
+                System.out.println("    " + file.getAbsolutePath());
+            }
+        }
     }
 }
