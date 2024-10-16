@@ -36,7 +36,7 @@
         <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
         <asm.version>9.7</asm.version>
         <commons.io.version>2.11.0</commons.io.version>
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
         <hutool.version>5.8.32</hutool.version>
 
         <!-- Unit Test -->
