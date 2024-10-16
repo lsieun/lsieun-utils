@@ -66,7 +66,7 @@ public abstract class ClassVisitorForMethodMatch extends ClassVisitor implements
         }
 
         // (3) <init> or <clinit>, do not process
-        if (name.equals("<init>") || name.equals("<clinit>")) {
+        if (name.equals(MyAsmConst.CONSTRUCTOR_INTERNAL_NAME) || name.equals(MyAsmConst.TYPE_INITIALIZER_INTERNAL_NAME)) {
             logger.trace(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "<init> or <clinit>"));
             return mv;
         }

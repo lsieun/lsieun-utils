@@ -10,17 +10,17 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public interface ZipEntryMatch {
+public interface ZipEntryMatch extends ArchiveMatch {
 
-    boolean test(FileSystem zipFileSystem, String entry);
+    boolean test(Path zipPath, FileSystem zipFileSystem, String entry);
 
     // region static methods: Text
     static ZipEntryMatch byText(TextMatch match) {
-        return (zipFs, entry) -> {
+        return (zipPath, zipFs, entry) -> {
             boolean flag = match.test(entry);
             if (flag) {
                 Logger logger = LoggerFactory.getLogger(ZipEntryMatch.class);
-                logger.debug(entry + " matched " + flag);
+                logger.debug(() -> String.format("[MATCHED] %s - %s", zipPath, entry));
             }
             return flag;
         };
@@ -29,7 +29,7 @@ public interface ZipEntryMatch {
 
     // region static methods: Bytes
     static ZipEntryMatch byBytes(ByteArrayMatch match) {
-        return (zipFs, entry) -> {
+        return (zipPath, zipFs, entry) -> {
             try {
                 Path path = zipFs.getPath(entry);
                 byte[] bytes = Files.readAllBytes(path);

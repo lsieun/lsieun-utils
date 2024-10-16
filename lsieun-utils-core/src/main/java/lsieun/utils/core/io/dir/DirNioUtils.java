@@ -1,5 +1,6 @@
 package lsieun.utils.core.io.dir;
 
+import jakarta.annotation.Nonnull;
 import lsieun.utils.annotation.method.MethodParamExample;
 import lsieun.utils.core.io.file.FileFormatUtils;
 import lsieun.utils.core.io.file.FileOperation;
@@ -22,20 +23,21 @@ public class DirNioUtils {
     private static final Logger logger = LoggerFactory.getLogger(DirNioUtils.class);
 
     public static List<Path> findFileListInDirByExt(Path dirPath,
-                                                    @MethodParamExample({".md", ".java"}) String ext) throws IOException {
+                                                    @MethodParamExample({".md", ".java"}) String ext) {
         return findFileListInDirByExt(dirPath, Integer.MAX_VALUE, ext);
     }
 
     public static List<Path> findFileListInDirByExt(Path dirPath,
                                                     int maxDepth,
-                                                    @MethodParamExample({".md", ".java"}) String ext) throws IOException {
+                                                    @MethodParamExample({".md", ".java"}) String ext) {
         BiPredicate<Path, BasicFileAttributes> predicate = (path, attrs) ->
                 attrs.isRegularFile() && path.getFileName().toString().endsWith(ext);
         return findFileListInDir(dirPath, maxDepth, predicate);
     }
 
-    public static List<Path> findFileListInDir(Path dirPath, int maxDepth,
-                                               BiPredicate<Path, BasicFileAttributes> predicate) throws IOException {
+    public static List<Path> findFileListInDir(@Nonnull Path dirPath,
+                                               int maxDepth,
+                                               @Nonnull BiPredicate<Path, BasicFileAttributes> predicate) {
         Objects.requireNonNull(dirPath);
         Objects.requireNonNull(predicate);
 
@@ -44,14 +46,28 @@ public class DirNioUtils {
             return Collections.emptyList();
         }
 
-        // (2) check dir
+        // (2) check file
+        if (Files.isRegularFile(dirPath)) {
+            try {
+                BasicFileAttributes bfa = Files.readAttributes(dirPath, BasicFileAttributes.class);
+                if (predicate.test(dirPath, bfa)) {
+                    return List.of(dirPath);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // (3) check dir
         if (!Files.isDirectory(dirPath)) {
             return Collections.emptyList();
         }
 
-        // (3) find
+        // (4) find
         try (Stream<Path> stream = Files.find(dirPath, maxDepth, predicate)) {
             return stream.collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

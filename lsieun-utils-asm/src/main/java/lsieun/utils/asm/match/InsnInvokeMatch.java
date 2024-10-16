@@ -4,11 +4,13 @@ import lsieun.utils.match.text.TextMatch;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface InsnInvokeMatch {
+@SuppressWarnings("UnnecessaryLocalVariable")
+public interface InsnInvokeMatch extends InsnMatch {
     boolean test(int opcode, String owner, String name, String descriptor);
 
     static InsnInvokeMatch by(String methodName) {
@@ -20,50 +22,6 @@ public interface InsnInvokeMatch {
         InsnInvokeMatch match = (opcode, owner, name, descriptor) -> textMatch.test(name);
         return match;
     }
-
-//    class And implements InsnInvokeMatch {
-//        private final InsnInvokeMatch[] matches;
-//
-//        private And(InsnInvokeMatch... matches) {
-//            this.matches = matches;
-//        }
-//
-//        @Override
-//        public boolean test(int opcode, String owner, String name, String descriptor) {
-//            for (InsnInvokeMatch match : matches) {
-//                if (!match.test(opcode, owner, name, descriptor)) {
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }
-//
-//        public static And of(InsnInvokeMatch... matches) {
-//            return new And(matches);
-//        }
-//    }
-
-//    class Or implements InsnInvokeMatch {
-//        private final InsnInvokeMatch[] matches;
-//
-//        private Or(InsnInvokeMatch... matches) {
-//            this.matches = matches;
-//        }
-//
-//        @Override
-//        public boolean test(int opcode, String owner, String name, String descriptor) {
-//            for (InsnInvokeMatch match : matches) {
-//                if (match.test(opcode, owner, name, descriptor)) {
-//                    return true;
-//                }
-//            }
-//            return false;
-//        }
-//
-//        public static Or of(InsnInvokeMatch... matches) {
-//            return new Or(matches);
-//        }
-//    }
 
     static InsnInvokeMatch byNameAndDesc(TextMatch textMatch) {
         InsnInvokeMatch match = (opcode, owner, name, descriptor) -> {
@@ -80,21 +38,26 @@ public interface InsnInvokeMatch {
         };
     }
 
+    static MethodHandles.Lookup lookup() {
+        return MethodHandles.lookup();
+    }
 
+    enum All implements InsnInvokeMatch {
+        INSTANCE;
 
-    enum Bool implements InsnInvokeMatch {
-        TRUE {
-            @Override
-            public boolean test(int opcode, String owner, String name, String descriptor) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(int opcode, String owner, String name, String descriptor) {
-                return false;
-            }
-        };
+        @Override
+        public boolean test(int opcode, String owner, String name, String descriptor) {
+            return true;
+        }
+    }
+
+    enum None implements InsnInvokeMatch {
+        INSTANCE;
+
+        @Override
+        public boolean test(int opcode, String owner, String name, String descriptor) {
+            return false;
+        }
     }
 
     enum ByMethodInsn implements InsnInvokeMatch {

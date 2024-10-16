@@ -4,5 +4,6 @@ public enum MatchType {
     CLASS,
     METHOD,
     FIELD,
+    INSN,
     ;
 }

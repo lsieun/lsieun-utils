@@ -55,7 +55,7 @@ public interface FilePathMatch {
 
             // (3) use
             try (FileSystem zipFs = FileSystems.newFileSystem(zipUri, env)) {
-                return zipFileSystemMatch.test(zipFs);
+                return zipFileSystemMatch.test(path, zipFs);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

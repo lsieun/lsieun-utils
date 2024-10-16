@@ -1,5 +1,6 @@
 package lsieun.utils.asm.match;
 
+import lsieun.utils.annotation.type.asm.AsmMatchGeneration;
 import lsieun.utils.asm.core.AsmTypeNameUtils;
 import lsieun.utils.match.text.TextMatch;
 import org.objectweb.asm.Type;
@@ -7,6 +8,7 @@ import org.objectweb.asm.Type;
 import java.util.Objects;
 import java.util.function.Function;
 
+@AsmMatchGeneration
 @FunctionalInterface
 public interface AsmTypeMatch {
     boolean test(Type type);

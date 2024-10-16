@@ -61,7 +61,7 @@ class DirectoryUtilsTest {
     }
 
     @Test
-    void testFindFileListInDirectory() throws IOException {
+    void testFindFileListInDirectory() {
         Path dirPath = Paths.get(".");
         List<Path> pathList = DirNioUtils.findFileListInDirByExt(dirPath, ".java");
         for (Path path : pathList) {

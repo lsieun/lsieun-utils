@@ -1,8 +1,10 @@
 package lsieun.utils.asm.match;
 
 import lsieun.utils.asm.core.AsmTypeBuddy;
+import lsieun.utils.asm.cst.MyAsmConst;
 import lsieun.utils.core.log.Logger;
 import lsieun.utils.core.log.LoggerFactory;
+import lsieun.utils.core.reflect.clazz.ClassUtils;
 import org.objectweb.asm.*;
 
 import java.lang.invoke.MethodHandle;
@@ -121,7 +123,7 @@ public class MatchAsmUtils {
 
     // region clazz
     static Class<?> getSamSubClass(MethodHandles.Lookup lookup, Class<?> samClass, Map<Class<?>, Class<?>> map, Function<Class<?>, byte[]> func) {
-        checkFunctionalInterface(samClass);
+        ClassUtils.checkFunctionalInterface(samClass);
 
         Class<?> clazz = getClassFromMap(map, samClass);
         if (clazz == null) {
@@ -132,7 +134,7 @@ public class MatchAsmUtils {
     }
 
     static Class<?> getClassFromMap(Map<Class<?>, Class<?>> map, Class<?> samClass) {
-        checkFunctionalInterface(samClass);
+        ClassUtils.checkFunctionalInterface(samClass);
 
         return map.get(samClass);
     }
@@ -158,7 +160,7 @@ public class MatchAsmUtils {
     }
 
     static byte[] generateEnumBool(Class<?> samClass, boolean flag) {
-        Method samMethod = findSingleAbstractMethod(samClass);
+        Method samMethod = ClassUtils.findSingleAbstractMethod(samClass);
 
         Type t = Type.getType(samClass);
         String methodName = samMethod.getName();
@@ -223,12 +225,12 @@ public class MatchAsmUtils {
         // constructor: <init>
         {
             MethodVisitor mv = cw.visitMethod(ACC_PRIVATE,
-                    "<init>", "(Ljava/lang/String;I)V", "()V", null);
+                    MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/lang/String;I)V", "()V", null);
             mv.visitCode();
             mv.visitVarInsn(ALOAD, 0);
             mv.visitVarInsn(ALOAD, 1);
             mv.visitVarInsn(ILOAD, 2);
-            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Enum", "<init>", "(Ljava/lang/String;I)V", false);
+            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Enum", MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/lang/String;I)V", false);
             mv.visitInsn(RETURN);
             mv.visitMaxs(3, 3);
             mv.visitEnd();
@@ -261,13 +263,13 @@ public class MatchAsmUtils {
         }
         // method: <clinit>
         {
-            MethodVisitor mv = cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null);
+            MethodVisitor mv = cw.visitMethod(ACC_STATIC, MyAsmConst.TYPE_INITIALIZER_INTERNAL_NAME, "()V", null, null);
             mv.visitCode();
             mv.visitTypeInsn(NEW, newClassType.getInternalName());
             mv.visitInsn(DUP);
             mv.visitLdcInsn(INSTANCE_FIELD);
             mv.visitInsn(ICONST_0);
-            mv.visitMethodInsn(INVOKESPECIAL, newClassType.getInternalName(), "<init>", "(Ljava/lang/String;I)V", false);
+            mv.visitMethodInsn(INVOKESPECIAL, newClassType.getInternalName(), MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/lang/String;I)V", false);
             mv.visitFieldInsn(PUTSTATIC, newClassType.getInternalName(), INSTANCE_FIELD, newClassType.getDescriptor());
             mv.visitMethodInsn(INVOKESTATIC, newClassType.getInternalName(), "$values", void2NewClassArrayMethodType.getDescriptor(), false);
             mv.visitFieldInsn(PUTSTATIC, newClassType.getInternalName(), "$VALUES", newClassArrayType.getDescriptor());
@@ -281,7 +283,7 @@ public class MatchAsmUtils {
     }
 
     static byte[] generateLogicAnd(Class<?> samClass) {
-        Method samMethod = findSingleAbstractMethod(samClass);
+        Method samMethod = ClassUtils.findSingleAbstractMethod(samClass);
 
         Type t = Type.getType(samClass);
         String methodName = samMethod.getName();
@@ -310,11 +312,11 @@ public class MatchAsmUtils {
         // constructor: <init>
         {
             String constructorSignature = String.format("(Ljava/util/List<%s>;)V", samType.getDescriptor());
-            MethodVisitor mv = cw.visitMethod(ACC_PRIVATE, "<init>", "(Ljava/util/List;)V",
+            MethodVisitor mv = cw.visitMethod(ACC_PRIVATE, MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/util/List;)V",
                     constructorSignature, null);
             mv.visitCode();
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "()V", false);
             mv.visitVarInsn(ALOAD, 0);
             mv.visitVarInsn(ALOAD, 1);
             mv.visitFieldInsn(PUTFIELD, newClassType.getInternalName(), "matchList", "Ljava/util/List;");
@@ -407,7 +409,7 @@ public class MatchAsmUtils {
             mv.visitTypeInsn(NEW, newClassType.getInternalName());
             mv.visitInsn(DUP);
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKESPECIAL, newClassType.getInternalName(), "<init>", "(Ljava/util/List;)V", false);
+            mv.visitMethodInsn(INVOKESPECIAL, newClassType.getInternalName(), MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/util/List;)V", false);
             mv.visitInsn(ARETURN);
             mv.visitMaxs(3, 1);
             mv.visitEnd();
@@ -418,7 +420,7 @@ public class MatchAsmUtils {
     }
 
     static byte[] generateLogicOr(Class<?> samClass) {
-        Method samMethod = findSingleAbstractMethod(samClass);
+        Method samMethod = ClassUtils.findSingleAbstractMethod(samClass);
 
         Type t = Type.getType(samClass);
         String methodName = samMethod.getName();
@@ -445,11 +447,11 @@ public class MatchAsmUtils {
         // constructor: <init>
         {
             String constructorSignature = String.format("(Ljava/util/List<%s>;)V", samType.getDescriptor());
-            MethodVisitor mv = cw.visitMethod(ACC_PRIVATE, "<init>", "(Ljava/util/List;)V",
+            MethodVisitor mv = cw.visitMethod(ACC_PRIVATE, MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/util/List;)V",
                     constructorSignature, null);
             mv.visitCode();
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "()V", false);
             mv.visitVarInsn(ALOAD, 0);
             mv.visitVarInsn(ALOAD, 1);
             mv.visitFieldInsn(PUTFIELD, newClassType.getInternalName(), "matchList", "Ljava/util/List;");
@@ -543,7 +545,7 @@ public class MatchAsmUtils {
             mv.visitTypeInsn(NEW, newClassType.getInternalName());
             mv.visitInsn(DUP);
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKESPECIAL, newClassType.getInternalName(), "<init>", "(Ljava/util/List;)V", false);
+            mv.visitMethodInsn(INVOKESPECIAL, newClassType.getInternalName(), MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/util/List;)V", false);
             mv.visitInsn(ARETURN);
             mv.visitMaxs(3, 1);
             mv.visitEnd();
@@ -554,7 +556,7 @@ public class MatchAsmUtils {
     }
 
     static byte[] generateLogicNegate(Class<?> samClass) {
-        Method samMethod = findSingleAbstractMethod(samClass);
+        Method samMethod = ClassUtils.findSingleAbstractMethod(samClass);
 
         Type t = Type.getType(samClass);
         String methodName = samMethod.getName();
@@ -579,10 +581,10 @@ public class MatchAsmUtils {
         }
         // constructor: <init>
         {
-            MethodVisitor mv = cw.visitMethod(ACC_PRIVATE, "<init>", constructorDescriptor.getDescriptor(), null, null);
+            MethodVisitor mv = cw.visitMethod(ACC_PRIVATE, MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, constructorDescriptor.getDescriptor(), null, null);
             mv.visitCode();
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "()V", false);
             mv.visitVarInsn(ALOAD, 0);
             mv.visitVarInsn(ALOAD, 1);
             mv.visitFieldInsn(PUTFIELD, newClassType.getInternalName(), "match", samType.getDescriptor());
@@ -635,7 +637,7 @@ public class MatchAsmUtils {
             mv.visitTypeInsn(NEW, newClassType.getInternalName());
             mv.visitInsn(DUP);
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKESPECIAL, newClassType.getInternalName(), "<init>", constructorDescriptor.getDescriptor(), false);
+            mv.visitMethodInsn(INVOKESPECIAL, newClassType.getInternalName(), MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, constructorDescriptor.getDescriptor(), false);
             mv.visitInsn(ARETURN);
             mv.visitMaxs(3, 1);
             mv.visitEnd();
@@ -670,46 +672,6 @@ public class MatchAsmUtils {
 
 
     // region check
-    static void checkFunctionalInterface(Class<?> clazz) {
-        Objects.requireNonNull(clazz);
 
-        // (1) check type: interface
-        if (!clazz.isInterface()) {
-            String msg = String.format("The class %s is not an interface", clazz.getTypeName());
-            throw new IllegalArgumentException(msg);
-        }
-
-        // (2) check annotation
-        if (clazz.getAnnotation(FunctionalInterface.class) == null) {
-            String msg = String.format(
-                    "The class %s does not have the @FunctionalInterface annotation",
-                    clazz.getTypeName()
-            );
-            throw new IllegalArgumentException(msg);
-        }
-
-        // (3) check method return: boolean
-        Method samMethod = findSingleAbstractMethod(clazz);
-        Class<?> returnType = samMethod.getReturnType();
-        if (returnType != boolean.class) {
-            String msg = String.format(
-                    "The %s.%s(...) does not return boolean.",
-                    clazz.getTypeName(),
-                    samMethod.getName()
-            );
-            throw new IllegalArgumentException(msg);
-        }
-    }
-
-    static Method findSingleAbstractMethod(Class<?> clazz) {
-        Method[] declaredMethods = clazz.getDeclaredMethods();
-        for (Method method : declaredMethods) {
-            int modifiers = method.getModifiers();
-            if (Modifier.isAbstract(modifiers)) {
-                return method;
-            }
-        }
-        throw new IllegalArgumentException("No method found for " + clazz);
-    }
     // endregion
 }

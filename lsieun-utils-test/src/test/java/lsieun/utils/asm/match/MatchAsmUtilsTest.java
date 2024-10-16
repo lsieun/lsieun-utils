@@ -1,6 +1,7 @@
 package lsieun.utils.asm.match;
 
 import lsieun.utils.core.io.file.FileContentUtils;
+import lsieun.utils.core.reflect.clazz.ClassUtils;
 import lsieun.utils.match.text.TextMatch;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
@@ -17,7 +18,7 @@ class MatchAsmUtilsTest {
     @Test
     void testFindSingleAbstractMethod() {
         Class<?> clazz = TextMatch.class;
-        Method samMethod = MatchAsmUtils.findSingleAbstractMethod(clazz);
+        Method samMethod = ClassUtils.findSingleAbstractMethod(clazz);
         assertNotNull(samMethod);
         System.out.println(samMethod);
     }

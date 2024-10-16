@@ -20,6 +20,27 @@ public class FileNioUtils {
     }
 
     // region copy
+    public static void backup(Path path, String suffix) throws IOException {
+
+        Path dirPath = path.getParent();
+        Path fileName = path.getFileName();
+        Path newFilePath = dirPath.resolve(fileName.toString() + suffix);
+
+        if (!Files.exists(dirPath)) {
+            throw new IllegalArgumentException("path is not exist: " + dirPath);
+        }
+
+        if (Files.exists(newFilePath)) {
+            copy(newFilePath, path);
+        }
+        else if (Files.exists(path)) {
+            copy(path, newFilePath);
+        }
+        else {
+            throw new IllegalArgumentException("path is not exist: " + path);
+        }
+    }
+
     public static void copy(Path srcPath, Path dstPath) throws IOException {
         if (!Files.exists(srcPath)) {
             throw new IllegalArgumentException("Source path does not exist: " + srcPath);

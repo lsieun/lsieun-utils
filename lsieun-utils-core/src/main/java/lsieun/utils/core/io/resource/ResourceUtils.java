@@ -41,20 +41,29 @@ public class ResourceUtils {
         throw new IllegalArgumentException(msg);
     }
 
-    public static byte[] readClassBytes(Class<?> clazz) throws IOException {
+    public static byte[] readClassBytes(Class<?> clazz) {
         String typeName = clazz.getTypeName();
         String resourcePath = typeName.replace('.', '/') + ".class";
         try (InputStream in = ClassLoader.getSystemResourceAsStream(resourcePath)) {
             try {
                 URL resource = ClassLoader.getSystemResource(resourcePath);
                 URI uri = resource.toURI();
-                logger.info(() -> String.format("[READ RESOURCE] %s", uri));
+                String scheme = uri.getScheme();
+                if (scheme.equals("file")) {
+                    Path path = Path.of(uri);
+                    logger.info(() -> String.format("[READ RESOURCE] %s", path.toUri()));
+                }
+                else {
+                    logger.info(() -> String.format("[READ RESOURCE] %s", uri));
+                }
             } catch (URISyntaxException ignored) {
             }
 
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             IOUtils.copy(in, bao);
             return bao.toByteArray();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

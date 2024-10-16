@@ -1,5 +1,7 @@
 package lsieun.utils.asm.match;
 
+import lsieun.utils.core.reflect.clazz.ClassUtils;
+
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,7 @@ public interface MatchLogic {
     }
 
     static <T> T toTrue(MethodHandles.Lookup lookup, Class<T> samClass) {
-        MatchAsmUtils.checkFunctionalInterface(samClass);
+        ClassUtils.checkFunctionalInterface(samClass);
         Class<?> clazz = getSamSubClass(lookup, samClass, MAP_OF_BOOL_TRUE, MatchAsmUtils::generateEnumTrue);
         return getEnumInstance(lookup, samClass, clazz);
     }
@@ -47,7 +49,7 @@ public interface MatchLogic {
     }
 
     static <T> T toFalse(MethodHandles.Lookup lookup, Class<T> samClass) {
-        MatchAsmUtils.checkFunctionalInterface(samClass);
+        ClassUtils.checkFunctionalInterface(samClass);
         Class<?> clazz = getSamSubClass(lookup, samClass, MAP_OF_BOOL_FALSE, MatchAsmUtils::generateEnumFalse);
         return getEnumInstance(lookup, samClass, clazz);
     }
@@ -58,7 +60,7 @@ public interface MatchLogic {
     }
 
     static <T> T and(MethodHandles.Lookup lookup, Class<T> samClass, List<T> list) {
-        MatchAsmUtils.checkFunctionalInterface(samClass);
+        ClassUtils.checkFunctionalInterface(samClass);
         Class<?> clazz = getSamSubClass(lookup, samClass, MAP_OF_LOGIC_AND, MatchAsmUtils::generateLogicAnd);
         return invokeFactoryMethodByList(lookup, samClass, clazz, list);
     }
@@ -69,7 +71,7 @@ public interface MatchLogic {
     }
 
     static <T> T or(MethodHandles.Lookup lookup, Class<T> samClass, List<T> list) {
-        MatchAsmUtils.checkFunctionalInterface(samClass);
+        ClassUtils.checkFunctionalInterface(samClass);
         Class<?> clazz = getSamSubClass(lookup, samClass, MAP_OF_LOGIC_OR, MatchAsmUtils::generateLogicOr);
         return invokeFactoryMethodByList(lookup, samClass, clazz, list);
     }
@@ -80,7 +82,7 @@ public interface MatchLogic {
     }
 
     static <T> T negate(MethodHandles.Lookup lookup, Class<T> samClass, T instance) {
-        MatchAsmUtils.checkFunctionalInterface(samClass);
+        ClassUtils.checkFunctionalInterface(samClass);
         Class<?> clazz = getSamSubClass(lookup, samClass, MAP_OF_LOGIC_NEGATE, MatchAsmUtils::generateLogicNegate);
         return invokeFactoryMethodByObj(lookup, samClass, clazz, instance);
     }

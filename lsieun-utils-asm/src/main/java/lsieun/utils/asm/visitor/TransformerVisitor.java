@@ -37,7 +37,7 @@ public class TransformerVisitor extends ClassVisitor {
                 mv.visitInsn(DUP);
                 mv.visitVarInsn(ALOAD, 2);
                 mv.visitVarInsn(ALOAD, 5);
-                mv.visitMethodInsn(INVOKESPECIAL, containerName, "<init>", "(Ljava/lang/String;[B)V", false);
+                mv.visitMethodInsn(INVOKESPECIAL, containerName, MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/lang/String;[B)V", false);
                 mv.visitMethodInsn(INVOKESTATIC, containerName, "start", "(L" + containerName + ";)V", false);
             }
         }

@@ -1,7 +1,10 @@
 package lsieun.utils.asm.consumer;
 
-import lsieun.utils.asm.code.CodeSegmentUtils;
+import lsieun.utils.annotation.mind.logic.ThinkStep;
+import lsieun.utils.asm.cst.MyAsmConst;
+import lsieun.utils.asm.insn.AsmInsnUtilsForCodeFragment;
 import lsieun.utils.asm.common.ClassFileModifyUtils;
+import lsieun.utils.asm.insn.AsmInsnUtilsForOpcode;
 import lsieun.utils.asm.match.InsnInvokeMatch;
 import lsieun.utils.asm.match.MethodInfoMatch;
 import lsieun.utils.asm.utils.OpcodeConst;
@@ -51,11 +54,11 @@ public interface InsnInvokeConsumer {
                                String currentType, String currentMethodName, String currentMethodDesc,
                                int opcode, String owner, String name, String descriptor, boolean isInterface) {
                 if (mv != null) {
-                    if (opcode == Opcodes.INVOKESPECIAL && "<init>".equals(name)) {
+                    if (opcode == Opcodes.INVOKESPECIAL && MyAsmConst.CONSTRUCTOR_INTERNAL_NAME.equals(name)) {
                         mv.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
                     }
                     else {
-                        CodeSegmentUtils.popByMethodDesc(mv, opcode == Opcodes.INVOKESTATIC, descriptor);
+                        AsmInsnUtilsForOpcode.popByMethodDesc(mv, opcode == Opcodes.INVOKESTATIC, descriptor);
                     }
                 }
             }
@@ -74,7 +77,23 @@ public interface InsnInvokeConsumer {
                     String msg = String.format("%s::%s:%s ---> %s %s::%s:%s",
                             currentType, currentMethodName, currentMethodDesc,
                             OpcodeConst.getOpcodeName(opcode), owner, name, descriptor);
-                    CodeSegmentUtils.printMessage(mv, msg);
+                    AsmInsnUtilsForCodeFragment.printMessage(mv, msg);
+                }
+            }
+        },
+        PRINT_METHOD_INSN_PARAM {
+            @Override
+            public void accept(MethodVisitor mv,
+                               String currentType, String currentMethodName, String currentMethodDesc,
+                               int opcode, String owner, String name, String descriptor, boolean isInterface) {
+                if (mv != null) {
+                    @ThinkStep("(1) 如果是 invokestatck 指令，说明是 static 方法，不存在 this")
+                    boolean isStatic = opcode == Opcodes.INVOKESTATIC;
+                    @ThinkStep("(2) 如果方法名称是 <init>，说明是 constructor 方法，此时的 receiver type 是 UNINITIALIZED_THIS")
+                    boolean isInstanceInit = MyAsmConst.CONSTRUCTOR_INTERNAL_NAME.equals(name);
+                    @ThinkStep("(3) 排除这两种情况")
+                    boolean hasReceiverType = !(isStatic || isInstanceInit);
+                    AsmInsnUtilsForCodeFragment.printInvokeMethodInsnParams(mv, hasReceiverType, descriptor);
                 }
             }
         },
@@ -87,11 +106,11 @@ public interface InsnInvokeConsumer {
                     // print return value
                     Type methodType = Type.getMethodType(descriptor);
                     Type returnType = methodType.getReturnType();
-                    CodeSegmentUtils.dupValueOnStack(mv, returnType);
+                    AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
                     String msg = String.format("%s::%s:%s ---> %s %s::%s:%s [RETURN] ",
                             currentType, currentMethodName, currentMethodDesc,
                             OpcodeConst.getOpcodeName(opcode), owner, name, descriptor);
-                    CodeSegmentUtils.printValueOnStack(mv, returnType, msg);
+                    AsmInsnUtilsForCodeFragment.printValueOnStack(mv, returnType, msg);
                 }
             }
         },
@@ -105,7 +124,7 @@ public interface InsnInvokeConsumer {
                             currentType,
                             currentMethodName,
                             currentMethodDesc);
-                    CodeSegmentUtils.printStackTrace(mv, msg);
+                    AsmInsnUtilsForCodeFragment.printStackTrace(mv, msg);
                 }
 
             }

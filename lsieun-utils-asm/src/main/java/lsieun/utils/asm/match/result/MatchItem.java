@@ -1,17 +1,21 @@
 package lsieun.utils.asm.match.result;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MatchItem {
     public final MatchType type;
 
-    public final String internalName;
+    public final String owner;
     public final String name;
     public final String descriptor;
 
-    private MatchItem(MatchType type, String internalName, String name, String descriptor) {
+    public final List<MatchItem> children = new ArrayList<>();
+
+    private MatchItem(MatchType type, String owner, String name, String descriptor) {
         this.type = type;
-        this.internalName = internalName;
+        this.owner = owner;
         this.name = name;
         this.descriptor = descriptor;
     }
@@ -26,6 +30,10 @@ public class MatchItem {
 
     public static MatchItem ofMethod(String internalName, String methodName, String methodDesc) {
         return of(MatchType.METHOD, internalName, methodName, methodDesc);
+    }
+
+    public static MatchItem ofInsn(String internalName, String methodName, String methodDesc) {
+        return of(MatchType.INSN, internalName, methodName, methodDesc);
     }
 
     public static MatchItem of(MatchType type, String internalName, String name, String descriptor) {
@@ -66,26 +74,27 @@ public class MatchItem {
         // fields
         MatchItem that = (MatchItem) o;
         return type == that.type &&
-                Objects.equals(internalName, that.internalName) &&
+                Objects.equals(owner, that.owner) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(descriptor, that.descriptor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, internalName, name, descriptor);
+        return Objects.hash(type, owner, name, descriptor);
     }
 
     @Override
     public String toString() {
         switch (type) {
             case CLASS: {
-                return String.format("%s %s", type, internalName);
+                return String.format("%s %s", type, owner);
             }
             case FIELD:
             case METHOD:
+            case INSN:
             default: {
-                return String.format("%s %s %s:%s", type, internalName, name, descriptor);
+                return String.format("%s %s %s:%s", type, owner, name, descriptor);
             }
         }
     }

@@ -3,11 +3,18 @@ package lsieun.utils.asm.match;
 import lsieun.utils.match.text.TextMatch;
 import org.objectweb.asm.Type;
 
+import java.util.function.Predicate;
+
 @FunctionalInterface
 public interface MethodInfoMatch {
     boolean test(int version, String owner,
                  int methodAccess, String methodName, String methodDesc,
                  String signature, String[] exceptions);
+
+    static MethodInfoMatch byModifier(Predicate<Integer> predicate) {
+        return ((version, owner, methodAccess, methodName, methodDesc, signature, exceptions) ->
+                predicate.test(methodAccess));
+    }
 
     static MethodInfoMatch byMethodName(String name) {
         return byMethodName(TextMatch.equals(name));
@@ -45,7 +52,6 @@ public interface MethodInfoMatch {
     }
 
 
-
     enum AllMethods implements MethodInfoMatch {
         INSTANCE;
 
@@ -67,6 +73,17 @@ public interface MethodInfoMatch {
             }
         },
         FALSE {
+            @Override
+            public boolean test(int version, String owner,
+                                int methodAccess, String methodName, String methodDesc,
+                                String signature, String[] exceptions) {
+                return false;
+            }
+        };
+    }
+
+    enum Skip implements MethodInfoMatch {
+        CONSTRUCTOR {
             @Override
             public boolean test(int version, String owner,
                                 int methodAccess, String methodName, String methodDesc,

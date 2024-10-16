@@ -20,6 +20,55 @@
             <artifactId>lsieun-utils-annotation</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.jetbrains</groupId>-->
+        <!--            <artifactId>lib-client</artifactId>-->
+        <!--            <version>8</version>-->
+        <!--            <scope>system</scope>-->
+        <!--            <systemPath>D:/tmp/intellij/lib/lib-client.jar</systemPath>-->
+        <!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>intellij.platform</groupId>-->
+<!--            <artifactId>embeddings</artifactId>-->
+<!--            <version>8</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>D:/tmp/intellij/lib/modules/intellij.platform.ml.embeddings.jar</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Launcher-Agent-Class>lsieun.agent.LauncherAgent</Launcher-Agent-Class>
+                            <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                            <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                            <Can-Set-Native-Method-Prefix>true</Can-Set-Native-Method-Prefix>
+                        </manifestEntries>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+<!--                    <includes>-->
+<!--                        <include>lsieun/**</include>-->
+<!--                        <include>data/**</include>-->
+<!--                    </includes>-->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

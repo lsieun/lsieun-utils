@@ -6,14 +6,13 @@ import lsieun.utils.core.log.LogLevel;
 import lsieun.utils.core.log.Logger;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 class ZipFindNioUtilsForMultipleTest {
     @Test
-    void testNexus() throws IOException {
+    void testNexus() {
         Logger.CURRENT_LEVEL = LogLevel.DEBUG;
         Path dirPath = Path.of("D:\\service\\nexus-3.70.1-02");
         if (!Files.exists(dirPath)) return;
@@ -42,7 +41,7 @@ class ZipFindNioUtilsForMultipleTest {
     }
 
     @Test
-    void testFindFileList() throws IOException {
+    void testFindFileList() {
         Path dirPath = Path.of("D:\\ideaIU-2024.2.1.win\\lib");
         List<Path> fileList = DirNioUtils.findFileListInDirByExt(dirPath, 1, ".jar");
         List<Path> candidateList = ZipFindNioUtilsForMultiple.findFileList(fileList, List.of("com/intellij/", "com/jetbrains/"));

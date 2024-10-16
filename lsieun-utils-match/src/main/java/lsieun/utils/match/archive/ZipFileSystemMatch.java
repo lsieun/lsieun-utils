@@ -10,12 +10,12 @@ import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 @FunctionalInterface
-public interface ZipFileSystemMatch {
-    boolean test(FileSystem zipFileSystem);
+public interface ZipFileSystemMatch extends ArchiveMatch {
+    boolean test(Path zipPath, FileSystem zipFileSystem);
 
     // region static methods: FileSystem
     static ZipFileSystemMatch exists(String entry) {
-        return zipFs -> {
+        return (zipPath, zipFs) -> {
             Path path = zipFs.getPath(entry);
             return Files.exists(path);
         };
@@ -38,7 +38,7 @@ public interface ZipFileSystemMatch {
     }
 
     static ZipFileSystemMatch byZipEntry(ZipEntryMatch match, boolean quick) {
-        return zipFs -> {
+        return (zipPath, zipFs) -> {
             Path dirPath = zipFs.getPath("/");
             BiPredicate<Path, BasicFileAttributes> predicate = (path, attr) -> true;
 
@@ -51,7 +51,7 @@ public interface ZipFileSystemMatch {
                 boolean matchFlag = false;
                 for (int i = 0; i < size; i++) {
                     String entry = list.get(i);
-                    boolean flag = match.test(zipFs, entry);
+                    boolean flag = match.test(zipPath, zipFs, entry);
                     if (quick && flag) {
                         return true;
                     }

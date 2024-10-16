@@ -5,6 +5,7 @@ import lsieun.utils.asm.common.ClassFileMatchUtils;
 /**
  * @see ClassFileMatchUtils
  */
+@FunctionalInterface
 public interface ClassFileMatch {
     boolean test(byte[] bytes);
 

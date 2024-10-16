@@ -15,13 +15,13 @@ class ResourceUtilsTest {
     }
 
     @Test
-    void readClassBytes() throws IOException {
+    void readClassBytes() {
         byte[] bytes = ResourceUtils.readClassBytes(Map.Entry.class);
         assertNotNull(bytes);
     }
 
     @Test
-    void testReadClassBytes() throws IOException {
+    void testReadClassBytes() {
         Class<?>[] clazzArray = {
                 Object.class,
                 Map.Entry.class,

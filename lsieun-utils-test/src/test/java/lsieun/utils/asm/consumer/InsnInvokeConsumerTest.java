@@ -5,6 +5,7 @@ import lsieun.utils.asm.match.InsnInvokeMatch;
 import lsieun.utils.asm.match.MethodInfoMatch;
 import lsieun.utils.asm.match.AsmTypeMatch;
 import lsieun.utils.asm.common.ClassFileModifyUtils;
+import lsieun.utils.core.bytes.ByteArrayThreePhase;
 import lsieun.utils.core.io.file.FileContentUtils;
 import lsieun.utils.core.io.resource.ResourceUtils;
 import lsieun.utils.core.log.LogLevel;
@@ -14,8 +15,11 @@ import org.objectweb.asm.Type;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.function.Function;
 
 class InsnInvokeConsumerTest {
+    final String TARGET_METHOD_NAME = "test";
+
     @Test
     void testPopFromStack() throws IOException {
         Logger.CURRENT_LEVEL = LogLevel.DEBUG;
@@ -37,5 +41,16 @@ class InsnInvokeConsumerTest {
         }
     }
 
+    @Test
+    void testPrintInvokeMethodInsnParamsAndReturn() {
+        Path path = ResourceUtils.readFilePath(InsnInvokeConsumerGalleryTest.HelloWorldForPrintInvokeMethodInsnParamsAndReturn.class);
 
+        MethodInfoMatch methodMatch = MethodInfoMatch.byMethodName(TARGET_METHOD_NAME);
+        Function<byte[], byte[]> func = bytes ->
+                ClassFileModifyUtils.patchInsnInvoke(
+                        bytes, methodMatch, InsnInvokeMatch.All.INSTANCE,
+                        InsnInvokeConsumerGallery.printInvokeMethodInsnParamsAndReturn()
+                );
+        ByteArrayThreePhase.forFile(path, func);
+    }
 }
