@@ -73,6 +73,10 @@ public class ClassVisitorForFindInsnByInvokeXxx extends ClassVisitorForFind {
                 if (!resultList.contains(methodMatchItem)) {
                     resultList.add(methodMatchItem);
                 }
+                else {
+                    int index = resultList.indexOf(methodMatchItem);
+                    methodMatchItem = resultList.get(index);
+                }
 
                 // (2) 添加 instruction
                 List<MatchItem> children = methodMatchItem.children;

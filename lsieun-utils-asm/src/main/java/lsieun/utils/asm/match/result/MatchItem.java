@@ -25,7 +25,7 @@ public class MatchItem {
     }
 
     public static MatchItem ofField(String internalName, String fieldName, String fieldDesc) {
-        return of(MatchType.METHOD, internalName, fieldName, fieldDesc);
+        return of(MatchType.FIELD, internalName, fieldName, fieldDesc);
     }
 
     public static MatchItem ofMethod(String internalName, String methodName, String methodDesc) {

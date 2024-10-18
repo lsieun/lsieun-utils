@@ -5,6 +5,7 @@ import lsieun.utils.match.bytes.ByteArrayMatch;
 import lsieun.utils.match.text.TextMatch;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -17,7 +18,6 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface FilePathMatch {
     boolean test(Path path);
-
 
     // region text
     static FilePathMatch byFileName(TextMatch textMatch) {
@@ -63,5 +63,22 @@ public interface FilePathMatch {
     }
     // endregion
 
+    static MethodHandles.Lookup lookup() {
+        return MethodHandles.lookup();
+    }
 
+    enum Bool implements FilePathMatch {
+        TRUE {
+            @Override
+            public boolean test(Path path) {
+                return true;
+            }
+        },
+        FALSE {
+            @Override
+            public boolean test(Path path) {
+                return false;
+            }
+        };
+    }
 }

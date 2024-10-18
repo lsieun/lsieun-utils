@@ -41,4 +41,19 @@ public interface ZipEntryMatch extends ArchiveMatch {
     }
     // endregion
 
+    enum Bool implements ZipEntryMatch {
+        TRUE {
+            @Override
+            public boolean test(Path zipPath, FileSystem zipFileSystem, String entry) {
+                return true;
+            }
+        },
+        FALSE {
+            @Override
+            public boolean test(Path zipPath, FileSystem zipFileSystem, String entry) {
+                return false;
+            }
+        },
+        ;
+    }
 }

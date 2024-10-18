@@ -1,6 +1,6 @@
 package lsieun.utils.asm.match;
 
-import lsieun.utils.asm.common.ClassFileMatchUtils;
+import lsieun.utils.asm.common.analysis.ClassFileMatchUtils;
 
 /**
  * @see ClassFileMatchUtils

@@ -71,9 +71,12 @@ public class PanguSpacing {
             return false;
         }
 
-        return !isSpecial(codePoint1) && !isSpecial(codePoint2);
+        return isNotSpecial(codePoint1) && isNotSpecial(codePoint2);
     }
 
+    private static boolean isNotSpecial(int codePoint) {
+        return !isSpecial(codePoint);
+    }
 
     private static boolean isSpecial(int codePoint) {
         for (int item : SEPARATOR_ARRAY) {

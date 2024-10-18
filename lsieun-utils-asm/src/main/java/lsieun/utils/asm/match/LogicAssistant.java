@@ -5,7 +5,6 @@ import lsieun.utils.core.coll.ListUtils;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * <pre>
@@ -31,47 +30,91 @@ public final class LogicAssistant<T> {
         this.clazz = clazz;
     }
 
+    public T toTrue() {
+        return MatchLogic.toTrue(lookup, clazz);
+    }
+
+    public T toFalse() {
+        return MatchLogic.toFalse(lookup, clazz);
+    }
+
     @SafeVarargs
     public final T and(@Nonnull T first, T... more) {
-        Objects.requireNonNull(first);
+        if (more == null || more.length == 0) {
+            return first;
+        }
 
         List<T> list = ListUtils.toList(first, more);
-        return MatchLogic.and(lookup, clazz, list);
+        return and(list);
+    }
+
+    @SafeVarargs
+    public final T and(boolean defaultValue, T... logicArray) {
+        if (logicArray == null || logicArray.length == 0) {
+            return defaultValue ? toTrue() : toFalse();
+        }
+
+        List<T> list = ListUtils.toList(logicArray);
+        if (ListUtils.isNullOrEmpty(list)) {
+            return defaultValue ? toTrue() : toFalse();
+        }
+
+        return and(list);
     }
 
     public T and(List<T> list) {
+        if (ListUtils.isNullOrEmpty(list)) {
+            throw new IllegalArgumentException("list is empty");
+        }
+
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+
         return MatchLogic.and(lookup, clazz, list);
     }
 
     @SafeVarargs
     public final T or(@Nonnull T first, T... more) {
-        Objects.requireNonNull(first);
+        if (more == null || more.length == 0) {
+            return first;
+        }
 
         List<T> list = ListUtils.toList(first, more);
         return or(list);
     }
 
+    @SafeVarargs
+    public final T or(boolean defaultValue, T... logicArray) {
+        if (logicArray == null || logicArray.length == 0) {
+            return defaultValue ? toTrue() : toFalse();
+        }
+
+        List<T> list = ListUtils.toList(logicArray);
+        if (ListUtils.isNullOrEmpty(list)) {
+            return defaultValue ? toTrue() : toFalse();
+        }
+
+        return or(list);
+    }
+
     public T or(List<T> list) {
+        if (ListUtils.isNullOrEmpty(list)) {
+            throw new IllegalArgumentException("list is empty");
+        }
+
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+
         return MatchLogic.or(lookup, clazz, list);
     }
 
-    public T not(T instance) {
+    public T not(@Nonnull T instance) {
         return MatchLogic.negate(lookup, clazz, instance);
     }
 
-    public static <R> AddClass<R> builder() {
-        return clazz -> lookup -> new LogicAssistant<R>(lookup, clazz);
-    }
-
-    public interface AddClass<R> {
-        AddLookup<R> withClass(Class<R> clazz);
-    }
-
-    public interface AddLookup<R> {
-        LogicAssistant<R> withLookup(MethodHandles.Lookup lookup);
-    }
-
     public static <R> LogicAssistant<R> of(MethodHandles.Lookup lookup, Class<R> clazz) {
-        return new LogicAssistant<R>(lookup, clazz);
+        return new LogicAssistant<>(lookup, clazz);
     }
 }

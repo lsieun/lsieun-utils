@@ -1,8 +1,10 @@
 package lsieun.utils.asm.match;
 
+import lsieun.utils.asm.description.MemberDesc;
 import lsieun.utils.match.text.TextMatch;
 import org.objectweb.asm.Type;
 
+import java.lang.invoke.MethodHandles;
 import java.util.function.Predicate;
 
 @FunctionalInterface
@@ -10,6 +12,11 @@ public interface MethodInfoMatch {
     boolean test(int version, String owner,
                  int methodAccess, String methodName, String methodDesc,
                  String signature, String[] exceptions);
+
+    static LogicAssistant<MethodInfoMatch> logic() {
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        return LogicAssistant.of(lookup, MethodInfoMatch.class);
+    }
 
     static MethodInfoMatch byModifier(Predicate<Integer> predicate) {
         return ((version, owner, methodAccess, methodName, methodDesc, signature, exceptions) ->
@@ -26,8 +33,12 @@ public interface MethodInfoMatch {
     }
 
     static MethodInfoMatch byMethodNameAndDesc(String name, String desc) {
+        return byMethodNameAndDesc(TextMatch.equals(name), TextMatch.equals(desc));
+    }
+
+    static MethodInfoMatch byMethodNameAndDesc(TextMatch nameMatch, TextMatch descMatch) {
         return (version, owner, methodAccess, methodName, methodDesc, signature, exceptions) ->
-                methodName.equals(name) && methodDesc.equals(desc);
+                nameMatch.test(methodName) && descMatch.test(methodDesc);
     }
 
     static MethodInfoMatch byMethodNameAndDesc(TextMatch textMatch) {
@@ -38,9 +49,16 @@ public interface MethodInfoMatch {
         };
     }
 
-    static MethodInfoMatch byOwnerMethodNameAndDesc(String internalClassName, String name, String desc) {
+    static MethodInfoMatch byOwnerNameAndDesc(String internalClassName, String name, String desc) {
         return (version, owner, methodAccess, methodName, methodDesc, signature, exceptions) ->
                 owner.equals(internalClassName) && methodName.equals(name) && methodDesc.equals(desc);
+    }
+
+    static MethodInfoMatch byOwnerNameAndDesc(MemberDesc memberDesc) {
+        return (version, owner, methodAccess, methodName, methodDesc, signature, exceptions) ->
+                owner.equals(memberDesc.owner()) &&
+                        methodName.equals(memberDesc.name()) &&
+                        methodDesc.equals(memberDesc.desc());
     }
 
     static MethodInfoMatch byReturnType(AsmTypeMatch asmTypeMatch) {
@@ -51,8 +69,14 @@ public interface MethodInfoMatch {
         };
     }
 
+    static MethodInfoMatch of(boolean flag) {
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        return flag ?
+                MatchLogic.toTrue(lookup, MethodInfoMatch.class) :
+                MatchLogic.toFalse(lookup, MethodInfoMatch.class);
+    }
 
-    enum AllMethods implements MethodInfoMatch {
+    enum All implements MethodInfoMatch {
         INSTANCE;
 
         @Override
@@ -60,6 +84,17 @@ public interface MethodInfoMatch {
                             int methodAccess, String methodName, String methodDesc,
                             String signature, String[] exceptions) {
             return true;
+        }
+    }
+
+    enum None implements MethodInfoMatch {
+        INSTANCE;
+
+        @Override
+        public boolean test(int version, String owner,
+                            int methodAccess, String methodName, String methodDesc,
+                            String signature, String[] exceptions) {
+            return false;
         }
     }
 
@@ -83,12 +118,12 @@ public interface MethodInfoMatch {
     }
 
     enum Skip implements MethodInfoMatch {
-        CONSTRUCTOR {
+        INIT_METHOD {
             @Override
             public boolean test(int version, String owner,
                                 int methodAccess, String methodName, String methodDesc,
                                 String signature, String[] exceptions) {
-                return false;
+                return !("<init>".equals(methodName) || "<clinit>".equals(methodName));
             }
         };
     }

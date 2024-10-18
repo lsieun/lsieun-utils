@@ -49,7 +49,7 @@ public class ClassVisitorForAdvice extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        logger.trace(() -> MatchFormat.format(MatchState.MATCHING, ByteCodeElementType.METHOD, currentOwner, name, descriptor));
+        logger.debug(() -> MatchFormat.format(MatchState.MATCHING, ByteCodeElementType.METHOD, currentOwner, name, descriptor));
 
 
         // match: find, modify
@@ -71,7 +71,7 @@ public class ClassVisitorForAdvice extends ClassVisitor {
 
         // (1) mv is null
         if (mv == null) {
-            logger.trace(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "mv is null"));
+            logger.debug(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "mv is null"));
             return mv;
         }
 
@@ -79,7 +79,7 @@ public class ClassVisitorForAdvice extends ClassVisitor {
         boolean isAbstract = (access & Opcodes.ACC_ABSTRACT) != 0;
         boolean isNative = (access & Opcodes.ACC_NATIVE) != 0;
         if (isAbstract || isNative) {
-            logger.trace(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "native or abstract"));
+            logger.debug(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "native or abstract"));
             return mv;
         }
 
@@ -87,6 +87,9 @@ public class ClassVisitorForAdvice extends ClassVisitor {
         if (flag) {
             logger.debug(() -> MatchFormat.format(MatchState.MATCHED, ByteCodeElementType.METHOD, currentOwner, name, descriptor));
             mv = new MethodVisitorForAdvice(mv, access, name, descriptor, signature, exceptions);
+        }
+        else {
+            logger.debug(() -> MatchFormat.format(MatchState.MISMATCHED, ByteCodeElementType.METHOD, currentOwner, name, descriptor));
         }
 
         return mv;

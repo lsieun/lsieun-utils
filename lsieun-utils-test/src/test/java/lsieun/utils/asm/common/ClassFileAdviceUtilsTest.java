@@ -2,13 +2,14 @@ package lsieun.utils.asm.common;
 
 import lsieun.utils.asm.code.AsmCodeFragment;
 import lsieun.utils.asm.code.StdAsmCodeFragmentForPrint;
+import lsieun.utils.asm.common.transformation.ClassFileAdviceUtils;
 import lsieun.utils.asm.match.MethodInfoMatch;
-import lsieun.utils.core.bytes.ByteArrayThreePhase;
+import lsieun.utils.core.bytes.ByteArrayProcessor;
+import lsieun.utils.core.bytes.ByteArrayProcessorBuilder;
 import lsieun.utils.core.io.resource.ResourceUtils;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
-import java.util.function.Function;
 
 class ClassFileAdviceUtilsTest {
     @Test
@@ -23,9 +24,12 @@ class ClassFileAdviceUtilsTest {
         AsmCodeFragment methodExitReturn = StdAsmCodeFragmentForPrint.EXIT_RETURN_SIMPLE;
         AsmCodeFragment methodExitThrown = StdAsmCodeFragmentForPrint.EXIT_THROWN_SIMPLE;
 
-        Function<byte[], byte[]> func = bytes ->
+        ByteArrayProcessor func = bytes ->
                 ClassFileAdviceUtils.apply(bytes, methodMatch, methodEnter, methodExitReturn, methodExitThrown);
-        ByteArrayThreePhase.forFile(path, func);
+        ByteArrayProcessorBuilder.forFile()
+                .withFile(path)
+                .withFunction(func);
+
     }
 
     static class HelloWorldForAdviceUtils {

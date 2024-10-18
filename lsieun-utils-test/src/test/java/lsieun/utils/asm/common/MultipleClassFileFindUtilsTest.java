@@ -1,5 +1,8 @@
 package lsieun.utils.asm.common;
 
+import lsieun.utils.asm.common.analysis.ClassFileFindBuilder;
+import lsieun.utils.asm.common.analysis.ClassFileFindUtils;
+import lsieun.utils.asm.common.analysis.MultipleClassFileFindUtils;
 import lsieun.utils.asm.match.AsmTypeMatch;
 import lsieun.utils.asm.match.InsnInvokeMatch;
 import lsieun.utils.asm.match.LogicAssistant;
@@ -33,7 +36,7 @@ class MultipleClassFileFindUtilsTest {
     @Test
     void findClassFromDir() {
         Path dirPath = Path.of("D:\\tmp\\intellij\\lib");
-        TextMatch textMatch = TextMatch.contains("match");
+        TextMatch textMatch = TextMatch.containsIgnoreCase("ascii");
         ClassFileFindBuilder.byEntryName()
                 .withDir(dirPath, 10, false)
                 .withTextMatch(textMatch)
@@ -43,10 +46,7 @@ class MultipleClassFileFindUtilsTest {
     @Test
     void findClassFromDir2() {
         Path dirPath = Path.of("D:\\tmp\\intellij\\lib");
-        MethodHandles.Lookup lookup = TextMatch.lookup();
-        LogicAssistant<TextMatch> logic = LogicAssistant.<TextMatch>builder()
-                .withClass(TextMatch.class)
-                .withLookup(lookup);
+        LogicAssistant<TextMatch> logic = LogicAssistant.of(TextMatch.lookup(), TextMatch.class);
         TextMatch textMatch = logic.and(
                 TextMatch.contains("/PsiElement.class")
 //                TextMatch.contains("Analy"),
@@ -66,6 +66,8 @@ class MultipleClassFileFindUtilsTest {
         );
         ClassFileFindBuilder.byMethod()
                 .withDir(dirPath, 1, false)
+                .withZipEntryMatch()
+                .withClassInfoMatch()
                 .withMethodMatch(methodMatch)
                 .print();
     }
@@ -73,13 +75,15 @@ class MultipleClassFileFindUtilsTest {
 
 
     @Test
-    void findInsnromDir2() {
+    void findInsnFromDir2() {
         Path dirPath = Path.of("D:\\tmp\\intellij\\lib");
         MethodHandles.Lookup lookup = TextMatch.lookup();
 
-        InsnInvokeMatch insnInvokeMatch = InsnInvokeMatch.by("doFinal");
+        InsnInvokeMatch insnInvokeMatch = InsnInvokeMatch.byMethodName("doFinal");
         ClassFileFindBuilder.byInsn()
                 .withDir(dirPath, 1, false)
+                .withZipEntryMatch()
+                .withClassInfoMatch()
                 .withMethodMatch(MethodInfoMatch.Bool.TRUE)
                 .withInsnMatch(insnInvokeMatch, false)
                 .print();

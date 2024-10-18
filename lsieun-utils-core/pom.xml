@@ -26,20 +26,7 @@
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.jetbrains</groupId>-->
-        <!--            <artifactId>lib-client</artifactId>-->
-        <!--            <version>8</version>-->
-        <!--            <scope>system</scope>-->
-        <!--            <systemPath>D:/tmp/intellij/lib/lib-client.jar</systemPath>-->
-        <!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>intellij.platform</groupId>-->
-<!--            <artifactId>embeddings</artifactId>-->
-<!--            <version>8</version>-->
-<!--            <scope>system</scope>-->
-<!--            <systemPath>D:/tmp/intellij/lib/modules/intellij.platform.ml.embeddings.jar</systemPath>-->
-<!--        </dependency>-->
+
     </dependencies>
 
     <build>
@@ -62,10 +49,10 @@
                         </manifestEntries>
                         <addMavenDescriptor>false</addMavenDescriptor>
                     </archive>
-<!--                    <includes>-->
-<!--                        <include>lsieun/**</include>-->
-<!--                        <include>data/**</include>-->
-<!--                    </includes>-->
+                    <!--                    <includes>-->
+                    <!--                        <include>lsieun/**</include>-->
+                    <!--                        <include>data/**</include>-->
+                    <!--                    </includes>-->
                 </configuration>
             </plugin>
         </plugins>

@@ -48,12 +48,22 @@ public abstract class ClassVisitorForMethodMatch extends ClassVisitor implements
         // match: find, modify
         boolean flag = methodMatch.test(version, currentOwner, access, name, descriptor, signature, exceptions);
 
+        if (name.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME) && descriptor.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC)) {
+            if (flag) {
+                logger.warn(() -> MatchFormat.format(
+                        MatchState.SKIP, ByteCodeElementType.METHOD,
+                        MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME + ":" + MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC
+                ));
+                flag = false;
+            }
+        }
+
         // mv
         MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
 
         // (1) mv is null
         if (mv == null) {
-            logger.trace(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "mv is null"));
+            logger.debug(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "mv is null"));
             return mv;
         }
 
@@ -61,13 +71,13 @@ public abstract class ClassVisitorForMethodMatch extends ClassVisitor implements
         boolean isAbstract = (access & Opcodes.ACC_ABSTRACT) != 0;
         boolean isNative = (access & Opcodes.ACC_NATIVE) != 0;
         if (isAbstract || isNative) {
-            logger.trace(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "native or abstract"));
+            logger.debug(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "native or abstract"));
             return mv;
         }
 
         // (3) <init> or <clinit>, do not process
         if (name.equals(MyAsmConst.CONSTRUCTOR_INTERNAL_NAME) || name.equals(MyAsmConst.TYPE_INITIALIZER_INTERNAL_NAME)) {
-            logger.trace(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, "<init> or <clinit>"));
+            logger.debug(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, name));
             return mv;
         }
 

@@ -739,6 +739,44 @@ public class AsmInsnUtilsForOpcode {
             mv.visitLdcInsn(constantDynamic);
         }
     }
+
+    public static void push(MethodVisitor mv, final Object obj) {
+        if (obj == null) {
+            mv.visitInsn(Opcodes.ACONST_NULL);
+        }
+        else {
+            if (obj instanceof Boolean) {
+                push(mv, (boolean) obj);
+            }
+            else if (obj instanceof Integer) {
+                push(mv, (int) obj);
+            }
+            else if (obj instanceof Long) {
+                push(mv, (long) obj);
+            }
+            else if (obj instanceof Float) {
+                push(mv, (float) obj);
+            }
+            else if (obj instanceof Double) {
+                push(mv, (double) obj);
+            }
+            else if (obj instanceof String) {
+                push(mv, (String) obj);
+            }
+            else if(obj instanceof Type) {
+                push(mv, (Type)obj);
+            }
+            else if (obj instanceof Handle) {
+                push(mv, (Handle) obj);
+            }
+            else if (obj instanceof ConstantDynamic) {
+                push(mv, (ConstantDynamic) obj);
+            }
+            else {
+                mv.visitInsn(Opcodes.ACONST_NULL);
+            }
+        }
+    }
     // endregion
 
     // region load and store method arguments

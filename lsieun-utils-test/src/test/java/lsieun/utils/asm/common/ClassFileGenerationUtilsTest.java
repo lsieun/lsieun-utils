@@ -1,5 +1,7 @@
 package lsieun.utils.asm.common;
 
+import lsieun.utils.asm.common.generation.ClassFileGenerationUtils;
+import lsieun.utils.asm.common.generation.MultipleClassFileGenerationBuilder;
 import lsieun.utils.asm.match.NameAndDescMatch;
 import lsieun.utils.core.reflect.member.FieldUtils;
 import lsieun.utils.core.reflect.member.MemberFindUtils;

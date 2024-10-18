@@ -4,10 +4,14 @@ import lsieun.utils.match.MatchDirection;
 import lsieun.utils.match.array.ArrayMatchForMany2One;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.Predicate;
 
-
+/**
+ * @see TextMatchBuddy
+ */
 @FunctionalInterface
-public interface TextMatch {
+public interface TextMatch extends Predicate<String> {
+
     static TextMatch equals(String text) {
         return str -> TextMatchForOne2One.EQUALS_FULLY.test(str, text);
     }
@@ -56,8 +60,6 @@ public interface TextMatch {
         return MethodHandles.lookup();
     }
 
-    boolean test(String text);
-
     enum Bool implements TextMatch {
         TRUE {
             @Override
@@ -71,41 +73,5 @@ public interface TextMatch {
                 return false;
             }
         };
-    }
-
-    class And implements TextMatch {
-        private final TextMatch[] matches;
-
-        private And(final TextMatch... matches) {
-            this.matches = matches;
-        }
-
-        @Override
-        public boolean test(String text) {
-            for (final TextMatch match : matches) {
-                if (!match.test(text)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
-
-    class Or implements TextMatch {
-        private final TextMatch[] matches;
-
-        private Or(final TextMatch... matches) {
-            this.matches = matches;
-        }
-
-        @Override
-        public boolean test(String text) {
-            for (final TextMatch match : matches) {
-                if (match.test(text)) {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }

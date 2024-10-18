@@ -718,7 +718,9 @@ public class AsmInsnUtilsForCodeFragment {
             // operand stack: [..., array, receiver]
             dupX1(mv);
             // operand stack: [..., receiver, array, receiver]
-            printValueOnStack2TypeName(mv);
+            convertValueOnStack2TypeName(mv);
+            // operand stack: [..., receiver, array, str]
+            printValueOnStack(mv, Type.getType(String.class), "    [receiver] ");
             // operand stack: [..., receiver, array]
         }
 
@@ -762,7 +764,7 @@ public class AsmInsnUtilsForCodeFragment {
         // operand stack: [...]
     }
 
-    public static void printValueOnStack2TypeName(MethodVisitor mv) {
+    public static void convertValueOnStack2TypeName(MethodVisitor mv) {
         if (mv == null) {
             return;
         }
@@ -772,13 +774,5 @@ public class AsmInsnUtilsForCodeFragment {
         // operand stack: [class]
         mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getTypeName", "()Ljava/lang/String;", false);
         // operand stack: [str]
-
-        // operand stack: [str]
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        // operand stack: [str, System.out]
-        mv.visitInsn(SWAP);
-        // operand stack: [System.out, str]
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
-        // operand stack: []
     }
 }

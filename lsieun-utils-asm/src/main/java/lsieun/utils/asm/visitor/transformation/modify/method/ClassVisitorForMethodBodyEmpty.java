@@ -1,15 +1,19 @@
 package lsieun.utils.asm.visitor.transformation.modify.method;
 
+import lsieun.utils.asm.insn.AsmInsnUtilsForOpcode;
 import lsieun.utils.asm.match.MethodInfoMatch;
 import lsieun.utils.asm.visitor.common.ClassVisitorForMethodMatch;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 
 public class ClassVisitorForMethodBodyEmpty extends ClassVisitorForMethodMatch {
+    private final Object returnValue;
+
     public ClassVisitorForMethodBodyEmpty(ClassVisitor classVisitor, MethodInfoMatch match) {
+        this(classVisitor, match, null);
+    }
+    public ClassVisitorForMethodBodyEmpty(ClassVisitor classVisitor, MethodInfoMatch match, Object returnValue) {
         super(classVisitor, match);
+        this.returnValue = returnValue;
     }
 
     @Override
@@ -37,11 +41,48 @@ public class ClassVisitorForMethodBodyEmpty extends ClassVisitorForMethodMatch {
             mv.visitInsn(Opcodes.RETURN);
         }
         else if (returnType.getSort() >= Type.BOOLEAN && returnType.getSort() <= Type.DOUBLE) {
-            mv.visitInsn(returnType.getOpcode(Opcodes.ICONST_1));
+            if (returnValue == null) {
+                mv.visitInsn(returnType.getOpcode(Opcodes.ICONST_0));
+            }
+            else if (returnValue instanceof Boolean) {
+                AsmInsnUtilsForOpcode.push(mv, (boolean) returnValue);
+            }
+            else if (returnValue instanceof Integer) {
+                AsmInsnUtilsForOpcode.push(mv, (int) returnValue);
+            }
+            else if (returnValue instanceof Long) {
+                AsmInsnUtilsForOpcode.push(mv, (long) returnValue);
+            }
+            else if (returnValue instanceof Float) {
+                AsmInsnUtilsForOpcode.push(mv, (float) returnValue);
+            }
+            else if (returnValue instanceof Double) {
+                AsmInsnUtilsForOpcode.push(mv, (double) returnValue);
+            }
+            else {
+                mv.visitInsn(returnType.getOpcode(Opcodes.ICONST_0));
+            }
             mv.visitInsn(returnType.getOpcode(Opcodes.IRETURN));
         }
         else {
-            mv.visitInsn(Opcodes.ACONST_NULL);
+            if (returnValue == null) {
+                mv.visitInsn(Opcodes.ACONST_NULL);
+            }
+            else if (returnValue instanceof String) {
+                AsmInsnUtilsForOpcode.push(mv, (String) returnValue);
+            }
+            else if(returnValue instanceof Type) {
+                AsmInsnUtilsForOpcode.push(mv, (Type)returnValue);
+            }
+            else if (returnValue instanceof Handle) {
+                AsmInsnUtilsForOpcode.push(mv, (Handle) returnValue);
+            }
+            else if (returnValue instanceof ConstantDynamic) {
+                AsmInsnUtilsForOpcode.push(mv, (ConstantDynamic) returnValue);
+            }
+            else {
+                mv.visitInsn(Opcodes.ACONST_NULL);
+            }
             mv.visitInsn(Opcodes.ARETURN);
         }
         mv.visitMaxs(stackSize, localSize);

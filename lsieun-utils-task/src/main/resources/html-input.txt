@@ -1,0 +1,11 @@
+Path jarPath = Path.of("...");
+String entry = AsmTypeNameUtils.toJarEntryName("com.abc.Xyz");
+String methodName = "test";
+String methodDesc = "()V";
+MethodInfoMatch methodMatch = MethodInfoMatch.byMethodNameAndDesc(methodName, methodDesc);
+InsnInvokeMatch insnInvokeMatch = InsnInvokeMatch.All.INSTANCE;
+InsnInvokeConsumer insnInvokeConsumer = InsnInvokeConsumerGallery.printInvokeMethodInsnParamsAndReturn();
+
+Function<byte[], byte[]> func = bytes -> ClassFileModifyUtils.patchInsnInvoke(
+    bytes, methodMatch, insnInvokeMatch, insnInvokeConsumer);
+ByteArrayThreePhase.forZip(jarPath, entry, func);

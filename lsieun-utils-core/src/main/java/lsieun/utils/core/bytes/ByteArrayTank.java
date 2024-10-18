@@ -15,13 +15,37 @@ public interface ByteArrayTank {
 
     void write(byte[] data);
 
+    // region static methods
+    static ByteArrayTank of(Path path) {
+        return of(path.getFileSystem(), path);
+    }
+
+    static ByteArrayTank of(FileSystem fs, Path path) {
+        return new ForFileSystem(fs, path);
+    }
+
+    static ByteArrayTank byZipAndEntry(Path zipPath, String first, String... more) {
+        try {
+            URI zipUri = URI.create("jar:" + zipPath.toUri());
+            Map<String, String> env = new HashMap<>(1);
+            env.put("create", "false");
+            FileSystem zipFs = FileSystems.newFileSystem(zipUri, env);
+            Path path = zipFs.getPath(first, more);
+            return of(zipFs, path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static ByteArrayTank byJarAndClassName(Path jarPath, String className) {
+        String entry = className.replace('.', '/') + ".class";
+        return byZipAndEntry(jarPath, entry);
+    }
+    // endregion
+
     class ForFileSystem implements ByteArrayTank {
         private final FileSystem fs;
         private final Path path;
-
-        private ForFileSystem(Path path) {
-            this(FileSystems.getDefault(), path);
-        }
 
         private ForFileSystem(FileSystem fs, Path path) {
             this.fs = fs;
@@ -53,28 +77,6 @@ public interface ByteArrayTank {
             if (typeName.endsWith("ZipFileSystem")) {
                 fs.close();
             }
-        }
-
-        public static ForFileSystem of(Path path) {
-            return new ForFileSystem(path);
-        }
-
-        public static ForFileSystem of(FileSystem fs, Path path) {
-            return new ForFileSystem(fs, path);
-        }
-
-        public static ForFileSystem byZipAndEntry(Path zipPath, String first, String... more) throws IOException {
-            URI zipUri = URI.create("jar:" + zipPath.toUri());
-            Map<String, String> env = new HashMap<>(1);
-            env.put("create", "false");
-            FileSystem zipFs = FileSystems.newFileSystem(zipUri, env);
-            Path path = zipFs.getPath(first, more);
-            return new ForFileSystem(zipFs, path);
-        }
-
-        public static ForFileSystem byJarAndClassName(Path jarPath, String className) throws IOException {
-            String entry = className.replace('.', '/') + ".class";
-            return byZipAndEntry(jarPath, entry);
         }
     }
 }

@@ -1,11 +1,13 @@
 package lsieun.utils.asm.common;
 
+import lsieun.utils.asm.common.transformation.ClassFileModifyUtils;
 import lsieun.utils.asm.consumer.InsnInvokeConsumer;
 import lsieun.utils.asm.match.InsnInvokeMatch;
 import lsieun.utils.asm.match.MethodInfoMatch;
 import lsieun.utils.asm.visitor.transformation.modify.method.MethodBodyInfoType;
+import lsieun.utils.core.bytes.ByteArrayProcessor;
 import lsieun.utils.core.bytes.ByteArrayTank;
-import lsieun.utils.core.bytes.ByteArrayThreePhase;
+import lsieun.utils.core.bytes.ByteArrayProcessorBuilder;
 import lsieun.utils.core.io.resource.ResourceUtils;
 import lsieun.utils.match.text.TextMatch;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.function.Function;
 
 class ClassFileModifyUtilsTest {
     final String TARGET_METHOD_NAME = "test";
@@ -48,22 +49,22 @@ class ClassFileModifyUtilsTest {
                                  MethodInfoMatch methodMatch,
                                  Set<MethodBodyInfoType> options) {
         Path path = ResourceUtils.readFilePath(clazz);
-        Function<byte[], byte[]> func = bytes -> ClassFileModifyUtils.printMethodInfo(
+        ByteArrayProcessor func = bytes -> ClassFileModifyUtils.printMethodInfo(
                 bytes, methodMatch, options);
-        ByteArrayThreePhase.forFile(path, func);
+        ByteArrayProcessorBuilder.forFile().withFile(path).withFunction(func);
     }
 
     @Test
-    void testEmptyAndPrint() throws Exception {
+    void testEmptyAndPrint() {
         Path path = ResourceUtils.readFilePath(HelloWorldForEmptyAndPrint.class);
-        ByteArrayTank.ForFileSystem tank = ByteArrayTank.ForFileSystem.of(path);
+        ByteArrayTank tank = ByteArrayTank.of(path);
         MethodInfoMatch methodMatch = MethodInfoMatch.byMethodName("test");
         EnumSet<MethodBodyInfoType> options = MethodBodyInfoType.STACK_TRACE_ONLY;
 
-        ByteArrayThreePhase.builder()
+        ByteArrayProcessorBuilder.builder()
                 .withFromTank(tank)
                 .withToTank(tank)
-                .withFunction(bytes -> ClassFileModifyUtils.emptyAndPrint(bytes, methodMatch, options))
+                .withFunction(bytes -> ClassFileModifyUtils.emptyAndPrint(bytes, methodMatch, null, options))
                 .run();
     }
 
@@ -94,8 +95,10 @@ class ClassFileModifyUtilsTest {
                                  InsnInvokeMatch insnInvokeMatch,
                                  InsnInvokeConsumer insnInvokeConsumer) {
         Path path = ResourceUtils.readFilePath(clazz);
-        Function<byte[], byte[]> func = bytes -> ClassFileModifyUtils.patchInsnInvoke(
+        ByteArrayProcessor func = bytes -> ClassFileModifyUtils.modifyInsnInvoke(
                 bytes, methodMatch, insnInvokeMatch, insnInvokeConsumer);
-        ByteArrayThreePhase.forFile(path, func);
+        ByteArrayProcessorBuilder.forFile()
+                .withFile(path)
+                .withFunction(func);
     }
 }

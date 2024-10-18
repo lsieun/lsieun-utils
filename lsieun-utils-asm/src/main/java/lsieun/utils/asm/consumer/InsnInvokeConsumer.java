@@ -1,9 +1,9 @@
 package lsieun.utils.asm.consumer;
 
 import lsieun.utils.annotation.mind.logic.ThinkStep;
+import lsieun.utils.asm.common.transformation.ClassFileModifyUtils;
 import lsieun.utils.asm.cst.MyAsmConst;
 import lsieun.utils.asm.insn.AsmInsnUtilsForCodeFragment;
-import lsieun.utils.asm.common.ClassFileModifyUtils;
 import lsieun.utils.asm.insn.AsmInsnUtilsForOpcode;
 import lsieun.utils.asm.match.InsnInvokeMatch;
 import lsieun.utils.asm.match.MethodInfoMatch;
@@ -17,12 +17,37 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @see ClassFileModifyUtils#patchInsnInvoke(byte[], MethodInfoMatch, InsnInvokeMatch, InsnInvokeConsumer)
+ * <code>
+ * <pre>
+ * Path jarPath = Path.of(&quot;...&quot;);
+ * String entry = AsmTypeNameUtils.toJarEntryName(&quot;com.abc.Xyz&quot;);
+ * String methodName = &quot;test&quot;;
+ * String methodDesc = &quot;()V&quot;;
+ * MethodInfoMatch methodMatch = MethodInfoMatch.byMethodNameAndDesc(methodName, methodDesc);
+ * InsnInvokeMatch insnInvokeMatch = InsnInvokeMatch.All.INSTANCE;
+ * InsnInvokeConsumer insnInvokeConsumer = InsnInvokeConsumerGallery.printInvokeMethodInsnParamsAndReturn();
+ *
+ * Function&lt;byte[], byte[]&gt; func = bytes -&gt; ClassFileModifyUtils.patchInsnInvoke(
+ *     bytes, methodMatch, insnInvokeMatch, insnInvokeConsumer);
+ * ByteArrayThreePhase.forZip(jarPath, entry, func);
+ * </pre>
+ * </code>
+ *
+ * @see ClassFileModifyUtils#modifyInsnInvoke(byte[], MethodInfoMatch, InsnInvokeMatch, InsnInvokeConsumer)
+ * @see InsnInvokeConsumerGallery
  */
 public interface InsnInvokeConsumer {
     void accept(MethodVisitor mv,
                 String currentType, String currentMethodName, String currentMethodDesc,
                 int opcode, String owner, String name, String descriptor, boolean isInterface);
+
+    static InsnInvokeConsumer push(int val) {
+        return ((mv, currentType, currentMethodName, currentMethodDesc,
+                 opcode, owner, name, descriptor, isInterface) ->
+        {
+            AsmInsnUtilsForOpcode.push(mv, val);
+        });
+    }
 
     enum NoOp implements InsnInvokeConsumer {
         INSTANCE;
@@ -107,7 +132,7 @@ public interface InsnInvokeConsumer {
                     Type methodType = Type.getMethodType(descriptor);
                     Type returnType = methodType.getReturnType();
                     AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
-                    String msg = String.format("%s::%s:%s ---> %s %s::%s:%s [RETURN] ",
+                    String msg = String.format("%s::%s:%s <--- %s %s::%s:%s [RETURN] ",
                             currentType, currentMethodName, currentMethodDesc,
                             OpcodeConst.getOpcodeName(opcode), owner, name, descriptor);
                     AsmInsnUtilsForCodeFragment.printValueOnStack(mv, returnType, msg);
@@ -166,21 +191,26 @@ public interface InsnInvokeConsumer {
         }
 
         @Override
-        public void accept(MethodVisitor mv, String currentType, String currentMethodName, String currentMethodDesc, int opcode, String owner, String name, String descriptor, boolean isInterface) {
+        public void accept(MethodVisitor mv,
+                           String currentType, String currentMethodName, String currentMethodDesc,
+                           int opcode, String owner, String name, String descriptor, boolean isInterface) {
             if (mv == null) {
                 return;
             }
 
             for (InsnInvokeConsumer consumer : preInvokeConsumers) {
-                consumer.accept(mv, currentType, currentMethodName, currentMethodDesc, opcode, owner, name, descriptor, isInterface);
+                consumer.accept(mv, currentType, currentMethodName, currentMethodDesc,
+                        opcode, owner, name, descriptor, isInterface);
             }
 
             for (InsnInvokeConsumer consumer : onInvokeConsumers) {
-                consumer.accept(mv, currentType, currentMethodName, currentMethodDesc, opcode, owner, name, descriptor, isInterface);
+                consumer.accept(mv, currentType, currentMethodName, currentMethodDesc,
+                        opcode, owner, name, descriptor, isInterface);
             }
 
             for (InsnInvokeConsumer consumer : postInvokeConsumers) {
-                consumer.accept(mv, currentType, currentMethodName, currentMethodDesc, opcode, owner, name, descriptor, isInterface);
+                consumer.accept(mv, currentType, currentMethodName, currentMethodDesc,
+                        opcode, owner, name, descriptor, isInterface);
             }
         }
 

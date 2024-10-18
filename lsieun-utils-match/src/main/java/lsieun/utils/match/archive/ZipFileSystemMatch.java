@@ -1,16 +1,21 @@
 package lsieun.utils.match.archive;
 
+import lsieun.utils.core.log.Logger;
+import lsieun.utils.core.log.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
+import java.util.Iterator;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 @FunctionalInterface
 public interface ZipFileSystemMatch extends ArchiveMatch {
+    Logger logger = LoggerFactory.getLogger(ZipFileSystemMatch.class);
+
     boolean test(Path zipPath, FileSystem zipFileSystem);
 
     // region static methods: FileSystem
@@ -39,19 +44,20 @@ public interface ZipFileSystemMatch extends ArchiveMatch {
 
     static ZipFileSystemMatch byZipEntry(ZipEntryMatch match, boolean quick) {
         return (zipPath, zipFs) -> {
-            Path dirPath = zipFs.getPath("/");
+            Path rootPath = zipFs.getPath("/");
             BiPredicate<Path, BasicFileAttributes> predicate = (path, attr) -> true;
 
-            try (Stream<Path> stream = Files.find(dirPath, Integer.MAX_VALUE, predicate)) {
-                List<String> list = stream
-                        .map(Path::toString)
-                        .sorted()
-                        .toList();
-                int size = list.size();
+            try (Stream<Path> stream = Files.find(rootPath, Integer.MAX_VALUE, predicate)) {
+                Iterator<Path> it = stream.sorted().iterator();
                 boolean matchFlag = false;
-                for (int i = 0; i < size; i++) {
-                    String entry = list.get(i);
+                while (it.hasNext()) {
+                    Path entryPath = it.next();
+                    Path relativePath = rootPath.relativize(entryPath);
+                    String entry = relativePath.toString();
                     boolean flag = match.test(zipPath, zipFs, entry);
+
+                    logger.debug(() -> String.format("[%s] %s", flag ? "MATCHED" : "MISMATCHED", entry));
+
                     if (quick && flag) {
                         return true;
                     }

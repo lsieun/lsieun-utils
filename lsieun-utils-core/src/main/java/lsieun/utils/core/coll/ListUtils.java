@@ -4,8 +4,8 @@ import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class ListUtils {
     public static boolean isNullOrEmpty(final Collection<?> c) {
@@ -13,9 +13,24 @@ public class ListUtils {
     }
 
     @SafeVarargs
-    public static <T> List<T> toList(@Nonnull T first, T... rest) {
-        Objects.requireNonNull(first);
+    public static <T> List<T> toList(T... array) {
+        if (array == null || array.length == 0) {
+            return Collections.emptyList();
+        }
 
+        List<T> list = new ArrayList<T>();
+        int length = array.length;
+        for (int i = 0; i < length; i++) {
+            T item = array[i];
+            if (item != null) {
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
+    @SafeVarargs
+    public static <T> List<T> toList(@Nonnull T first, T... rest) {
         List<T> list = new ArrayList<T>();
         list.add(first);
 
