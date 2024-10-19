@@ -14,12 +14,12 @@
     <url>https://github.com/lsieun/lsieun-utils</url>
 
     <modules>
-        <module>lsieun-utils-annotation</module>
-        <module>lsieun-utils-core</module>
-        <module>lsieun-utils-asm</module>
-        <module>lsieun-utils-match</module>
-        <module>lsieun-utils-task</module>
-        <module>lsieun-utils-test</module>
+        <module>lsieun-annotation</module>
+        <module>lsieun-base</module>
+        <module>lsieun-core</module>
+        <module>lsieun-asm</module>
+        <module>lsieun-task</module>
+        <module>lsieun-test</module>
     </modules>
 
     <properties>
@@ -99,13 +99,10 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <!--<fork>true</fork>-->
                     <compilerArgs>
                         <arg>-g</arg>
                         <arg>-parameters</arg>
-                        <!--<arg>-XDignore.symbol.file</arg>-->
                     </compilerArgs>
-                    <!--<compilerArgument>&#45;&#45;add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED</compilerArgument>-->
                 </configuration>
             </plugin>
             <!-- 生成 source code 的 JAR 包 -->
