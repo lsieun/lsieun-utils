@@ -6,8 +6,6 @@ import lsieun.base.io.resource.ResourceUtils;
 import lsieun.core.match.text.TextMatch;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 class ClassFileAnalysisUtilsTest {
 
     @Test

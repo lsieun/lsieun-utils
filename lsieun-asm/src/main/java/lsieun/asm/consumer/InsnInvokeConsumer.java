@@ -2,6 +2,8 @@ package lsieun.asm.consumer;
 
 import lsieun.annotation.mind.logic.ThinkStep;
 import lsieun.asm.common.transformation.ClassFileModifyUtils;
+import lsieun.asm.core.AsmTypeBuddy;
+import lsieun.asm.core.AsmTypeNameUtils;
 import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.insn.AsmInsnUtilsForCodeFragment;
 import lsieun.asm.insn.AsmInsnUtilsForOpcode;
@@ -100,8 +102,8 @@ public interface InsnInvokeConsumer {
                                int opcode, String owner, String name, String descriptor, boolean isInterface) {
                 if (mv != null) {
                     String msg = String.format("%s::%s:%s ---> %s %s::%s:%s",
-                            currentType, currentMethodName, currentMethodDesc,
-                            OpcodeConst.getOpcodeName(opcode), owner, name, descriptor);
+                            AsmTypeNameUtils.toClassName(currentType), currentMethodName, currentMethodDesc,
+                            OpcodeConst.getOpcodeName(opcode), AsmTypeNameUtils.toClassName(owner), name, descriptor);
                     AsmInsnUtilsForCodeFragment.printMessage(mv, msg);
                 }
             }
@@ -131,11 +133,17 @@ public interface InsnInvokeConsumer {
                     // print return value
                     Type methodType = Type.getMethodType(descriptor);
                     Type returnType = methodType.getReturnType();
-                    AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
+
                     String msg = String.format("%s::%s:%s <--- %s %s::%s:%s [RETURN] ",
-                            currentType, currentMethodName, currentMethodDesc,
-                            OpcodeConst.getOpcodeName(opcode), owner, name, descriptor);
-                    AsmInsnUtilsForCodeFragment.printValueOnStack(mv, returnType, msg);
+                            AsmTypeNameUtils.toClassName(currentType), currentMethodName, currentMethodDesc,
+                            OpcodeConst.getOpcodeName(opcode), AsmTypeNameUtils.toClassName(owner), name, descriptor);
+                    if (AsmTypeBuddy.isValidValue(returnType)) {
+                        AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
+                        AsmInsnUtilsForCodeFragment.printValueOnStack(mv, returnType, msg);
+                    }
+                    else {
+                        AsmInsnUtilsForCodeFragment.printMessage(mv, msg + "void");
+                    }
                 }
             }
         },

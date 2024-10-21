@@ -426,7 +426,9 @@ public class AsmInsnUtilsForCodeFragment {
     }
 
     public static void printValueOnStack(@Nonnull MethodVisitor mv, @Nonnull Type t, @Nonnull String prefix) {
-        AsmTypeBuddy.requiresValidValue(t);
+        if (!AsmTypeBuddy.isValidValue(t)) {
+            return;
+        }
 
         // convert to String
         // operand stack: obj

@@ -20,6 +20,7 @@
         <module>lsieun-asm</module>
         <module>lsieun-task</module>
         <module>lsieun-test</module>
+        <module>lsieun-box</module>
     </modules>
 
     <properties>
@@ -33,11 +34,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Lib -->
-        <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
         <asm.version>9.7</asm.version>
         <commons.io.version>2.11.0</commons.io.version>
         <guava.version>31.1-jre</guava.version>
         <hutool.version>5.8.32</hutool.version>
+        <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
+        <jetbrains.version>26.0.1</jetbrains.version>
+        <jna.version>5.15.0</jna.version>
 
         <!-- Unit Test -->
         <junit.version>5.10.0</junit.version>
@@ -45,12 +48,20 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Annotation -->
             <dependency>
                 <groupId>jakarta.annotation</groupId>
                 <artifactId>jakarta.annotation-api</artifactId>
                 <version>${jakarta.annotation.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${jetbrains.version}</version>
+            </dependency>
 
+            <!-- ASM -->
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-util</artifactId>
@@ -60,6 +71,26 @@
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-commons</artifactId>
                 <version>${asm.version}</version>
+            </dependency>
+
+            <!-- JNA -->
+            <!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna -->
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${jna.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform -->
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>${jna.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna-jpms -->
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-jpms</artifactId>
+                <version>${jna.version}</version>
             </dependency>
 
             <dependency>
@@ -72,6 +103,38 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.17.0</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>1.12.0</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-exec -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-exec</artifactId>
+                <version>1.4.0</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.27.1</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.jboss/jboss-vfs -->
+            <dependency>
+                <groupId>org.jboss</groupId>
+                <artifactId>jboss-vfs</artifactId>
+                <version>3.3.2.Final</version>
             </dependency>
 
             <dependency>

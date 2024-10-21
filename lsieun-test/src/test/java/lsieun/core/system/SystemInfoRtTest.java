@@ -1,8 +1,8 @@
-package lsieun.base.os;
+package lsieun.core.system;
 
 import org.junit.jupiter.api.Test;
 
-import static lsieun.base.os.SystemInfoRt.*;
+import static lsieun.core.system.SystemInfoRt.*;
 
 class SystemInfoRtTest {
     @Test

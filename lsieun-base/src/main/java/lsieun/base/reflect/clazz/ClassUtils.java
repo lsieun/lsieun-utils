@@ -2,7 +2,6 @@ package lsieun.base.reflect.clazz;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Objects;
 
 public class ClassUtils {
     // java.lang.invoke.InnerClassLambdaMetafactory的lambdaClassName字段
@@ -10,45 +9,27 @@ public class ClassUtils {
         return clazz.getName().contains("$$Lambda$");
     }
 
-    public static void checkFunctionalInterface(Class<?> clazz) {
-        Objects.requireNonNull(clazz);
-
-        // (1) check type: interface
-        if (!clazz.isInterface()) {
-            String msg = String.format("The class %s is not an interface", clazz.getTypeName());
-            throw new IllegalArgumentException(msg);
-        }
-
-        // (2) check annotation
-        if (clazz.getAnnotation(FunctionalInterface.class) == null) {
-            String msg = String.format(
-                    "The class %s does not have the @FunctionalInterface annotation",
-                    clazz.getTypeName()
-            );
-            throw new IllegalArgumentException(msg);
-        }
-
-        // (3) check method return: boolean
-        Method samMethod = findSingleAbstractMethod(clazz);
-        Class<?> returnType = samMethod.getReturnType();
-        if (returnType != boolean.class) {
-            String msg = String.format(
-                    "The %s.%s(...) does not return boolean.",
-                    clazz.getTypeName(),
-                    samMethod.getName()
-            );
-            throw new IllegalArgumentException(msg);
-        }
-    }
-
     public static Method findSingleAbstractMethod(Class<?> clazz) {
-        Method[] declaredMethods = clazz.getDeclaredMethods();
-        for (Method method : declaredMethods) {
-            int modifiers = method.getModifiers();
+        Method[] methods = clazz.getMethods();
+        Method samMethod = null;
+        int samCount = 0;
+        for (Method m : methods) {
+            int modifiers = m.getModifiers();
             if (Modifier.isAbstract(modifiers)) {
-                return method;
+                samMethod = m;
+                samCount++;
             }
         }
-        throw new IllegalArgumentException("No method found for " + clazz);
+
+        if(samCount == 0) {
+            throw new IllegalArgumentException("No SAM method found for " + clazz);
+        }
+        else if (samCount == 1) {
+            return samMethod;
+        }
+        else {
+            throw new IllegalArgumentException("Multiple abstract methods found for " + clazz);
+        }
+
     }
 }

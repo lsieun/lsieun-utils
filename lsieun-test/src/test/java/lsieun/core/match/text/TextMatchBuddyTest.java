@@ -1,6 +1,5 @@
 package lsieun.core.match.text;
 
-import lsieun.core.match.text.TextMatchBuddy;
 import org.junit.jupiter.api.Test;
 
 class TextMatchBuddyTest {

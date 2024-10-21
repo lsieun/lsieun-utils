@@ -53,7 +53,13 @@ public class ClassFileTextUtils {
 
     public static void printAsmCode(byte[] bytes) {
         String text = toAsmCode(bytes);
-        System.out.println(text);
+        String[] lines = text.split("\\R");
+        PrintWriter writer = new PrintWriter(System.out, true, StandardCharsets.UTF_8);
+        CodeWriter codeWriter = new CodeWriter(writer);
+        for (String str : lines) {
+            codeWriter.println(str);
+        }
+        codeWriter.flush();
     }
 
     public static void printAsmCode(Class<?> clazz) {

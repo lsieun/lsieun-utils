@@ -2,11 +2,14 @@ package lsieun.asm.visitor.common;
 
 import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.description.ByteCodeElementType;
+import lsieun.asm.insn.AsmInsnUtilsForCodeFragment;
+import lsieun.asm.match.InsnInvokeMatch;
 import lsieun.asm.match.format.MatchFormat;
 import lsieun.asm.match.format.MatchState;
-import lsieun.asm.match.InsnInvokeMatch;
+import lsieun.asm.utils.OpcodeConst;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 public abstract class MethodVisitorForInsnInvokeMatch extends MethodVisitor {
@@ -16,15 +19,17 @@ public abstract class MethodVisitorForInsnInvokeMatch extends MethodVisitor {
     protected final String currentMethodName;
     protected final String currentMethodDesc;
     private final InsnInvokeMatch insnInvokeMatch;
+    private final boolean supportJump;
 
     protected MethodVisitorForInsnInvokeMatch(MethodVisitor methodVisitor,
                                               String currentType, String currentMethodName, String currentMethodDesc,
-                                              InsnInvokeMatch insnInvokeMatch) {
+                                              InsnInvokeMatch insnInvokeMatch, boolean supportJump) {
         super(MyAsmConst.ASM_API_VERSION, methodVisitor);
         this.currentType = currentType;
         this.currentMethodName = currentMethodName;
         this.currentMethodDesc = currentMethodDesc;
         this.insnInvokeMatch = insnInvokeMatch;
+        this.supportJump = supportJump;
     }
 
     @Override
@@ -37,6 +42,25 @@ public abstract class MethodVisitorForInsnInvokeMatch extends MethodVisitor {
         }
         else {
             super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
+        }
+    }
+
+    @Override
+    public void visitJumpInsn(int opcode, Label label) {
+        if (mv != null && supportJump) {
+            AsmInsnUtilsForCodeFragment.printMessage(mv, "Jump --->" + OpcodeConst.getOpcodeName(opcode));
+        }
+        super.visitJumpInsn(opcode, label);
+        if (mv != null && supportJump) {
+            AsmInsnUtilsForCodeFragment.printMessage(mv, "Jump ---> XXX - " + OpcodeConst.getOpcodeName(opcode));
+        }
+    }
+
+    @Override
+    public void visitLabel(Label label) {
+        super.visitLabel(label);
+        if (mv != null && supportJump) {
+            AsmInsnUtilsForCodeFragment.printMessage(mv, "Jump <---");
         }
     }
 

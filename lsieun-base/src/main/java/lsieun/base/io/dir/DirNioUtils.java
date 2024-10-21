@@ -8,6 +8,7 @@ import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -64,7 +65,7 @@ public class DirNioUtils {
         }
 
         // (4) find
-        try (Stream<Path> stream = Files.find(dirPath, maxDepth, predicate)) {
+        try (Stream<Path> stream = Files.find(dirPath, maxDepth, predicate, FileVisitOption.FOLLOW_LINKS)) {
             return stream.collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException(e);

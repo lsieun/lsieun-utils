@@ -10,14 +10,17 @@ import org.objectweb.asm.MethodVisitor;
 public class ClassVisitorForModifyInsnInvoke extends ClassVisitorForMethodMatch {
     private final InsnInvokeMatch insnInvokeMatch;
     private final InsnInvokeConsumer insnInvokeConsumer;
+    private final boolean supportJump;
 
     public ClassVisitorForModifyInsnInvoke(ClassVisitor classVisitor,
                                            MethodInfoMatch methodMatch,
                                            InsnInvokeMatch insnInvokeMatch,
-                                           InsnInvokeConsumer insnInvokeConsumer) {
+                                           InsnInvokeConsumer insnInvokeConsumer,
+                                           boolean supportJump) {
         super(classVisitor, methodMatch);
         this.insnInvokeMatch = insnInvokeMatch;
         this.insnInvokeConsumer = insnInvokeConsumer;
+        this.supportJump = supportJump;
     }
 
     @Override
@@ -26,6 +29,6 @@ public class ClassVisitorForModifyInsnInvoke extends ClassVisitorForMethodMatch 
                                              String signature, String[] exceptions) {
         return new MethodVisitorForModifyInsnInvoke(mv,
                 currentOwner, methodName, methodDesc,
-                insnInvokeMatch, insnInvokeConsumer);
+                insnInvokeMatch, supportJump, insnInvokeConsumer);
     }
 }

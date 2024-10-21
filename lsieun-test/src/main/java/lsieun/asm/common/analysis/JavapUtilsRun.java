@@ -1,6 +1,5 @@
 package lsieun.asm.common.analysis;
 
-import lsieun.asm.common.analysis.JavapUtils;
 import lsieun.asm.core.AsmTypeNameUtils;
 
 public class JavapUtilsRun {

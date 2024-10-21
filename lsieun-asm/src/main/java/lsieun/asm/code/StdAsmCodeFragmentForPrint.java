@@ -1,11 +1,14 @@
 package lsieun.asm.code;
 
+import lsieun.asm.core.AsmTypeBuddy;
 import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.format.MethodInfoFormat;
 import lsieun.asm.insn.AsmInsnUtilsForCodeFragment;
+import lsieun.asm.insn.AsmInsnUtilsForOpcode;
 import lsieun.asm.tag.AsmCodeTag;
 import lsieun.base.thread.stacktrace.StackTraceFormat;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -62,6 +65,24 @@ public enum StdAsmCodeFragmentForPrint implements AsmCodeFragment {
                               String signature, String[] exceptions) {
             String line = MethodInfoFormat.methodExitReturn(currentType, methodAccess, methodName, methodDesc);
             AsmInsnUtilsForCodeFragment.printMessage(mv, line);
+        }
+    },
+    EXIT_RETURN_VALUE {
+        @Override
+        public void implement(MethodVisitor mv, String currentType,
+                              int methodAccess, String methodName, String methodDesc,
+                              String signature, String[] exceptions) {
+            String line = MethodInfoFormat.methodExitReturn(currentType, methodAccess, methodName, methodDesc);
+            Type methodType = Type.getMethodType(methodDesc);
+            Type returnType = methodType.getReturnType();
+            if (AsmTypeBuddy.isValidValue(returnType)) {
+                AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
+                AsmInsnUtilsForCodeFragment.printValueOnStack(mv, returnType, line + " - [ReturnValue] ");
+            }
+            else {
+                AsmInsnUtilsForCodeFragment.printMessage(mv, line);
+            }
+
         }
     },
     EXIT_THROWN_SIMPLE {

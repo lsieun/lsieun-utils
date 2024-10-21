@@ -5,15 +5,14 @@ import lsieun.asm.common.analysis.ClassFileFindUtils;
 import lsieun.asm.common.analysis.MultipleClassFileFindUtils;
 import lsieun.asm.match.AsmTypeMatch;
 import lsieun.asm.match.InsnInvokeMatch;
-import lsieun.core.match.LogicAssistant;
 import lsieun.asm.match.MethodInfoMatch;
 import lsieun.asm.match.result.MatchItem;
 import lsieun.base.ds.pair.Pair;
+import lsieun.core.match.LogicAssistant;
 import lsieun.core.match.text.TextMatch;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;

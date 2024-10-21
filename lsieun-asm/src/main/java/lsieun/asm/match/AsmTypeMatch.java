@@ -2,9 +2,11 @@ package lsieun.asm.match;
 
 import lsieun.annotation.type.asm.AsmMatchGeneration;
 import lsieun.asm.core.AsmTypeNameUtils;
+import lsieun.core.match.LogicAssistant;
 import lsieun.core.match.text.TextMatch;
 import org.objectweb.asm.Type;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -51,7 +53,9 @@ public interface AsmTypeMatch {
         return t -> textMatch.test(func.apply(t));
     }
 
-
+    static LogicAssistant<AsmTypeMatch> logic() {
+        return LogicAssistant.of(MethodHandles.lookup(), AsmTypeMatch.class);
+    }
 
     enum Bool implements AsmTypeMatch {
         TRUE {

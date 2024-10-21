@@ -1,11 +1,11 @@
 package lsieun.asm.common.transformation;
 
 import lsieun.annotation.mind.logic.ThinkStep;
-import lsieun.asm.code.AsmCodeOptionForWrite;
 import lsieun.asm.code.AsmCodeFragment;
-import lsieun.asm.tag.AsmCodeTag;
+import lsieun.asm.code.AsmCodeOptionForWrite;
 import lsieun.asm.code.StdAsmCodeFragmentForPrint;
 import lsieun.asm.match.MethodInfoMatch;
+import lsieun.asm.tag.AsmCodeTag;
 import lsieun.asm.visitor.transformation.modify.method.ClassVisitorForAdvice;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
@@ -33,6 +33,16 @@ public class ClassFileAdviceUtils {
                 StdAsmCodeFragmentForPrint.PARAMETER_VALUES
         );
         AsmCodeFragment methodExitReturn = StdAsmCodeFragmentForPrint.EXIT_RETURN_SIMPLE;
+        AsmCodeFragment methodExitThrown = StdAsmCodeFragmentForPrint.EXIT_THROWN_SIMPLE;
+        return apply(bytes, methodMatch, methodEnter, methodExitReturn, methodExitThrown);
+    }
+
+    public static byte[] applyParamAndReturnValue(byte[] bytes, MethodInfoMatch methodMatch) {
+        AsmCodeFragment methodEnter = AsmCodeFragment.of(
+                StdAsmCodeFragmentForPrint.ENTER,
+                StdAsmCodeFragmentForPrint.PARAMETER_VALUES
+        );
+        AsmCodeFragment methodExitReturn = StdAsmCodeFragmentForPrint.EXIT_RETURN_VALUE;
         AsmCodeFragment methodExitThrown = StdAsmCodeFragmentForPrint.EXIT_THROWN_SIMPLE;
         return apply(bytes, methodMatch, methodEnter, methodExitReturn, methodExitThrown);
     }

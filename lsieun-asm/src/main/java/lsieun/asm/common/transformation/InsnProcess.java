@@ -4,7 +4,6 @@ import lsieun.asm.common.analysis.ClassFileMatchUtils;
 import lsieun.asm.consumer.InsnInvokeConsumer;
 import lsieun.asm.match.ClassInfoMatch;
 import lsieun.asm.match.InsnInvokeMatch;
-import lsieun.core.match.LogicAssistant;
 import lsieun.asm.match.MethodInfoMatch;
 import lsieun.asm.match.format.MatchFormat;
 import lsieun.asm.match.format.MatchState;
@@ -12,6 +11,7 @@ import lsieun.base.coll.ListUtils;
 import lsieun.base.io.dir.DirNioUtils;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
+import lsieun.core.match.LogicAssistant;
 import lsieun.core.match.path.FilePathMatch;
 import lsieun.core.match.text.TextMatch;
 

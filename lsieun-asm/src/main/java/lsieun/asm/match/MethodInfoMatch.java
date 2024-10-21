@@ -2,7 +2,6 @@ package lsieun.asm.match;
 
 import lsieun.asm.description.MemberDesc;
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.MatchLogic;
 import lsieun.core.match.text.TextMatch;
 import org.objectweb.asm.Type;
 

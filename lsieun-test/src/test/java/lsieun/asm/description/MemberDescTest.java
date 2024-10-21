@@ -1,6 +1,5 @@
 package lsieun.asm.description;
 
-import lsieun.asm.description.MemberDesc;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

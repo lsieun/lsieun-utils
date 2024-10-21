@@ -11,6 +11,7 @@ import java.lang.invoke.VarHandle;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -121,7 +122,7 @@ public class MatchAsmUtils {
 
     // region clazz
     static Class<?> getSamSubClass(MethodHandles.Lookup lookup, Class<?> samClass, Map<Class<?>, Class<?>> map, Function<Class<?>, byte[]> func) {
-        ClassUtils.checkFunctionalInterface(samClass);
+        checkFunctionalInterface(samClass);
 
         Class<?> clazz = getClassFromMap(map, samClass);
         if (clazz == null) {
@@ -132,7 +133,7 @@ public class MatchAsmUtils {
     }
 
     static Class<?> getClassFromMap(Map<Class<?>, Class<?>> map, Class<?> samClass) {
-        ClassUtils.checkFunctionalInterface(samClass);
+        checkFunctionalInterface(samClass);
 
         return map.get(samClass);
     }
@@ -673,6 +674,37 @@ public class MatchAsmUtils {
     public static Type toArray(Type t, int rank) {
         String arrayDescriptor = "[".repeat(rank) + t.getDescriptor();
         return Type.getType(arrayDescriptor);
+    }
+
+    static void checkFunctionalInterface(Class<?> clazz) {
+        Objects.requireNonNull(clazz);
+
+        // (1) check type: interface
+        if (!clazz.isInterface()) {
+            String msg = String.format("The class %s is not an interface", clazz.getTypeName());
+            throw new IllegalArgumentException(msg);
+        }
+
+        // (2) check annotation
+        if (clazz.getAnnotation(FunctionalInterface.class) == null) {
+            String msg = String.format(
+                    "The class %s does not have the @FunctionalInterface annotation",
+                    clazz.getTypeName()
+            );
+            throw new IllegalArgumentException(msg);
+        }
+
+        // (3) check method return: boolean
+        Method samMethod = ClassUtils.findSingleAbstractMethod(clazz);
+        Class<?> returnType = samMethod.getReturnType();
+        if (returnType != boolean.class) {
+            String msg = String.format(
+                    "The %s.%s(...) does not return boolean.",
+                    clazz.getTypeName(),
+                    samMethod.getName()
+            );
+            throw new IllegalArgumentException(msg);
+        }
     }
     // endregion
 }

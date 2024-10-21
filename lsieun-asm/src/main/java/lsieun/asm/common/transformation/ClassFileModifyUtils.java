@@ -76,19 +76,27 @@ public class ClassFileModifyUtils {
         return newBytes;
     }
 
-
     public static byte[] modifyInsnInvoke(byte[] bytes,
                                           MethodInfoMatch methodMatch,
                                           InsnInvokeMatch insnInvokeMatch,
                                           InsnInvokeConsumer insnInvokeConsumer) {
+        return modifyInsnInvoke(bytes, methodMatch, insnInvokeMatch, insnInvokeConsumer, false);
+    }
+
+    public static byte[] modifyInsnInvoke(byte[] bytes,
+                                          MethodInfoMatch methodMatch,
+                                          InsnInvokeMatch insnInvokeMatch,
+                                          InsnInvokeConsumer insnInvokeConsumer,
+                                          boolean supportJump) {
         //（1）构建ClassReader
         ClassReader cr = new ClassReader(bytes);
 
         //（2）构建ClassWriter
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        int writerFlag = supportJump ? ClassWriter.COMPUTE_FRAMES : ClassWriter.COMPUTE_MAXS;
+        ClassWriter cw = new ClassWriter(writerFlag);
 
         //（3）串连ClassVisitor
-        ClassVisitor cv = new ClassVisitorForModifyInsnInvoke(cw, methodMatch, insnInvokeMatch, insnInvokeConsumer);
+        ClassVisitor cv = new ClassVisitorForModifyInsnInvoke(cw, methodMatch, insnInvokeMatch, insnInvokeConsumer, supportJump);
 
         //（4）结合ClassReader和ClassVisitor
         int parsingOptions = ClassReader.EXPAND_FRAMES;

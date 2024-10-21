@@ -23,6 +23,8 @@ import java.util.*;
  *                                   └─── Print ───┤
  *                                                 └─── ALL_THREAD_INFO
  * </pre>
+ *
+ * @see StdAsmCodeFragmentForPrint
  */
 @FunctionalInterface
 public interface AsmCodeFragment extends AsmCodeTagCarrier.ForMax {

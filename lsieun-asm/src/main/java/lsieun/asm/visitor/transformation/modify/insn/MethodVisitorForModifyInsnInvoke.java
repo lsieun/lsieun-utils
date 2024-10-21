@@ -10,9 +10,9 @@ public class MethodVisitorForModifyInsnInvoke extends MethodVisitorForInsnInvoke
 
     protected MethodVisitorForModifyInsnInvoke(MethodVisitor methodVisitor,
                                                String currentType, String currentMethodName, String currentMethodDesc,
-                                               InsnInvokeMatch insnInvokeMatch,
+                                               InsnInvokeMatch insnInvokeMatch, boolean supportJump,
                                                InsnInvokeConsumer insnInvokeConsumer) {
-        super(methodVisitor, currentType, currentMethodName, currentMethodDesc, insnInvokeMatch);
+        super(methodVisitor, currentType, currentMethodName, currentMethodDesc, insnInvokeMatch, supportJump);
         this.insnInvokeConsumer = insnInvokeConsumer;
     }
 
