@@ -15,9 +15,10 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @FunctionalInterface
-public interface FilePathMatch {
+public interface FilePathMatch extends Predicate<Path> {
     boolean test(Path path);
 
     // region text

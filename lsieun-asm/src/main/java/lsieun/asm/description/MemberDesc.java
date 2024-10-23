@@ -1,9 +1,10 @@
 package lsieun.asm.description;
 
-import jakarta.annotation.Nonnull;
 import lsieun.asm.core.AsmTypeNameUtils;
 import lsieun.base.text.StrConst;
 import lsieun.base.text.StringUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,11 +17,11 @@ public record MemberDesc(String owner, String name, String desc) {
         return new MemberDesc(owner, name, desc);
     }
 
-    public static MemberDesc of(@Nonnull String line) {
+    public static MemberDesc of(@NotNull String line) {
         return of(line, StrConst.COLON);
     }
 
-    public static MemberDesc of(@Nonnull String line, @Nonnull String regex) {
+    public static MemberDesc of(@NotNull String line, @NotNull String regex) {
         String[] array = line.trim().split(regex);
         String[] parts = Arrays.stream(array).
                 map(String::trim)
@@ -29,11 +30,11 @@ public record MemberDesc(String owner, String name, String desc) {
         return new MemberDesc(AsmTypeNameUtils.toInternalName(parts[0]), parts[1], parts[2]);
     }
 
-    public static List<MemberDesc> ofList(@Nonnull List<String> lines) {
+    public static List<MemberDesc> ofList(@NotNull List<String> lines) {
         return ofList(lines, StrConst.COLON);
     }
 
-    public static List<MemberDesc> ofList(@Nonnull List<String> lines, @Nonnull String regex) {
+    public static List<MemberDesc> ofList(@NotNull List<String> lines, @NotNull String regex) {
         if (lines.isEmpty()) {
             return Collections.emptyList();
         }

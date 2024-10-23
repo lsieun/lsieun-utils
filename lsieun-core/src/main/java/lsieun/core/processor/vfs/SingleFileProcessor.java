@@ -14,7 +14,8 @@ public interface SingleFileProcessor extends Consumer<Path> {
             ByteArrayProcessor p = ByteArrayProcessor.of(processors);
             ByteArrayProcessorBuilder.forFile()
                     .withFile(filepath)
-                    .withByteArrayProcessor(p);
+                    .withByteArrayProcessor(p)
+                    .run();
         };
     }
 }

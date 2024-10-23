@@ -1,7 +1,7 @@
 package lsieun.core.system;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -54,7 +54,7 @@ public final class SystemInfo {
         return (new File("/dev/.cros_milestone")).exists();
     }
 
-    public static boolean isOsVersionAtLeast(@Nonnull String version) {
+    public static boolean isOsVersionAtLeast(@NotNull String version) {
         return compareVersionNumbers(OS_VERSION, version) >= 0;
     }
 
@@ -175,12 +175,12 @@ public final class SystemInfo {
         isMacOSSonoma = isMac && isOsVersionAtLeast("14.0");
     }
 
-    public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+    public static int indexOfIgnoreCase(@NotNull String where, @NotNull String what, int fromIndex) {
         return indexOfIgnoreCase((CharSequence)where, (CharSequence)what, fromIndex);
     }
 
 
-    public static int indexOfIgnoreCase(@Nonnull CharSequence where, @Nonnull CharSequence what, int fromIndex) {
+    public static int indexOfIgnoreCase(@NotNull CharSequence where, @NotNull CharSequence what, int fromIndex) {
 
         int targetCount = what.length();
         int sourceCount = where.length();
@@ -224,7 +224,7 @@ public final class SystemInfo {
     }
 
 
-    public static int indexOfIgnoreCase(@Nonnull String where, char what, int fromIndex) {
+    public static int indexOfIgnoreCase(@NotNull String where, char what, int fromIndex) {
 
         int sourceCount = where.length();
 

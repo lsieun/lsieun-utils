@@ -16,6 +16,14 @@ public interface MyAsmConst {
      * The internal name of a Java static initializer.
      */
     String TYPE_INITIALIZER_INTERNAL_NAME = "<clinit>";
+    String HASH_CODE_METHOD_NAME = "hashCode";
+    String HASH_CODE_METHOD_DESC = "()I";
+    String EQUALS_METHOD_NAME = "equals";
+    String EQUALS_METHOD_DESC = "(Ljava/lang/Object;)Z";
+    String CLONE_METHOD_NAME = "clone";
+    String CLONE_METHOD_DESC = "()Ljava/lang/Object;";
+    String TO_STRING_METHOD_NAME = "toString";
+    String TO_STRING_METHOD_DESC = "()Ljava/lang/String;";
     String PRINT_STACK_FRAME_METHOD_NAME = "print$StackWalker$StackFrame";
     String PRINT_STACK_FRAME_METHOD_DESC = "(Ljava/lang/StackWalker$StackFrame;)V";
 

@@ -1,7 +1,7 @@
 package lsieun.core.system;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -20,11 +20,11 @@ public enum OS {
     OS() {
     }
 
-    public @Nonnull Platform getPlatform() {
+    public @NotNull Platform getPlatform() {
         return this == Windows ? Platform.WINDOWS : Platform.UNIX;
     }
 
-    public static @Nonnull OS fromString(@Nullable String os) {
+    public static @NotNull OS fromString(@Nullable String os) {
         if (os != null) {
             os = os.toLowerCase(Locale.ENGLISH);
             if (os.startsWith("windows")) {

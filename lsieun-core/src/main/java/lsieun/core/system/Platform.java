@@ -1,6 +1,6 @@
 package lsieun.core.system;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 来自 IntelliJ IDEA 的 util-8.jar 中 com.intellij.execution.Platform
@@ -11,15 +11,15 @@ public enum Platform {
 
     public final char fileSeparator;
     public final char pathSeparator;
-    public final @Nonnull String lineSeparator;
+    public final @NotNull String lineSeparator;
 
-    Platform(char fileSeparator, char pathSeparator, @Nonnull String lineSeparator) {
+    Platform(char fileSeparator, char pathSeparator, @NotNull String lineSeparator) {
         this.fileSeparator = fileSeparator;
         this.pathSeparator = pathSeparator;
         this.lineSeparator = lineSeparator;
     }
 
-    public static @Nonnull Platform current() {
+    public static @NotNull Platform current() {
         return SystemInfo.isWindows ? WINDOWS : UNIX;
     }
 }

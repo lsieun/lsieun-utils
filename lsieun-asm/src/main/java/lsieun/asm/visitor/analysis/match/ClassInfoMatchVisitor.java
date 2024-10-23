@@ -1,6 +1,6 @@
 package lsieun.asm.visitor.analysis.match;
 
-import lsieun.asm.match.ClassInfoMatch;
+import lsieun.asm.sam.match.ClassInfoMatch;
 
 public class ClassInfoMatchVisitor extends MatchFlagVisitor {
     private final ClassInfoMatch match;

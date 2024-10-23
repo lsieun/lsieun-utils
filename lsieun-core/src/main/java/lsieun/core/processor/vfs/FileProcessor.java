@@ -1,6 +1,6 @@
 package lsieun.core.processor.vfs;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import lsieun.base.io.file.FileContentUtils;
 import lsieun.core.processor.bytes.ByteArrayProcessor;
 
@@ -15,16 +15,16 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public interface FileProcessor extends Consumer<Path> {
-    static FileProcessor of(@Nonnull ByteArrayProcessor processor) {
+    static FileProcessor of(@NotNull ByteArrayProcessor processor) {
         return path -> processFileAsByteArray(path, processor);
     }
 
-    static FileProcessor of(@Nonnull FileSystemProcessor fileSystemProcessor) {
+    static FileProcessor of(@NotNull FileSystemProcessor fileSystemProcessor) {
         return path -> processFileAsZipFileSystem(path, fileSystemProcessor);
     }
 
-    private static void processFileAsZipFileSystem(@Nonnull Path zipPath,
-                                                   @Nonnull FileSystemProcessor fileSystemProcessor) {
+    private static void processFileAsZipFileSystem(@NotNull Path zipPath,
+                                                   @NotNull FileSystemProcessor fileSystemProcessor) {
         if (!Files.exists(zipPath)) {
             return;
         }
@@ -39,7 +39,7 @@ public interface FileProcessor extends Consumer<Path> {
         }
     }
 
-    static void processFileAsByteArray(@Nonnull Path filepath, @Nonnull ByteArrayProcessor byteArrayProcessor) {
+    static void processFileAsByteArray(@NotNull Path filepath, @NotNull ByteArrayProcessor byteArrayProcessor) {
         if (!Files.exists(filepath)) {
             return;
         }

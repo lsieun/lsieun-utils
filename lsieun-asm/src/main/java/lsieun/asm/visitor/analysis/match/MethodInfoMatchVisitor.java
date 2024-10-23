@@ -1,6 +1,7 @@
 package lsieun.asm.visitor.analysis.match;
 
-import lsieun.asm.match.MethodInfoMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
+
 import org.objectweb.asm.MethodVisitor;
 
 public class MethodInfoMatchVisitor extends MatchFlagVisitor {
@@ -12,7 +13,7 @@ public class MethodInfoMatchVisitor extends MatchFlagVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        boolean flag = match.test(version, currentOwner, access, name, descriptor, signature, exceptions);
+        boolean flag = match.test(currentOwner, access, name, descriptor, signature, exceptions);
         matchFlag |= flag;
         return null;
     }

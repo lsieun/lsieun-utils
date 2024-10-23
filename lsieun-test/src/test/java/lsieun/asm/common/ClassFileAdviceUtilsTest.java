@@ -1,9 +1,9 @@
 package lsieun.asm.common;
 
-import lsieun.asm.code.AsmCodeFragment;
-import lsieun.asm.code.StdAsmCodeFragmentForPrint;
+import lsieun.asm.sam.consumer.AsmCodeFragment;
+import lsieun.asm.sam.consumer.StdAsmCodeFragmentForPrint;
 import lsieun.asm.common.transformation.ClassFileAdviceUtils;
-import lsieun.asm.match.MethodInfoMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.base.io.resource.ResourceUtils;
 import lsieun.core.processor.bytes.ByteArrayProcessor;
 import lsieun.core.processor.bytes.ByteArrayProcessorBuilder;
@@ -28,7 +28,8 @@ class ClassFileAdviceUtilsTest {
                 ClassFileAdviceUtils.apply(bytes, methodMatch, methodEnter, methodExitReturn, methodExitThrown);
         ByteArrayProcessorBuilder.forFile()
                 .withFile(path)
-                .withByteArrayProcessor(func);
+                .withByteArrayProcessor(func)
+                .run();
 
     }
 

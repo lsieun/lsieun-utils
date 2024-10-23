@@ -1,6 +1,6 @@
 package lsieun.core.match;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import lsieun.base.coll.ListUtils;
 
 import java.lang.invoke.MethodHandles;
@@ -39,7 +39,7 @@ public final class LogicAssistant<T> {
     }
 
     @SafeVarargs
-    public final T and(@Nonnull T first, T... more) {
+    public final T and(@NotNull T first, T... more) {
         if (more == null || more.length == 0) {
             return first;
         }
@@ -75,7 +75,7 @@ public final class LogicAssistant<T> {
     }
 
     @SafeVarargs
-    public final T or(@Nonnull T first, T... more) {
+    public final T or(@NotNull T first, T... more) {
         if (more == null || more.length == 0) {
             return first;
         }
@@ -110,7 +110,7 @@ public final class LogicAssistant<T> {
         return MatchLogic.or(lookup, clazz, list);
     }
 
-    public T not(@Nonnull T instance) {
+    public T not(@NotNull T instance) {
         return MatchLogic.negate(lookup, clazz, instance);
     }
 

@@ -1,6 +1,6 @@
 package lsieun.asm.common.analysis;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
@@ -15,7 +15,7 @@ public final class CodeWriter extends PrintWriter {
         super(writer);
     }
 
-    public void print(@Nonnull String s) {
+    public void print(@NotNull String s) {
         this.possiblyIndent(s);
         super.print(s);
 

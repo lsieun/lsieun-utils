@@ -1,6 +1,6 @@
 package lsieun.base.number;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class BitUtil {
     public static boolean isSet(byte value, byte mask) {
@@ -64,7 +64,7 @@ public final class BitUtil {
 
     }
 
-    private static @Nonnull String invalidMaskError(long mask) {
+    private static @NotNull String invalidMaskError(long mask) {
         return "Mask must have only one bit set, but got: " + Long.toBinaryString(mask);
     }
 }

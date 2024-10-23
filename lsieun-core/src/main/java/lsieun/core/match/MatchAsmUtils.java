@@ -3,6 +3,7 @@ package lsieun.core.match;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
 import lsieun.base.reflect.clazz.ClassUtils;
+
 import org.objectweb.asm.*;
 
 import java.lang.invoke.MethodHandle;
@@ -128,7 +129,6 @@ public class MatchAsmUtils {
         if (clazz == null) {
             clazz = map.computeIfAbsent(samClass, k -> getClassFromBytes(lookup, k, func));
         }
-
         return clazz;
     }
 
@@ -564,7 +564,7 @@ public class MatchAsmUtils {
     }
 
     static byte[] generateLogicNegate(Type samType, String samMethodName, Type samMethodType) {
-        Type newClassType = getOrType(samType);
+        Type newClassType = getNotType(samType);
 
         ClassWriter cw = new ClassWriter(CLASS_WRITER_FLAGS);
         Type constructorDescriptor = Type.getMethodType(Type.VOID_TYPE, samType);
@@ -660,6 +660,10 @@ public class MatchAsmUtils {
 
     static Type getOrType(Type t) {
         return getNewType(t, "Or");
+    }
+
+    static Type getNotType(Type t) {
+        return getNewType(t, "Not");
     }
 
     static Type getNewType(Type t, String suffix) {

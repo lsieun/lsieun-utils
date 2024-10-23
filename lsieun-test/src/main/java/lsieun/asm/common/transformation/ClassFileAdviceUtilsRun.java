@@ -2,7 +2,7 @@ package lsieun.asm.common.transformation;
 
 import lsieun.asm.core.AsmTypeNameUtils;
 import lsieun.asm.description.MemberDesc;
-import lsieun.asm.match.MethodInfoMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.core.processor.bytes.ByteArrayProcessor;
 import lsieun.core.processor.bytes.ByteArrayProcessorBuilder;
 
@@ -33,6 +33,7 @@ public class ClassFileAdviceUtilsRun {
         // (4) transform
         ByteArrayProcessorBuilder.forZip()
                 .withZip(jarPath, entry)
-                .withByteArrayProcessor(func);
+                .withByteArrayProcessor(func)
+                .run();
     }
 }

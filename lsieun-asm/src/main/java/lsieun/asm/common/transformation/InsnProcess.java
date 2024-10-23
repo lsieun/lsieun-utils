@@ -1,12 +1,12 @@
 package lsieun.asm.common.transformation;
 
 import lsieun.asm.common.analysis.ClassFileMatchUtils;
-import lsieun.asm.consumer.InsnInvokeConsumer;
-import lsieun.asm.match.ClassInfoMatch;
-import lsieun.asm.match.InsnInvokeMatch;
-import lsieun.asm.match.MethodInfoMatch;
-import lsieun.asm.match.format.MatchFormat;
-import lsieun.asm.match.format.MatchState;
+import lsieun.asm.format.MatchFormat;
+import lsieun.asm.match.MatchState;
+import lsieun.asm.sam.consumer.InsnInvokeConsumer;
+import lsieun.asm.sam.match.ClassInfoMatch;
+import lsieun.asm.sam.match.InsnInvokeMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.base.coll.ListUtils;
 import lsieun.base.io.dir.DirNioUtils;
 import lsieun.base.log.Logger;
@@ -127,39 +127,5 @@ public interface InsnProcess {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    @FunctionalInterface
-    interface AddDir {
-        AddFilePathMatch withDir(Path dirPath, int maxDepth);
-    }
-
-    interface AddFilePathMatch {
-        AddZipEntryMatch withFilePathMatch(FilePathMatch... filePathMatches);
-    }
-
-    @FunctionalInterface
-    interface AddZipEntryMatch {
-        AddClassInfoMatch withZipEntryMatch(TextMatch... zipEntryMatchs);
-    }
-
-    @FunctionalInterface
-    interface AddClassInfoMatch {
-        AddMethodMatch withClassInfoMatch(ClassInfoMatch... classMatches);
-    }
-
-    @FunctionalInterface
-    interface AddMethodMatch {
-        AddInsnMatch withMethodMatch(MethodInfoMatch... methodMatches);
-    }
-
-    @FunctionalInterface
-    interface AddInsnMatch {
-        AddInsnInvokeConsumer withInsnMatch(InsnInvokeMatch insnInvokeMatch);
-    }
-
-    @FunctionalInterface
-    interface AddInsnInvokeConsumer {
-        void withInsnInvokeConsumer(InsnInvokeConsumer insnInvokeConsumer);
     }
 }

@@ -1,5 +1,7 @@
 package lsieun.asm.insn;
 
+import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
+
 import org.objectweb.asm.*;
 
 public class InstructionAdapter {

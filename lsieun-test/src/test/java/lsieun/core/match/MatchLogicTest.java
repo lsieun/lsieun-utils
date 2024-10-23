@@ -1,7 +1,7 @@
 package lsieun.core.match;
 
-import lsieun.asm.match.AsmTypeMatch;
-import lsieun.asm.match.MemberInfoMatch;
+import lsieun.asm.sam.match.AsmTypeMatch;
+import lsieun.asm.sam.match.MemberInfoMatch;
 import lsieun.core.match.text.TextMatch;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Type;

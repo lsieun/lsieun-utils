@@ -1,6 +1,7 @@
 package lsieun.asm.visitor.transformation.print;
 
-import lsieun.asm.utils.OpcodeConst;
+import lsieun.asm.cst.OpcodeConst;
+
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

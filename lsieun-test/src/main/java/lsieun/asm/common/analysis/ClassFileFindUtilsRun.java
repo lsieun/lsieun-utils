@@ -1,9 +1,10 @@
 package lsieun.asm.common.analysis;
 
+import lsieun.asm.builder.ClassFileFindBuilder;
 import lsieun.asm.core.AsmTypeNameUtils;
 import lsieun.asm.description.MemberDesc;
-import lsieun.asm.match.FieldInfoMatch;
-import lsieun.asm.match.MethodInfoMatch;
+import lsieun.asm.sam.match.FieldInfoMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.core.match.text.TextMatch;
 import lsieun.core.match.text.TextMatchBuddy;
 
@@ -26,11 +27,11 @@ public class ClassFileFindUtilsRun {
 
         // (3) find
         ClassFileFindBuilder.byField()
-                .withDir(dirPath, 1, false)
-                .withZipEntryMatch(zipEntryMatch)
-                .withClassInfoMatch()
+                .withFromDir(dirPath, 1, false)
+                .withEntryName(zipEntryMatch)
+                .withClassMatch()
                 .withFieldMatch(fieldMatch)
-                .print();
+                .run();
     }
 
     public static void findMethod() {
@@ -47,11 +48,11 @@ public class ClassFileFindUtilsRun {
 
         // (3) find
         ClassFileFindBuilder.byMethod()
-                .withDir(dirPath, 1, false)
-                .withZipEntryMatch(zipEntryMatch)
-                .withClassInfoMatch()
+                .withFromDir(dirPath, 1, false)
+                .withEntryName(zipEntryMatch)
+                .withClassMatch()
                 .withMethodMatch(methodMatch)
-                .print();
+                .run();
     }
 
     public static void findMethodByStackFrameLine() {
@@ -72,10 +73,10 @@ public class ClassFileFindUtilsRun {
 
         // (3) find
         ClassFileFindBuilder.byMethod()
-                .withDir(dirPath, 1, false)
-                .withZipEntryMatch(zipEntryMatch)
-                .withClassInfoMatch()
+                .withFromDir(dirPath, 1, false)
+                .withEntryName(zipEntryMatch)
+                .withClassMatch()
                 .withMethodMatch(methodMatch)
-                .print();
+                .run();
     }
 }

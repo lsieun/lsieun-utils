@@ -1,6 +1,6 @@
 package lsieun.base.coll;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +30,7 @@ public class ListUtils {
     }
 
     @SafeVarargs
-    public static <T> List<T> toList(@Nonnull T first, T... rest) {
+    public static <T> List<T> toList(@NotNull T first, T... rest) {
         List<T> list = new ArrayList<T>();
         list.add(first);
 

@@ -1,6 +1,6 @@
 package lsieun.base.io.dir;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import lsieun.annotation.method.MethodParamExample;
 import lsieun.base.io.file.FileFormatUtils;
 import lsieun.base.io.file.FileOperation;
@@ -36,9 +36,9 @@ public class DirNioUtils {
         return findFileListInDir(dirPath, maxDepth, predicate);
     }
 
-    public static List<Path> findFileListInDir(@Nonnull Path dirPath,
+    public static List<Path> findFileListInDir(@NotNull Path dirPath,
                                                int maxDepth,
-                                               @Nonnull BiPredicate<Path, BasicFileAttributes> predicate) {
+                                               @NotNull BiPredicate<Path, BasicFileAttributes> predicate) {
         Objects.requireNonNull(dirPath);
         Objects.requireNonNull(predicate);
 

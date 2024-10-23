@@ -2,6 +2,7 @@ package lsieun.core.processor.bytes;
 
 import lsieun.core.match.path.FilePathMatch;
 import lsieun.core.processor.vfs.*;
+import lsieun.core.sam.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 
 public interface ByteArrayProcessorBuilder {
 
-    static AddFileSystem<AddDir<AddFilePathMatch<AddFileProcessor>>> forDir() {
+    static AddFileSystem<AddDirWithMultipleArgs<AddFilePathMatch<AddFileProcessor>>> forDir() {
         return fs -> (first, more) -> (maxDepth, filePathMatch) -> fileProcessor ->
         {
             Path dirPath = fs.getPath(first, more);
@@ -29,25 +30,25 @@ public interface ByteArrayProcessorBuilder {
         }
     }
 
-    static AddZip<AddByteArrayProcessor> forZip() {
-        return (zipPath, entry) -> func -> forZip(zipPath, entry, func);
+    static AddZip<AddByteArrayProcessor<ToRun>> forZip() {
+        return (zipPath, entry) -> func -> () -> forZip(zipPath, entry, func);
     }
 
-    static AddFile<AddByteArrayProcessor> forFile() {
-        return file -> func -> forFile(file, func);
+    static AddFile<AddByteArrayProcessor<ToRun>> forFile() {
+        return file -> func -> () -> forFile(file, func);
     }
 
-    static AddZip<AddDstDir<AddByteArrayProcessor>> fromZip2File() {
-        return ((zipPath, entry) -> dirpath -> func -> fromZip2File(zipPath, entry, dirpath, func));
+    static AddZip<AddDirTo<AddByteArrayProcessor<ToRun>>> fromZip2File() {
+        return ((zipPath, entry) -> dirpath -> func -> ()-> fromZip2File(zipPath, entry, dirpath, func));
     }
 
-    static AddFile<AddZip<AddByteArrayProcessor>> fromFile2Zip() {
-        return filepath -> (zipPath, entry) -> func -> fromFile2Zip(filepath, zipPath, entry, func);
+    static AddFile<AddZip<AddByteArrayProcessor<ToRun>>> fromFile2Zip() {
+        return filepath -> (zipPath, entry) -> func -> () -> fromFile2Zip(filepath, zipPath, entry, func);
     }
 
 
     static AddTank.From builder() {
-        return tankFrom -> tankTo -> func -> process(tankFrom, tankTo, func);
+        return tankFrom -> tankTo -> func -> () -> process(tankFrom, tankTo, func);
     }
 
     interface AddTank {
@@ -56,14 +57,10 @@ public interface ByteArrayProcessorBuilder {
         }
 
         interface To {
-            AddByteArrayProcessor withToTank(ByteArrayTank tankTo);
+            AddByteArrayProcessor<ToRun> withToTank(ByteArrayTank tankTo);
         }
     }
 
-
-    interface ToRun {
-        void run();
-    }
 
     private static void process(ByteArrayTank tankFrom, ByteArrayTank tankTo, ByteArrayProcessor func) {
         byte[] bytes = tankFrom.read();

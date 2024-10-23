@@ -1,6 +1,6 @@
 package lsieun.asm.common.generation;
 
-import lsieun.asm.match.NameAndDescMatch;
+import lsieun.asm.sam.match.NameAndDescMatch;
 import lsieun.base.reflect.member.FieldUtils;
 import lsieun.base.reflect.member.MemberFindUtils;
 import lsieun.base.reflect.member.MethodInvokeUtils;

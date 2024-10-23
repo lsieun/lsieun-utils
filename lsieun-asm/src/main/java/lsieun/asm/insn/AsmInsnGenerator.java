@@ -1,6 +1,8 @@
 package lsieun.asm.insn;
 
 import lsieun.asm.cst.MyAsmConst;
+import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
+
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.commons.Method;
@@ -11,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static lsieun.asm.cst.MyAsmConst.*;
-import static lsieun.asm.insn.AsmInsnUtilsForOpcode.getBoxedType;
+import static lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode.getBoxedType;
 
 public class AsmInsnGenerator {
     /**

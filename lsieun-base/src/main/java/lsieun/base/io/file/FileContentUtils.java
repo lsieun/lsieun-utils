@@ -1,6 +1,6 @@
 package lsieun.base.io.file;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import lsieun.annotation.type.UtilityClass;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
@@ -23,7 +23,7 @@ public class FileContentUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static byte[] readBytes(@Nonnull Path filepath) {
+    public static byte[] readBytes(@NotNull Path filepath) {
         if (!Files.exists(filepath)) {
             String msg = String.format("filepath does not exist: %s", filepath);
             throw new IllegalArgumentException(msg);
@@ -38,7 +38,7 @@ public class FileContentUtils {
         }
     }
 
-    public static void writeBytes(@Nonnull Path filepath, @Nonnull byte[] bytes) {
+    public static void writeBytes(@NotNull Path filepath, @NotNull byte[] bytes) {
         try {
             prepareWrite(filepath);
 
@@ -49,7 +49,7 @@ public class FileContentUtils {
         }
     }
 
-    public static List<String> readLines(@Nonnull Path path) {
+    public static List<String> readLines(@NotNull Path path) {
         Objects.requireNonNull(path);
         if (!Files.exists(path)) {
             String msg = String.format("path does not exist: %s", path);
@@ -65,7 +65,7 @@ public class FileContentUtils {
         }
     }
 
-    public static void writeLines(@Nonnull Path path, @Nonnull List<String> lines) {
+    public static void writeLines(@NotNull Path path, @NotNull List<String> lines) {
         Objects.requireNonNull(path);
         Objects.requireNonNull(lines);
 
@@ -79,7 +79,7 @@ public class FileContentUtils {
         }
     }
 
-    private static void prepareWrite(@Nonnull Path filepath) throws IOException {
+    private static void prepareWrite(@NotNull Path filepath) throws IOException {
         Path dir = filepath.getParent();
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);

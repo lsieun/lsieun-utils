@@ -1,6 +1,6 @@
 package lsieun.asm.search;
 
-import lsieun.asm.match.result.MatchItem;
+import lsieun.asm.match.MatchItem;
 import org.junit.jupiter.api.Test;
 
 class MatchItemTest {

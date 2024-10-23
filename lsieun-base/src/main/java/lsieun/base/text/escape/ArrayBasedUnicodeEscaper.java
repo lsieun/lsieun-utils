@@ -1,7 +1,9 @@
 package lsieun.base.text.escape;
 
-import jakarta.annotation.Nullable;
+
 import lsieun.base.base.Preconditions;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 

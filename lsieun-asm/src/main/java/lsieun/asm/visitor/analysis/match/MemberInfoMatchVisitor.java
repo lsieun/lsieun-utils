@@ -1,6 +1,7 @@
 package lsieun.asm.visitor.analysis.match;
 
-import lsieun.asm.match.MemberInfoMatch;
+import lsieun.asm.sam.match.MemberInfoMatch;
+
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 

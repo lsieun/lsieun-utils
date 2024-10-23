@@ -36,6 +36,55 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/print-foo/print-foo -->
+<!--        <dependency>-->
+<!--            <groupId>print-foo</groupId>-->
+<!--            <artifactId>print-foo</artifactId>-->
+<!--            <version>1.0.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.aevi.print/print-api -->
+<!--        <dependency>-->
+<!--            <groupId>com.aevi.print</groupId>-->
+<!--            <artifactId>print-api</artifactId>-->
+<!--            <version>3.0.1</version>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.tylerthrailkill.helpers/pretty-print -->
+<!--        <dependency>-->
+<!--            <groupId>com.tylerthrailkill.helpers</groupId>-->
+<!--            <artifactId>pretty-print</artifactId>-->
+<!--            <version>v2.0.8</version>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.tngtech.archunit/archunit -->
+<!--        <dependency>-->
+<!--            <groupId>com.tngtech.archunit</groupId>-->
+<!--            <artifactId>archunit</artifactId>-->
+<!--            <version>1.3.0</version>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.tngtech.archunit/archunit-junit5 -->
+
+        <!-- https://mvnrepository.com/artifact/com.tngtech.archunit/archunit-junit5-api -->
+<!--        <dependency>-->
+<!--            <groupId>com.tngtech.archunit</groupId>-->
+<!--            <artifactId>archunit-junit5-api</artifactId>-->
+<!--            <version>1.3.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.tngtech.archunit</groupId>-->
+<!--            <artifactId>archunit-junit5-engine-api</artifactId>-->
+<!--            <version>1.3.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+
+
+
+
     </dependencies>
 
 </project>

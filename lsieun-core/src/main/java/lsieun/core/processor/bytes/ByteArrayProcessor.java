@@ -1,6 +1,6 @@
 package lsieun.core.processor.bytes;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import lsieun.base.coll.ListUtils;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public interface ByteArrayProcessor extends Function<byte[], byte[]> {
     class Compound implements ByteArrayProcessor {
         private final List<ByteArrayProcessor> processors;
 
-        private Compound(@Nonnull List<ByteArrayProcessor> processors) {
+        private Compound(@NotNull List<ByteArrayProcessor> processors) {
             this.processors = processors;
         }
 

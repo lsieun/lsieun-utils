@@ -1,13 +1,17 @@
 package lsieun.asm.common.transformation;
 
-import lsieun.asm.consumer.InsnInvokeConsumer;
-import lsieun.asm.match.InsnInvokeMatch;
-import lsieun.asm.match.MethodInfoMatch;
-import lsieun.asm.visitor.transformation.modify.clazz.ClassVisitorForToString;
-import lsieun.asm.visitor.transformation.modify.insn.ClassVisitorForModifyInsnInvoke;
-import lsieun.asm.visitor.transformation.modify.method.ClassVisitorForMethodBodyEmpty;
-import lsieun.asm.visitor.transformation.modify.method.ClassVisitorForMethodBodyInfo;
-import lsieun.asm.visitor.transformation.modify.method.MethodBodyInfoType;
+import lsieun.asm.sam.consumer.InsnInvokeConsumer;
+import lsieun.asm.sam.match.InsnInvokeMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
+import lsieun.asm.visitor.transformation.clazz.TypeAddToStringMethodVisitor;
+import lsieun.asm.visitor.transformation.insn.InsnTraceVisitor;
+import lsieun.asm.visitor.transformation.insn.ModifyInsnInvokeVisitor;
+import lsieun.asm.visitor.transformation.method.ClassVisitorForMethodBodyEmpty;
+import lsieun.asm.visitor.transformation.method.ClassVisitorForMethodBodyInfo;
+import lsieun.asm.visitor.transformation.method.MethodBodyInfoType;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -17,7 +21,9 @@ import java.util.Set;
 @SuppressWarnings("UnnecessaryLocalVariable")
 public class ClassFileModifyUtils {
 
-    public static byte[] printMethodInfo(byte[] bytes, MethodInfoMatch match, Set<MethodBodyInfoType> options) {
+    public static byte @Nullable [] printMethodInfo(byte @NotNull [] bytes,
+                                                    @NotNull MethodInfoMatch match,
+                                                    @NotNull Set<MethodBodyInfoType> options) {
         //（1）构建ClassReader
         ClassReader cr = new ClassReader(bytes);
 
@@ -96,7 +102,7 @@ public class ClassFileModifyUtils {
         ClassWriter cw = new ClassWriter(writerFlag);
 
         //（3）串连ClassVisitor
-        ClassVisitor cv = new ClassVisitorForModifyInsnInvoke(cw, methodMatch, insnInvokeMatch, insnInvokeConsumer, supportJump);
+        ClassVisitor cv = new ModifyInsnInvokeVisitor(cw, methodMatch, insnInvokeMatch, insnInvokeConsumer, supportJump);
 
         //（4）结合ClassReader和ClassVisitor
         int parsingOptions = ClassReader.EXPAND_FRAMES;
@@ -108,14 +114,34 @@ public class ClassFileModifyUtils {
     }
 
     /**
-     * @see ClassVisitorForToString
+     * @see TypeAddToStringMethodVisitor
      */
     public static byte[] addToString(byte[] bytes) {
         ClassReader cr = new ClassReader(bytes);
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        ClassVisitor cv = new ClassVisitorForToString(cw);
+        ClassVisitor cv = new TypeAddToStringMethodVisitor(cw);
         int parsingOptions = ClassReader.EXPAND_FRAMES;
         cr.accept(cv, parsingOptions);
         return cw.toByteArray();
+    }
+
+    public static byte[] traceInsn(byte[] bytes, MethodInfoMatch methodMatch) {
+        //（1）构建ClassReader
+        ClassReader cr = new ClassReader(bytes);
+
+        //（2）构建ClassWriter
+        int writerFlag = ClassWriter.COMPUTE_FRAMES;
+        ClassWriter cw = new ClassWriter(writerFlag);
+
+        //（3）串连ClassVisitor
+        ClassVisitor cv = new InsnTraceVisitor(cw, methodMatch);
+
+        //（4）结合ClassReader和ClassVisitor
+        int parsingOptions = ClassReader.EXPAND_FRAMES;
+        cr.accept(cv, parsingOptions);
+
+        //（5）生成byte[]
+        byte[] newBytes = cw.toByteArray();
+        return newBytes;
     }
 }

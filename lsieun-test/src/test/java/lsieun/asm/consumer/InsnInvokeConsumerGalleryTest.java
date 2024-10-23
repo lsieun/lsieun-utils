@@ -1,8 +1,9 @@
 package lsieun.asm.consumer;
 
 import lsieun.asm.common.transformation.ClassFileModifyUtils;
-import lsieun.asm.match.InsnInvokeMatch;
-import lsieun.asm.match.MethodInfoMatch;
+import lsieun.asm.sam.consumer.InsnInvokeConsumerGallery;
+import lsieun.asm.sam.match.InsnInvokeMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.base.io.resource.ResourceUtils;
 import lsieun.core.processor.bytes.ByteArrayProcessor;
 import lsieun.core.processor.bytes.ByteArrayProcessorBuilder;
@@ -25,7 +26,8 @@ class InsnInvokeConsumerGalleryTest {
                 );
         ByteArrayProcessorBuilder.forFile()
                 .withFile(path)
-                .withByteArrayProcessor(func);
+                .withByteArrayProcessor(func)
+                .run();
     }
 
     static class HelloWorldForPrintInvokeMethodInsnParamsAndReturn {

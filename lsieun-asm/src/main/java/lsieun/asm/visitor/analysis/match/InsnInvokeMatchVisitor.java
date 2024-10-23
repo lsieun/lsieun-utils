@@ -1,8 +1,9 @@
 package lsieun.asm.visitor.analysis.match;
 
 import lsieun.asm.cst.MyAsmConst;
-import lsieun.asm.match.InsnInvokeMatch;
-import lsieun.asm.match.MethodInfoMatch;
+import lsieun.asm.sam.match.InsnInvokeMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
+
 import org.objectweb.asm.MethodVisitor;
 
 public class InsnInvokeMatchVisitor extends MatchFlagVisitor {
@@ -16,7 +17,7 @@ public class InsnInvokeMatchVisitor extends MatchFlagVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        boolean flag = methodInfoMatch.test(version, currentOwner, access, name, descriptor, signature, exceptions);
+        boolean flag = methodInfoMatch.test(currentOwner, access, name, descriptor, signature, exceptions);
         if (flag) {
             return new InsnInvokeMatchAdapter();
         }

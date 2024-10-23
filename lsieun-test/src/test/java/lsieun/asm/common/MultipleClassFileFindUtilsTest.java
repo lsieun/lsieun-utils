@@ -1,15 +1,16 @@
 package lsieun.asm.common;
 
-import lsieun.asm.common.analysis.ClassFileFindBuilder;
+import lsieun.asm.builder.ClassFileFindBuilder;
 import lsieun.asm.common.analysis.ClassFileFindUtils;
 import lsieun.asm.common.analysis.MultipleClassFileFindUtils;
-import lsieun.asm.match.AsmTypeMatch;
-import lsieun.asm.match.InsnInvokeMatch;
-import lsieun.asm.match.MethodInfoMatch;
-import lsieun.asm.match.result.MatchItem;
+import lsieun.asm.sam.match.AsmTypeMatch;
+import lsieun.asm.sam.match.InsnInvokeMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
+import lsieun.asm.match.MatchItem;
 import lsieun.base.ds.pair.Pair;
 import lsieun.core.match.LogicAssistant;
 import lsieun.core.match.text.TextMatch;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -37,9 +38,9 @@ class MultipleClassFileFindUtilsTest {
         Path dirPath = Path.of("D:\\tmp\\intellij\\lib");
         TextMatch textMatch = TextMatch.containsIgnoreCase("ascii");
         ClassFileFindBuilder.byEntryName()
-                .withDir(dirPath, 10, false)
-                .withTextMatch(textMatch)
-                .print();
+                .withFromDir(dirPath, 10, false)
+                .withEntryName(textMatch)
+                .run();
     }
 
     @Test
@@ -52,9 +53,9 @@ class MultipleClassFileFindUtilsTest {
 //                logic.not(TextMatch.contains("asm"))
         );
         ClassFileFindBuilder.byEntryName()
-                .withDir(dirPath, 1, false)
-                .withTextMatch(textMatch)
-                .print();
+                .withFromDir(dirPath, 1, false)
+                .withEntryName(textMatch)
+                .run();
     }
 
     @Test
@@ -64,13 +65,12 @@ class MultipleClassFileFindUtilsTest {
                 TextMatch.startsWith("draw")
         );
         ClassFileFindBuilder.byMethod()
-                .withDir(dirPath, 1, false)
-                .withZipEntryMatch()
-                .withClassInfoMatch()
+                .withFromDir(dirPath, 1, false)
+                .withEntryName()
+                .withClassMatch()
                 .withMethodMatch(methodMatch)
-                .print();
+                .run();
     }
-
 
 
     @Test
@@ -79,11 +79,11 @@ class MultipleClassFileFindUtilsTest {
 
         InsnInvokeMatch insnInvokeMatch = InsnInvokeMatch.byMethodName("doFinal");
         ClassFileFindBuilder.byInsn()
-                .withDir(dirPath, 1, false)
-                .withZipEntryMatch()
-                .withClassInfoMatch()
+                .withFromDir(dirPath, 1, false)
+                .withEntryName()
+                .withClassMatch()
                 .withMethodMatch(MethodInfoMatch.Bool.TRUE)
                 .withInsnMatch(insnInvokeMatch, false)
-                .print();
+                .run();
     }
 }

@@ -6,8 +6,8 @@ import com.sun.jna.platform.unix.LibCAPI;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinBase;
 import com.sun.jna.ptr.IntByReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 来自 IntelliJ IDEA 的 util-8.jar 中 com.intellij.util.system.CpuArch
@@ -35,7 +35,7 @@ public enum CpuArch {
         this.width = width;
     }
 
-    public static @Nonnull CpuArch fromString(@Nullable String arch) {
+    public static @NotNull CpuArch fromString(@Nullable String arch) {
         if (!"x86_64".equals(arch) && !"amd64".equals(arch)) {
             if (!"i386".equals(arch) && !"x86".equals(arch)) {
                 if (!"aarch64".equals(arch) && !"arm64".equals(arch)) {

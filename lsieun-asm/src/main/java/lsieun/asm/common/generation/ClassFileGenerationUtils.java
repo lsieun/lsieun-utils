@@ -1,18 +1,19 @@
 package lsieun.asm.common.generation;
 
 import lsieun.asm.common.analysis.ClassFileFindUtils;
-import lsieun.asm.core.AsmTypeBuddy;
+import lsieun.asm.core.AsmTypeUtils;
 import lsieun.asm.description.ByteCodeElementType;
-import lsieun.asm.insn.AsmInsnUtilsForOpcode;
-import lsieun.asm.match.MethodInfoMatch;
-import lsieun.asm.match.format.MatchFormat;
-import lsieun.asm.match.format.MatchState;
-import lsieun.asm.match.result.MatchItem;
-import lsieun.asm.visitor.transformation.add.ClassVisitorForAddInnerClass;
+import lsieun.asm.format.MatchFormat;
+import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
+import lsieun.asm.match.MatchItem;
+import lsieun.asm.match.MatchState;
+import lsieun.asm.sam.match.MethodInfoMatch;
+import lsieun.asm.visitor.transformation.clazz.TypeAddInnerClassVisitor;
 import lsieun.base.io.file.FileContentUtils;
 import lsieun.base.io.resource.ResourceUtils;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
+
 import org.objectweb.asm.*;
 
 import java.io.IOException;
@@ -78,7 +79,7 @@ public class ClassFileGenerationUtils {
     public static byte[] addInnerClass(byte[] bytes, String... innerNames) {
         ClassReader cr = new ClassReader(bytes);
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor cv = new ClassVisitorForAddInnerClass(cw, innerNames);
+        ClassVisitor cv = new TypeAddInnerClassVisitor(cw, innerNames);
         cr.accept(cv, ClassReader.EXPAND_FRAMES);
         return cw.toByteArray();
     }
@@ -114,7 +115,7 @@ public class ClassFileGenerationUtils {
         String innerClassSignature = String.format("Ljava/lang/Enum<%s>;%s", innerClassDescriptor, outerClassDescriptor);
 
         // inner array
-        Type innerClassArrayType = AsmTypeBuddy.toArray(innerType, 1);
+        Type innerClassArrayType = AsmTypeUtils.toArray(innerType, 1);
         String innerClassArrayDescriptor = innerClassArrayType.getDescriptor();
 
         // void -> inner array

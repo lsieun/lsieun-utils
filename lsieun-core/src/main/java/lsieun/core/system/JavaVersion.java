@@ -1,7 +1,7 @@
 package lsieun.core.system;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -22,7 +22,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         this.ea = ea;
     }
 
-    public int compareTo(@Nonnull JavaVersion o) {
+    public int compareTo(@NotNull JavaVersion o) {
 
         int diff = this.feature - o.feature;
         if (diff != 0) {
@@ -67,11 +67,11 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         return hash;
     }
 
-    public @Nonnull String toFeatureString() {
+    public @NotNull String toFeatureString() {
         return this.formatVersionTo(true, true);
     }
 
-    public @Nonnull String toFeatureMinorUpdateString() {
+    public @NotNull String toFeatureMinorUpdateString() {
         return this.formatVersionTo(false, true);
     }
 
@@ -128,7 +128,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         return sb.toString();
     }
 
-    public static @Nonnull JavaVersion compose(int feature, int minor, int update, int build, boolean ea) throws IllegalArgumentException {
+    public static @NotNull JavaVersion compose(int feature, int minor, int update, int build, boolean ea) throws IllegalArgumentException {
         if (feature < 0) {
             throw new IllegalArgumentException();
         } else if (minor < 0) {
@@ -142,11 +142,11 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         }
     }
 
-    public static @Nonnull JavaVersion compose(int feature) {
+    public static @NotNull JavaVersion compose(int feature) {
         return compose(feature, 0, 0, 0, false);
     }
 
-    public static @Nonnull JavaVersion current() {
+    public static @NotNull JavaVersion current() {
         if (current == null) {
             JavaVersion fallback = parse(System.getProperty("java.version"));
             JavaVersion rt = rtVersion();
@@ -179,7 +179,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         }
     }
 
-    public static @Nonnull JavaVersion parse(@Nonnull String versionString) throws IllegalArgumentException {
+    public static @NotNull JavaVersion parse(@NotNull String versionString) throws IllegalArgumentException {
 
         String str = versionString.trim();
         Map<String, String> trimmingMap = new HashMap<>();

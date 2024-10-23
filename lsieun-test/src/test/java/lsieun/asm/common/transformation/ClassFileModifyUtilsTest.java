@@ -1,9 +1,9 @@
 package lsieun.asm.common.transformation;
 
-import lsieun.asm.consumer.InsnInvokeConsumer;
-import lsieun.asm.match.InsnInvokeMatch;
-import lsieun.asm.match.MethodInfoMatch;
-import lsieun.asm.visitor.transformation.modify.method.MethodBodyInfoType;
+import lsieun.asm.sam.consumer.InsnInvokeConsumer;
+import lsieun.asm.sam.match.InsnInvokeMatch;
+import lsieun.asm.sam.match.MethodInfoMatch;
+import lsieun.asm.visitor.transformation.method.MethodBodyInfoType;
 import lsieun.base.io.resource.ResourceUtils;
 import lsieun.core.match.text.TextMatch;
 import lsieun.core.processor.bytes.ByteArrayProcessor;
@@ -39,7 +39,10 @@ class ClassFileModifyUtilsTest {
         Path path = ResourceUtils.readFilePath(clazz);
         ByteArrayProcessor func = bytes -> ClassFileModifyUtils.printMethodInfo(
                 bytes, methodMatch, options);
-        ByteArrayProcessorBuilder.forFile().withFile(path).withByteArrayProcessor(func);
+        ByteArrayProcessorBuilder.forFile()
+                .withFile(path)
+                .withByteArrayProcessor(func)
+                .run();
     }
 
     static class HelloWorldForPrint {
@@ -59,7 +62,8 @@ class ClassFileModifyUtilsTest {
         ByteArrayProcessor func = bytes -> ClassFileModifyUtils.emptyMethodBody(bytes, methodMatch, true);
         ByteArrayProcessorBuilder.forFile()
                 .withFile(path)
-                .withByteArrayProcessor(func);
+                .withByteArrayProcessor(func)
+                .run();
     }
 
     static class HelloWorldForEmptyToTrue {
@@ -86,7 +90,8 @@ class ClassFileModifyUtilsTest {
         ByteArrayProcessorBuilder.builder()
                 .withFromTank(tank)
                 .withToTank(tank)
-                .withByteArrayProcessor(func);
+                .withByteArrayProcessor(func)
+                .run();
     }
 
 
@@ -123,7 +128,8 @@ class ClassFileModifyUtilsTest {
                 bytes, methodMatch, insnInvokeMatch, insnInvokeConsumer);
         ByteArrayProcessorBuilder.forFile()
                 .withFile(path)
-                .withByteArrayProcessor(func);
+                .withByteArrayProcessor(func)
+                .run();
     }
 
     @Test
@@ -133,7 +139,8 @@ class ClassFileModifyUtilsTest {
         ByteArrayProcessor func = ClassFileModifyUtils::addToString;
         ByteArrayProcessorBuilder.forFile()
                 .withFile(path)
-                .withByteArrayProcessor(func);
+                .withByteArrayProcessor(func)
+                .run();
     }
 
     @SuppressWarnings("all")

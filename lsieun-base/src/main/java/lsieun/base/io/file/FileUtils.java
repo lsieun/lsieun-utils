@@ -108,7 +108,7 @@ public class FileUtils {
     }
 
     public static void writeLines(String filepath, List<String> lines) {
-        if (lines == null || lines.size() < 1) {
+        if (lines == null || lines.isEmpty()) {
             return;
         }
 
