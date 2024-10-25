@@ -3,7 +3,7 @@ package lsieun.asm.sam.match;
 import lsieun.annotation.type.asm.AsmMatchGeneration;
 import lsieun.asm.core.AsmTypeNameUtils;
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 import org.objectweb.asm.Type;
 
@@ -15,6 +15,8 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface AsmTypeMatch {
     boolean test(Type type);
+
+    LogicAssistant<AsmTypeMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), AsmTypeMatch.class);
 
     static AsmTypeMatch byType(String text) {
         Type t = AsmTypeNameUtils.parse(text);
@@ -52,25 +54,5 @@ public interface AsmTypeMatch {
 
     static AsmTypeMatch byName(Function<Type, String> func, TextMatch textMatch) {
         return t -> textMatch.test(func.apply(t));
-    }
-
-    // TODO: 所有的 match 应该有 logic 方法
-    static LogicAssistant<AsmTypeMatch> logic() {
-        return LogicAssistant.of(MethodHandles.lookup(), AsmTypeMatch.class);
-    }
-
-    enum Bool implements AsmTypeMatch {
-        TRUE {
-            @Override
-            public boolean test(Type type) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(Type type) {
-                return false;
-            }
-        };
     }
 }

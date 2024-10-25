@@ -9,7 +9,7 @@ import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.asm.match.MatchItem;
 import lsieun.base.ds.pair.Pair;
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +46,7 @@ class MultipleClassFileFindUtilsTest {
     @Test
     void findClassFromDir2() {
         Path dirPath = Path.of("D:\\tmp\\intellij\\lib");
-        LogicAssistant<TextMatch> logic = TextMatch.logic();
+        LogicAssistant<TextMatch> logic = TextMatch.LOGIC;
         TextMatch textMatch = logic.and(
                 TextMatch.contains("/PsiElement.class")
 //                TextMatch.contains("Analy"),
@@ -82,7 +82,7 @@ class MultipleClassFileFindUtilsTest {
                 .withFromDir(dirPath, 1, false)
                 .withEntryName()
                 .withClassMatch()
-                .withMethodMatch(MethodInfoMatch.Bool.TRUE)
+                .withMethodMatch(MethodInfoMatch.LOGIC.alwaysTrue())
                 .withInsnMatch(insnInvokeMatch, false)
                 .run();
     }

@@ -1,9 +1,11 @@
-package lsieun.core.match.archive;
+package lsieun.core.sam.match.archive;
 
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
+import lsieun.core.match.LogicAssistant;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +17,7 @@ import java.util.stream.Stream;
 @FunctionalInterface
 public interface ZipFileSystemMatch extends ArchiveMatch {
     Logger logger = LoggerFactory.getLogger(ZipFileSystemMatch.class);
+    LogicAssistant<ZipFileSystemMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), ZipFileSystemMatch.class);
 
     boolean test(Path zipPath, FileSystem zipFileSystem);
 

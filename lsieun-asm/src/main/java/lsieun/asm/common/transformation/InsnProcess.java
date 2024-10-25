@@ -12,8 +12,8 @@ import lsieun.base.io.dir.DirNioUtils;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.path.FilePathMatch;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.path.FilePathMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 import java.io.IOException;
 import java.net.URI;
@@ -55,7 +55,7 @@ public interface InsnProcess {
                             ClassInfoMatch[] classMatches, MethodInfoMatch[] methodMatches,
                             InsnInvokeMatch insnInvokeMatch, InsnInvokeConsumer insnInvokeConsumer) {
         // (1) match: zip entry
-        LogicAssistant<TextMatch> textLogic = TextMatch.logic();
+        LogicAssistant<TextMatch> textLogic = TextMatch.LOGIC;
         TextMatch zipEntryMatch = textLogic.and(TextMatch.endsWith(".class"), zipEntryMatchs);
 
         BiPredicate<Path, BasicFileAttributes> predicate = (path, attr) -> {
@@ -69,10 +69,10 @@ public interface InsnProcess {
         };
 
         // (2) match: class
-        ClassInfoMatch classMatch = ClassInfoMatch.logic().and(true, classMatches);
+        ClassInfoMatch classMatch = ClassInfoMatch.LOGIC.and(true, classMatches);
 
         // (3) match: method
-        MethodInfoMatch methodMatch = MethodInfoMatch.logic().and(true, methodMatches);
+        MethodInfoMatch methodMatch = MethodInfoMatch.LOGIC.and(true, methodMatches);
 
         // (4) transform jar
         int size = jarList.size();

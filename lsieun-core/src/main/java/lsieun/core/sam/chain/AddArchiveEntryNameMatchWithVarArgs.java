@@ -1,6 +1,6 @@
-package lsieun.core.sam;
+package lsieun.core.sam.chain;
 
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 @FunctionalInterface
 public interface AddArchiveEntryNameMatchWithVarArgs<T> {

@@ -1,12 +1,14 @@
 package lsieun.core.match.member;
 
+import lsieun.core.match.LogicAssistant;
+
+import java.lang.invoke.MethodHandles;
 import java.util.function.BiPredicate;
 
-public class ClassMemberParamTypeMatch<T> implements BiPredicate<Class<?>[], T> {
-//    private final BiPredicate<T, Class<?>>
-
+public interface ClassMemberParamTypeMatch<T> extends BiPredicate<Class<?>[], T> {
     @Override
-    public boolean test(Class<?>[] classes, T t) {
-        return false;
-    }
+    boolean test(Class<?>[] classes, T t);
+
+    LogicAssistant<ClassMemberParamCountMatch> LOGIC = LogicAssistant.of(
+            MethodHandles.lookup(), ClassMemberParamCountMatch.class);
 }

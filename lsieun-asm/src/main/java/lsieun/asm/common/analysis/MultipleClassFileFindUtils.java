@@ -9,7 +9,7 @@ import lsieun.base.io.dir.DirNioUtils;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
 import lsieun.base.text.StrConst;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 import java.io.IOException;
 import java.nio.file.Path;

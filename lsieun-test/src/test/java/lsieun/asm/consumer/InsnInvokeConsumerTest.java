@@ -28,7 +28,7 @@ class InsnInvokeConsumerTest {
         Class<?> clazz = HelloWorldForPop.class;
         byte[] bytes = ResourceUtils.readClassBytes(clazz);
         byte[] newBytes = ClassFileModifyUtils.modifyInsnInvoke(bytes,
-                MethodInfoMatch.Bool.TRUE,
+                MethodInfoMatch.LOGIC.alwaysTrue(),
                 InsnInvokeMatch.byReturnType(AsmTypeMatch.byType(void.class)),
                 InsnInvokeConsumer.Common.POP_FROM_STACK
         );
@@ -50,7 +50,7 @@ class InsnInvokeConsumerTest {
         MethodInfoMatch methodMatch = MethodInfoMatch.byMethodName(TARGET_METHOD_NAME);
         ByteArrayProcessor func = bytes ->
                 ClassFileModifyUtils.modifyInsnInvoke(
-                        bytes, methodMatch, InsnInvokeMatch.All.INSTANCE,
+                        bytes, methodMatch, InsnInvokeMatch.LOGIC.alwaysTrue(),
                         InsnInvokeConsumerGallery.printInvokeMethodInsnParamsAndReturn()
                 );
         ByteArrayProcessorBuilder.forFile()

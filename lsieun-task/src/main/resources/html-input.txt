@@ -1,9 +1,1 @@
-Path dirPath = Path.of("...");
-InsnInvokeMatch insnInvokeMatch = InsnInvokeMatch.byMethodName("test");
-ClassFileFindBuilder.byInsn()
-        .withFromDir(dirPath, 1, false)
-        .withEntryName()
-        .withClassMatch()
-        .withMethodMatch()
-        .withInsnMatch(insnInvokeMatch, true)
-        .run();
+LogicAssistant<TextMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), TextMatch.class);

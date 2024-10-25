@@ -1,74 +1,21 @@
 package lsieun.asm.sam.match;
 
+import lsieun.core.match.LogicAssistant;
+
 import org.objectweb.asm.Type;
+
+import java.lang.invoke.MethodHandles;
 
 @FunctionalInterface
 public interface MethodDescMatch {
+    boolean test(String methodDesc);
+
+    LogicAssistant<MethodDescMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), MethodDescMatch.class);
+
     static MethodDescMatch byReturnType(AsmTypeMatch asmTypeMatch) {
         return methodDesc -> {
             Type returnType = Type.getReturnType(methodDesc);
             return asmTypeMatch.test(returnType);
-        };
-    }
-
-    boolean test(String methodDesc);
-
-//    class And implements MethodDescMatch {
-//        private final MethodDescMatch[] matches;
-//
-//        private And(MethodDescMatch... matches) {
-//            this.matches = matches;
-//        }
-//
-//        @Override
-//        public boolean test(String methodDesc) {
-//            for (MethodDescMatch match : matches) {
-//                if (!match.test(methodDesc)) {
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }
-//
-//        public static And of(MethodDescMatch... matches) {
-//            return new And(matches);
-//        }
-//    }
-
-//    class Or implements MethodDescMatch {
-//        private final MethodDescMatch[] matches;
-//
-//        private Or(MethodDescMatch... matches) {
-//            this.matches = matches;
-//        }
-//
-//        @Override
-//        public boolean test(String methodDesc) {
-//            for (MethodDescMatch match : matches) {
-//                if (match.test(methodDesc)) {
-//                    return true;
-//                }
-//            }
-//            return false;
-//        }
-//
-//        public static Or of(MethodDescMatch... matches) {
-//            return new Or(matches);
-//        }
-//    }
-
-    enum Bool implements MethodDescMatch {
-        TRUE {
-            @Override
-            public boolean test(String methodDesc) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(String methodDesc) {
-                return false;
-            }
         };
     }
 }

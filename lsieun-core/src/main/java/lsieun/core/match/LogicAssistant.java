@@ -1,22 +1,28 @@
 package lsieun.core.match;
 
-import org.jetbrains.annotations.NotNull;
 import lsieun.base.coll.ListUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 /**
+ * <h2>Usage</h2>
+ * <code>LogicAssistant&lt;TextMatch&gt; LOGIC = LogicAssistant.of(MethodHandles.lookup(), TextMatch.class);</code>
+ * <h2>MindMap</h2>
  * <pre>
- *                                                                         ┌─── lookup
- *                                                       ┌─── of() ────────┤
- *                   ┌─── static ───────┼─── instance ───┤                 └─── clazz
- *                   │                                   │
- *                   │                                   └─── builder() ───┼─── withLookup() ───┼─── withClass()
- * LogicAssistant ───┤
- *                   │                                ┌─── and()
- *                   │                                │
- *                   └─── non-static ───┼─── logic ───┼─── or()
+ *                                                   ┌─── lookup
+ *                   ┌─── static ───────┼─── of() ───┤
+ *                   │                               └─── clazz
+ *                   │
+ * LogicAssistant ───┤                                ┌─── alwaysTrue()
+ *                   │                  ┌─── bool ────┤
+ *                   │                  │             └─── alwaysFalse()
+ *                   └─── non-static ───┤
+ *                                      │             ┌─── and()
+ *                                      │             │
+ *                                      └─── logic ───┼─── or()
  *                                                    │
  *                                                    └─── not()
  * </pre>
@@ -30,11 +36,11 @@ public final class LogicAssistant<T> {
         this.clazz = clazz;
     }
 
-    public T toTrue() {
+    public T alwaysTrue() {
         return MatchLogic.toTrue(lookup, clazz);
     }
 
-    public T toFalse() {
+    public T alwaysFalse() {
         return MatchLogic.toFalse(lookup, clazz);
     }
 
@@ -51,12 +57,12 @@ public final class LogicAssistant<T> {
     @SafeVarargs
     public final T and(boolean defaultValue, T... logicArray) {
         if (logicArray == null || logicArray.length == 0) {
-            return defaultValue ? toTrue() : toFalse();
+            return defaultValue ? alwaysTrue() : alwaysFalse();
         }
 
         List<T> list = ListUtils.toList(logicArray);
         if (ListUtils.isNullOrEmpty(list)) {
-            return defaultValue ? toTrue() : toFalse();
+            return defaultValue ? alwaysTrue() : alwaysFalse();
         }
 
         return and(list);
@@ -87,12 +93,12 @@ public final class LogicAssistant<T> {
     @SafeVarargs
     public final T or(boolean defaultValue, T... logicArray) {
         if (logicArray == null || logicArray.length == 0) {
-            return defaultValue ? toTrue() : toFalse();
+            return defaultValue ? alwaysTrue() : alwaysFalse();
         }
 
         List<T> list = ListUtils.toList(logicArray);
         if (ListUtils.isNullOrEmpty(list)) {
-            return defaultValue ? toTrue() : toFalse();
+            return defaultValue ? alwaysTrue() : alwaysFalse();
         }
 
         return or(list);

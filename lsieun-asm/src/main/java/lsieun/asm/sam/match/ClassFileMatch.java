@@ -1,6 +1,9 @@
 package lsieun.asm.sam.match;
 
 import lsieun.asm.common.analysis.ClassFileMatchUtils;
+import lsieun.core.match.LogicAssistant;
+
+import java.lang.invoke.MethodHandles;
 
 /**
  * @see ClassFileMatchUtils
@@ -8,6 +11,8 @@ import lsieun.asm.common.analysis.ClassFileMatchUtils;
 @FunctionalInterface
 public interface ClassFileMatch {
     boolean test(byte[] bytes);
+
+    LogicAssistant<ClassFileMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), ClassFileMatch.class);
 
     static ClassFileMatch byClassInfo(ClassInfoMatch match) {
         return bytes -> ClassFileMatchUtils.matchClassInfo(bytes, match);
@@ -18,7 +23,7 @@ public interface ClassFileMatch {
     }
 
     static ClassFileMatch byInsnInvoke(InsnInvokeMatch insnInvokeMatch) {
-        return byInsnInvoke(MethodInfoMatch.Bool.TRUE, insnInvokeMatch);
+        return byInsnInvoke(MethodInfoMatch.LOGIC.alwaysTrue(), insnInvokeMatch);
     }
 
     static ClassFileMatch byInsnInvoke(MethodInfoMatch methodMatch, InsnInvokeMatch insnInvokeMatch) {

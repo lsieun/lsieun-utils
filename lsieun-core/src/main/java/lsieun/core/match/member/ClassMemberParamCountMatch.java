@@ -11,4 +11,6 @@ class ClassMemberParamCountMatch extends ToSameTypeBiPredicate<Executable, Integ
     private ClassMemberParamCountMatch() {
         super(Executable::getParameterCount, Objects::equals);
     }
+
+
 }

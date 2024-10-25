@@ -1,18 +1,23 @@
-package lsieun.core.match.archive;
+package lsieun.core.sam.match.archive;
 
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
-import lsieun.core.match.bytes.ByteArrayMatch;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.match.LogicAssistant;
+import lsieun.core.sam.match.bytes.ByteArrayMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@FunctionalInterface
 public interface ZipEntryMatch extends ArchiveMatch {
 
     boolean test(Path zipPath, FileSystem zipFileSystem, String entry);
+
+    LogicAssistant<ZipEntryMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), ZipEntryMatch.class);
 
     // region static methods: Text
     static ZipEntryMatch byText(TextMatch match) {
@@ -40,20 +45,4 @@ public interface ZipEntryMatch extends ArchiveMatch {
         };
     }
     // endregion
-
-    enum Bool implements ZipEntryMatch {
-        TRUE {
-            @Override
-            public boolean test(Path zipPath, FileSystem zipFileSystem, String entry) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(Path zipPath, FileSystem zipFileSystem, String entry) {
-                return false;
-            }
-        },
-        ;
-    }
 }

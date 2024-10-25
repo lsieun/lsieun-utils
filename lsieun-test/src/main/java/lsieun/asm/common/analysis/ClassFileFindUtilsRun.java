@@ -5,8 +5,8 @@ import lsieun.asm.core.AsmTypeNameUtils;
 import lsieun.asm.description.MemberDesc;
 import lsieun.asm.sam.match.FieldInfoMatch;
 import lsieun.asm.sam.match.MethodInfoMatch;
-import lsieun.core.match.text.TextMatch;
-import lsieun.core.match.text.TextMatchBuddy;
+import lsieun.core.sam.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatchBuddy;
 
 import java.nio.file.Path;
 

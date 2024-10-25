@@ -1,4 +1,4 @@
-package lsieun.core.sam;
+package lsieun.core.sam.chain;
 
 @FunctionalInterface
 public interface ToRun {

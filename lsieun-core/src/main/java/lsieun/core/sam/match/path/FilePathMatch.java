@@ -1,9 +1,9 @@
-package lsieun.core.match.path;
+package lsieun.core.sam.match.path;
 
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.archive.ZipFileSystemMatch;
-import lsieun.core.match.bytes.ByteArrayMatch;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.archive.ZipFileSystemMatch;
+import lsieun.core.sam.match.bytes.ByteArrayMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -20,6 +20,8 @@ import java.util.function.Predicate;
 @FunctionalInterface
 public interface FilePathMatch extends Predicate<Path> {
     boolean test(Path path);
+
+    LogicAssistant<FilePathMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), FilePathMatch.class);
 
     // region text
     static FilePathMatch byFileName(TextMatch textMatch) {
@@ -67,20 +69,5 @@ public interface FilePathMatch extends Predicate<Path> {
 
     static LogicAssistant<FilePathMatch> logic() {
         return LogicAssistant.of(MethodHandles.lookup(), FilePathMatch.class);
-    }
-
-    enum Bool implements FilePathMatch {
-        TRUE {
-            @Override
-            public boolean test(Path path) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(Path path) {
-                return false;
-            }
-        };
     }
 }

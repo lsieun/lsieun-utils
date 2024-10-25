@@ -1,11 +1,13 @@
 package lsieun.asm.sam.match;
 
 import lsieun.asm.description.MemberDesc;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.match.LogicAssistant;
+import lsieun.core.sam.match.text.TextMatch;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -13,6 +15,8 @@ import java.util.Objects;
 @SuppressWarnings("UnnecessaryLocalVariable")
 public interface InsnInvokeMatch extends InsnMatch {
     boolean test(int opcode, String owner, String name, String descriptor);
+
+    LogicAssistant<InsnInvokeMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), InsnInvokeMatch.class);
 
     static InsnInvokeMatch byMethodName(String methodName) {
         InsnInvokeMatch match = (opcode, owner, name, descriptor) -> Objects.equals(methodName, name);
@@ -48,39 +52,6 @@ public interface InsnInvokeMatch extends InsnMatch {
         return (opcode, owner, name, descriptor) -> {
             Type returnType = Type.getReturnType(descriptor);
             return asmTypeMatch.test(returnType);
-        };
-    }
-
-    enum All implements InsnInvokeMatch {
-        INSTANCE;
-
-        @Override
-        public boolean test(int opcode, String owner, String name, String descriptor) {
-            return true;
-        }
-    }
-
-    enum None implements InsnInvokeMatch {
-        INSTANCE;
-
-        @Override
-        public boolean test(int opcode, String owner, String name, String descriptor) {
-            return false;
-        }
-    }
-
-    enum Bool implements InsnInvokeMatch {
-        TRUE {
-            @Override
-            public boolean test(int opcode, String owner, String name, String descriptor) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(int opcode, String owner, String name, String descriptor) {
-                return false;
-            }
         };
     }
 

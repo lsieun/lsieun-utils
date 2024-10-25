@@ -2,7 +2,7 @@ package lsieun.asm.sam.match;
 
 
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 import java.lang.invoke.MethodHandles;
 
@@ -10,28 +10,9 @@ import java.lang.invoke.MethodHandles;
 public interface MemberInfoMatch {
     boolean test(String currentOwner, int access, String name, String descriptor);
 
+    LogicAssistant<MemberInfoMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), MemberInfoMatch.class);
 
     static MemberInfoMatch byName(TextMatch textMatch) {
         return ((currentOwner, access, name, descriptor) -> textMatch.test(name));
     }
-
-    static LogicAssistant<MemberInfoMatch> logic() {
-        return LogicAssistant.of(MethodHandles.lookup(), MemberInfoMatch.class);
-    }
-
-    enum Bool implements MemberInfoMatch {
-        TRUE {
-            @Override
-            public boolean test(String currentOwner, int access, String name, String descriptor) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(String currentOwner, int access, String name, String descriptor) {
-                return false;
-            }
-        };
-    }
-
 }

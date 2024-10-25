@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 import static lsieun.core.match.MatchAsmUtils.*;
 
@@ -30,21 +31,11 @@ public interface MatchLogic {
     Map<Class<?>, Class<?>> MAP_OF_LOGIC_NEGATE = new ConcurrentHashMap<>();
 
 
-//    static <T> T toTrue(Class<T> samClass) {
-//        MethodHandles.Lookup lookup = MethodHandles.lookup();
-//        return toTrue(lookup, samClass);
-//    }
-
     static <T> T toTrue(MethodHandles.Lookup lookup, Class<T> samClass) {
         MatchAsmUtils.checkFunctionalInterface(samClass);
         Class<?> clazz = getSamSubClass(lookup, samClass, MAP_OF_BOOL_TRUE, MatchAsmUtils::generateEnumTrue);
         return getEnumInstance(lookup, samClass, clazz);
     }
-
-//    static <T> T toFalse(Class<T> samClass) {
-//        MethodHandles.Lookup lookup = MethodHandles.lookup();
-//        return toFalse(lookup, samClass);
-//    }
 
     static <T> T toFalse(MethodHandles.Lookup lookup, Class<T> samClass) {
         MatchAsmUtils.checkFunctionalInterface(samClass);
@@ -52,21 +43,11 @@ public interface MatchLogic {
         return getEnumInstance(lookup, samClass, clazz);
     }
 
-//    static <T> T and(Class<T> samClass, List<T> list) {
-//        MethodHandles.Lookup lookup = MethodHandles.lookup();
-//        return and(lookup, samClass, list);
-//    }
-
     static <T> T and(MethodHandles.Lookup lookup, Class<T> samClass, List<T> list) {
         MatchAsmUtils.checkFunctionalInterface(samClass);
         Class<?> clazz = getSamSubClass(lookup, samClass, MAP_OF_LOGIC_AND, MatchAsmUtils::generateLogicAnd);
         return invokeFactoryMethodByList(lookup, samClass, clazz, list);
     }
-
-//    static <T> T or(Class<T> samClass, List<T> list) {
-//        MethodHandles.Lookup lookup = MethodHandles.lookup();
-//        return or(lookup, samClass, list);
-//    }
 
     static <T> T or(MethodHandles.Lookup lookup, Class<T> samClass, List<T> list) {
         MatchAsmUtils.checkFunctionalInterface(samClass);
@@ -74,11 +55,9 @@ public interface MatchLogic {
         return invokeFactoryMethodByList(lookup, samClass, clazz, list);
     }
 
-//    static <T> T negate(Class<T> samClass, T instance) {
-//        MethodHandles.Lookup lookup = MethodHandles.lookup();
-//        return negate(lookup, samClass, instance);
-//    }
-
+    /**
+     * @see Predicate#negate()
+     */
     static <T> T negate(MethodHandles.Lookup lookup, Class<T> samClass, T instance) {
         MatchAsmUtils.checkFunctionalInterface(samClass);
         Class<?> clazz = getSamSubClass(lookup, samClass, MAP_OF_LOGIC_NEGATE, MatchAsmUtils::generateLogicNegate);

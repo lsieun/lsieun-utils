@@ -2,7 +2,7 @@ package lsieun.asm.sam.match;
 
 import lsieun.asm.description.MemberDesc;
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 
 import org.objectweb.asm.Type;
 
@@ -19,10 +19,6 @@ public interface MethodInfoMatch {
 
 
     LogicAssistant<MethodInfoMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), MethodInfoMatch.class);
-
-    static LogicAssistant<MethodInfoMatch> logic() {
-        return LOGIC;
-    }
 
     static MethodInfoMatch byModifier(Predicate<Integer> predicate) {
         return ((owner, methodAccess, methodName, methodDesc, signature, exceptions) ->
@@ -75,10 +71,6 @@ public interface MethodInfoMatch {
         };
     }
 
-    static MethodInfoMatch of(boolean flag) {
-        return flag ? Bool.TRUE : Bool.FALSE;
-    }
-
     static MethodInfoMatch skipCommon() {
         return skip(
                 Common.INIT,
@@ -91,28 +83,8 @@ public interface MethodInfoMatch {
     }
 
     static MethodInfoMatch skip(MethodInfoMatch... matches) {
-        LogicAssistant<MethodInfoMatch> logic = logic();
-        MethodInfoMatch m = logic.or(false, matches);
-        return logic.not(m);
-    }
-
-    enum Bool implements MethodInfoMatch {
-        TRUE {
-            @Override
-            public boolean test(String owner,
-                                int methodAccess, String methodName, String methodDesc,
-                                String signature, String[] exceptions) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(String owner,
-                                int methodAccess, String methodName, String methodDesc,
-                                String signature, String[] exceptions) {
-                return false;
-            }
-        };
+        MethodInfoMatch m = LOGIC.or(false, matches);
+        return LOGIC.not(m);
     }
 
     enum Common implements MethodInfoMatch {

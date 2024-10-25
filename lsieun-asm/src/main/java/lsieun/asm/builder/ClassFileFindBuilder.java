@@ -12,10 +12,10 @@ import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.base.ds.pair.Pair;
 import lsieun.base.io.dir.DirNioUtils;
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.text.TextMatch;
-import lsieun.core.sam.AddArchiveEntryNameMatchWithVarArgs;
-import lsieun.core.sam.AddDirFromWithMaxDepthAndQuick;
-import lsieun.core.sam.ToRun;
+import lsieun.core.sam.match.text.TextMatch;
+import lsieun.core.sam.chain.AddArchiveEntryNameMatchWithVarArgs;
+import lsieun.core.sam.chain.AddDirFromWithMaxDepthAndQuick;
+import lsieun.core.sam.chain.ToRun;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 public interface ClassFileFindBuilder {
     static AddDirFromWithMaxDepthAndQuick<AddArchiveEntryNameMatchWithVarArgs<ToRun>> byEntryName() {
         return (dirPath, maxDepth, quick) -> (textMatches) -> () -> {
-            TextMatch zipEntryNameMatch = TextMatch.logic().and(true, textMatches);
+            TextMatch zipEntryNameMatch = TextMatch.LOGIC.and(true, textMatches);
             findByEntryName(dirPath, maxDepth, quick, zipEntryNameMatch);
         };
     }
@@ -48,8 +48,8 @@ public interface ClassFileFindBuilder {
 
     static AddDirFromWithMaxDepthAndQuick<AddArchiveEntryNameMatchWithVarArgs<AddClassInfoMatchWithVarArgs<AddFieldMatch<ToRun>>>> byField() {
         return (dirPath, maxDepth, quick) -> zipEntryMatches -> classMatches -> fieldMatch -> () -> {
-            TextMatch zipEntryMatch = TextMatch.logic().and(true, zipEntryMatches);
-            ClassInfoMatch classMatch = ClassInfoMatch.logic().and(true, classMatches);
+            TextMatch zipEntryMatch = TextMatch.LOGIC.and(true, zipEntryMatches);
+            ClassInfoMatch classMatch = ClassInfoMatch.LOGIC.and(true, classMatches);
 
             findByField(dirPath, maxDepth, quick, zipEntryMatch, classMatch, fieldMatch);
         };
@@ -70,11 +70,8 @@ public interface ClassFileFindBuilder {
     static AddDirFromWithMaxDepthAndQuick<AddArchiveEntryNameMatchWithVarArgs<AddClassInfoMatchWithVarArgs<AddMethodMatch<ToRun>>>> byMethod() {
         return (dirPath, maxDepth, quick) -> zipEntryMatches -> classMatches -> methodMatch -> () -> {
 
-            LogicAssistant<TextMatch> zipEntryLogic = TextMatch.logic();
-            TextMatch zipEntryMatch = zipEntryLogic.and(true, zipEntryMatches);
-
-            LogicAssistant<ClassInfoMatch> classMatchLogic = ClassInfoMatch.logic();
-            ClassInfoMatch classMatch = classMatchLogic.and(true, classMatches);
+            TextMatch zipEntryMatch = TextMatch.LOGIC.and(true, zipEntryMatches);
+            ClassInfoMatch classMatch = ClassInfoMatch.LOGIC.and(true, classMatches);
 
             findByMethod(dirPath, maxDepth, quick, zipEntryMatch, classMatch, methodMatch);
         };
@@ -112,14 +109,11 @@ public interface ClassFileFindBuilder {
             AddClassInfoMatchWithVarArgs<AddMethodMatchWithVarArgs<AddInsnMatchWithUnique<ToRun>>>>> byInsn() {
         return (dirPath, maxDepth, quick) -> zipEntryMatches -> classMatches -> methodMatches ->
                 (insnMatch, deduplicate) -> () -> {
-                    LogicAssistant<TextMatch> zipEntryLogic = TextMatch.logic();
+                    LogicAssistant<TextMatch> zipEntryLogic = TextMatch.LOGIC;
                     TextMatch zipEntryMatch = zipEntryLogic.and(true, zipEntryMatches);
 
-                    LogicAssistant<ClassInfoMatch> classMatchLogic = ClassInfoMatch.logic();
-                    ClassInfoMatch classMatch = classMatchLogic.and(true, classMatches);
-
-                    LogicAssistant<MethodInfoMatch> methodMatchLogic = MethodInfoMatch.logic();
-                    MethodInfoMatch methodMatch = methodMatchLogic.and(true, methodMatches);
+                    ClassInfoMatch classMatch = ClassInfoMatch.LOGIC.and(true, classMatches);
+                    MethodInfoMatch methodMatch = MethodInfoMatch.LOGIC.and(true, methodMatches);
 
                     findByInsn(dirPath, maxDepth, quick, zipEntryMatch, classMatch, methodMatch, insnMatch, deduplicate);
                 };
@@ -199,7 +193,7 @@ public interface ClassFileFindBuilder {
             String entry = relativizedPath.toString();
 
             // (2) logic
-            LogicAssistant<TextMatch> logic = TextMatch.logic();
+            LogicAssistant<TextMatch> logic = TextMatch.LOGIC;
             TextMatch match = logic.and(true, textMatch, TextMatch.endsWith(".class"));
 
             // (3) test
@@ -265,7 +259,7 @@ public interface ClassFileFindBuilder {
             Path rootPath = zipFs.getPath("/");
 
             // (2) predicate: .class
-            LogicAssistant<TextMatch> logic = TextMatch.logic();
+            LogicAssistant<TextMatch> logic = TextMatch.LOGIC;
             BiPredicate<Path, BasicFileAttributes> predicate = (path, attr) -> {
                 Path relativePath = path.getRoot().relativize(path);
                 String entry = relativePath.toString();

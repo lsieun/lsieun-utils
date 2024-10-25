@@ -11,11 +11,11 @@ import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.text.TextMatch;
-import lsieun.core.sam.AddArchiveEntryNameMatchWithVarArgs;
-import lsieun.core.sam.AddDirFromWithMaxDepth;
-import lsieun.core.sam.AddFilePathMatchWithVarArgs;
-import lsieun.core.sam.ToRun;
+import lsieun.core.sam.match.text.TextMatch;
+import lsieun.core.sam.chain.AddArchiveEntryNameMatchWithVarArgs;
+import lsieun.core.sam.chain.AddDirFromWithMaxDepth;
+import lsieun.core.sam.chain.AddFilePathMatchWithVarArgs;
+import lsieun.core.sam.chain.ToRun;
 
 import java.io.IOException;
 import java.net.URI;
@@ -72,7 +72,7 @@ public interface ClassFileModifyBuilder {
     static void processMethod(List<Path> jarList, TextMatch[] zipEntryMatches,
                               ClassInfoMatch[] classMatches, MethodInfoMatch methodMatch) {
         // (1) match: zip entry
-        LogicAssistant<TextMatch> textLogic = TextMatch.logic();
+        LogicAssistant<TextMatch> textLogic = TextMatch.LOGIC;
         TextMatch zipEntryMatch = textLogic.and(TextMatch.endsWith(".class"), zipEntryMatches);
 
         BiPredicate<Path, BasicFileAttributes> predicate = (path, attr) -> {
@@ -86,7 +86,7 @@ public interface ClassFileModifyBuilder {
         };
 
         // (2) match: class
-        ClassInfoMatch classMatch = ClassInfoMatch.logic().and(true, classMatches);
+        ClassInfoMatch classMatch = ClassInfoMatch.LOGIC.and(true, classMatches);
 
 
         // (3) transform jar

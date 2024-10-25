@@ -3,7 +3,7 @@ package lsieun.asm.common.analysis;
 
 import lsieun.asm.sam.match.MemberInfoMatch;
 import lsieun.base.io.resource.ResourceUtils;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 import org.junit.jupiter.api.Test;
 
 class ClassFileAnalysisUtilsTest {

@@ -2,7 +2,7 @@ package lsieun.base.operators.logical;
 
 
 import lsieun.core.match.LogicAssistant;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,7 +14,7 @@ public class LogicTest {
         String str = "You don't need wings to fly";
         TextMatch instance = TextMatch.startsWith("You");
 
-        LogicAssistant<TextMatch> logic = TextMatch.logic();
+        LogicAssistant<TextMatch> logic = TextMatch.LOGIC;
         TextMatch match = logic.not(instance);
         boolean flag = match.test(str);
         assertFalse(flag);

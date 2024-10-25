@@ -1,4 +1,4 @@
-package lsieun.core.sam;
+package lsieun.core.sam.chain;
 
 import java.nio.file.Path;
 

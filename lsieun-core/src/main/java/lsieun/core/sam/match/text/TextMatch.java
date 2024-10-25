@@ -1,8 +1,9 @@
-package lsieun.core.match.text;
+package lsieun.core.sam.match.text;
 
 import lsieun.core.match.LogicAssistant;
 import lsieun.core.match.MatchDirection;
 import lsieun.core.match.array.ArrayMatchForMany2One;
+import lsieun.core.match.text.TextMatchForOne2One;
 
 import java.lang.invoke.MethodHandles;
 import java.util.function.Predicate;
@@ -12,6 +13,10 @@ import java.util.function.Predicate;
  */
 @FunctionalInterface
 public interface TextMatch extends Predicate<String> {
+    @Override
+    boolean test(String s);
+
+    LogicAssistant<TextMatch> LOGIC = LogicAssistant.of(MethodHandles.lookup(), TextMatch.class);
 
     static TextMatch equals(String text) {
         return str -> TextMatchForOne2One.EQUALS_FULLY.test(str, text);
@@ -55,24 +60,5 @@ public interface TextMatch extends Predicate<String> {
                 MatchDirection.BACKWARD
         );
         return str -> match.test(textArray, str);
-    }
-
-    static LogicAssistant<TextMatch> logic() {
-        return LogicAssistant.of(MethodHandles.lookup(), TextMatch.class);
-    }
-
-    enum Bool implements TextMatch {
-        TRUE {
-            @Override
-            public boolean test(String text) {
-                return true;
-            }
-        },
-        FALSE {
-            @Override
-            public boolean test(String text) {
-                return false;
-            }
-        };
     }
 }

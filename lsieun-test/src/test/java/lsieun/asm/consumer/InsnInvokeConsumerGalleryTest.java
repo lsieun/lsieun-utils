@@ -21,7 +21,7 @@ class InsnInvokeConsumerGalleryTest {
         MethodInfoMatch methodMatch = MethodInfoMatch.byMethodName(TARGET_METHOD_NAME);
         ByteArrayProcessor func = bytes ->
                 ClassFileModifyUtils.modifyInsnInvoke(
-                        bytes, methodMatch, InsnInvokeMatch.All.INSTANCE,
+                        bytes, methodMatch, InsnInvokeMatch.LOGIC.alwaysTrue(),
                         InsnInvokeConsumerGallery.printInvokeMethodInsnParamsAndReturn()
                 );
         ByteArrayProcessorBuilder.forFile()

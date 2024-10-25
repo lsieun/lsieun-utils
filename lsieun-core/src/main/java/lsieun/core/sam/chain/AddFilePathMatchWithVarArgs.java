@@ -1,6 +1,6 @@
-package lsieun.core.sam;
+package lsieun.core.sam.chain;
 
-import lsieun.core.match.path.FilePathMatch;
+import lsieun.core.sam.match.path.FilePathMatch;
 
 @FunctionalInterface
 public interface AddFilePathMatchWithVarArgs<T> {

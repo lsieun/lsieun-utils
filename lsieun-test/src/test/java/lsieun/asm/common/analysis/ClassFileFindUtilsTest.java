@@ -16,7 +16,7 @@ class ClassFileFindUtilsTest {
         byte[] bytes = ResourceUtils.readClassBytes(HelloWorldForSystemExit.class);
         List<MatchItem> itemList = ClassFileFindUtils.findMethodByInsnInvoke(
                 bytes,
-                MethodInfoMatch.Bool.TRUE,
+                MethodInfoMatch.LOGIC.alwaysTrue(),
                 InsnInvokeMatch.ByMethodInsn.SYSTEM_EXIT);
         itemList.forEach(System.out::println);
         assertNotEquals(0, itemList.size());

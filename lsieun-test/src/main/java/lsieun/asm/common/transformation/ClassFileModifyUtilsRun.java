@@ -27,7 +27,7 @@ public class ClassFileModifyUtilsRun {
         String methodName = memberDesc.name();
         String methodDesc = memberDesc.desc();
         MethodInfoMatch methodMatch = MethodInfoMatch.byMethodNameAndDesc(methodName, methodDesc);
-        InsnInvokeMatch insnInvokeMatch = InsnInvokeMatch.All.INSTANCE;
+        InsnInvokeMatch insnInvokeMatch = InsnInvokeMatch.LOGIC.alwaysTrue();
 
         // (3) mapping: bytes --> bytes
         InsnInvokeConsumer insnInvokeConsumer = InsnInvokeConsumerGallery.printInvokeMethodInsnParamsAndReturn();

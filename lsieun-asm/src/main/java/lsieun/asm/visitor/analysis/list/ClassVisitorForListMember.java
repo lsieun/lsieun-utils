@@ -15,7 +15,7 @@ public class ClassVisitorForListMember extends ClassVisitor {
     private String currentOwner;
 
     public ClassVisitorForListMember() {
-        this(MemberInfoMatch.Bool.TRUE);
+        this(MemberInfoMatch.LOGIC.alwaysTrue());
     }
 
     public ClassVisitorForListMember(MemberInfoMatch memberMatch) {

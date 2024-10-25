@@ -1,4 +1,4 @@
-package lsieun.core.match.text;
+package lsieun.core.sam.match.text;
 
 public interface TextMatchBuddy {
     static TextMatch byFileExtension(String... exts) {

@@ -2,7 +2,7 @@ package lsieun.core.match;
 
 import lsieun.asm.sam.match.AsmTypeMatch;
 import lsieun.asm.sam.match.MemberInfoMatch;
-import lsieun.core.match.text.TextMatch;
+import lsieun.core.sam.match.text.TextMatch;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Type;
 
@@ -13,22 +13,22 @@ import static org.junit.jupiter.api.Assertions.*;
 class MatchLogicTest {
     @Test
     void testGetTrueInstance() {
-        MemberInfoMatch memberMatch = MemberInfoMatch.logic().toTrue();
+        MemberInfoMatch memberMatch = MemberInfoMatch.LOGIC.alwaysTrue();
         assertNotNull(memberMatch);
         System.out.println(memberMatch);
     }
 
     @Test
     void testGetFalseInstance() {
-        MemberInfoMatch memberMatch = MemberInfoMatch.logic().toFalse();
+        MemberInfoMatch memberMatch = MemberInfoMatch.LOGIC.alwaysFalse();
         assertNotNull(memberMatch);
         System.out.println(memberMatch);
     }
 
     @Test
     void testGetTwoEnumInstance() {
-        MemberInfoMatch true1 = MemberInfoMatch.logic().toTrue();
-        MemberInfoMatch true2 = MemberInfoMatch.logic().toTrue();
+        MemberInfoMatch true1 = MemberInfoMatch.LOGIC.alwaysTrue();
+        MemberInfoMatch true2 = MemberInfoMatch.LOGIC.alwaysTrue();
         assertEquals(true1, true2);
         System.out.println(true1);
         System.out.println(true2);
@@ -39,7 +39,7 @@ class MatchLogicTest {
     void testLogicAndTrueUsingTypeMatchByMethodInvoke() {
         Type t = Type.getType(String.class);
 
-        LogicAssistant<AsmTypeMatch> logic = AsmTypeMatch.logic();
+        LogicAssistant<AsmTypeMatch> logic = AsmTypeMatch.LOGIC;
         AsmTypeMatch asmTypeMatch = logic.and(
                 AsmTypeMatch.bySimpleName(TextMatch.startsWith("S")),
                 AsmTypeMatch.bySimpleName(TextMatch.endsWith("g"))
@@ -55,7 +55,7 @@ class MatchLogicTest {
                 AsmTypeMatch.bySimpleName(TextMatch.startsWith("S")),
                 AsmTypeMatch.bySimpleName(TextMatch.endsWith("x"))
         );
-        LogicAssistant<AsmTypeMatch> logic = AsmTypeMatch.logic();
+        LogicAssistant<AsmTypeMatch> logic = AsmTypeMatch.LOGIC;
         AsmTypeMatch asmTypeMatch = logic.and(list);
         boolean flag = asmTypeMatch.test(t);
         assertFalse(flag);
@@ -68,7 +68,7 @@ class MatchLogicTest {
                 TextMatch.startsWith("You"),
                 TextMatch.endsWith("fly")
         );
-        TextMatch match = TextMatch.logic().and(list);
+        TextMatch match = TextMatch.LOGIC.and(list);
         boolean flag = match.test(str);
         assertTrue(flag);
     }
@@ -80,7 +80,7 @@ class MatchLogicTest {
                 TextMatch.startsWith("You"),
                 TextMatch.endsWith("flx")
         );
-        TextMatch match = TextMatch.logic().and(list);
+        TextMatch match = TextMatch.LOGIC.and(list);
         boolean flag = match.test(str);
         assertFalse(flag);
     }
@@ -94,7 +94,7 @@ class MatchLogicTest {
                 AsmTypeMatch.bySimpleName(TextMatch.startsWith("S")),
                 AsmTypeMatch.bySimpleName(TextMatch.endsWith("x"))
         );
-        LogicAssistant<AsmTypeMatch> logic = AsmTypeMatch.logic();
+        LogicAssistant<AsmTypeMatch> logic = AsmTypeMatch.LOGIC;
         AsmTypeMatch asmTypeMatch = logic.or(list);
         boolean flag = asmTypeMatch.test(t);
         assertTrue(flag);
@@ -107,7 +107,7 @@ class MatchLogicTest {
                 AsmTypeMatch.bySimpleName(TextMatch.startsWith("A")),
                 AsmTypeMatch.bySimpleName(TextMatch.endsWith("x"))
         );
-        LogicAssistant<AsmTypeMatch> logic = AsmTypeMatch.logic();
+        LogicAssistant<AsmTypeMatch> logic = AsmTypeMatch.LOGIC;
         AsmTypeMatch asmTypeMatch = logic.or(list);
         boolean flag = asmTypeMatch.test(t);
         assertFalse(flag);
@@ -120,7 +120,7 @@ class MatchLogicTest {
         String str = "You don't need wings to fly";
         TextMatch instance = TextMatch.startsWith("You");
 
-        LogicAssistant<TextMatch> logic = TextMatch.logic();
+        LogicAssistant<TextMatch> logic = TextMatch.LOGIC;
         TextMatch match = logic.not(instance);
         boolean flag = match.test(str);
         assertFalse(flag);
