@@ -14,19 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @see ClassFileModifyUtils#addToString(byte[])
+ * @see ClassFileModifyUtils#addToString(byte[], boolean)
  */
 public class TypeAddToStringMethodVisitor extends ClassVisitor implements AsmCodeTagCarrier.ForMax, Opcodes {
     private static final String TO_STRING_METHOD_NAME = "toString";
     private static final String TO_STRING_METHOD_DESC = "()Ljava/lang/String;";
 
+    private final boolean supportStaticField;
     private boolean isInterface = false;
     private String currentOwner;
     private final List<FieldDesc> fieldList = new ArrayList<>();
     private boolean toStringExists = false;
 
-    public TypeAddToStringMethodVisitor(ClassVisitor classVisitor) {
+
+    public TypeAddToStringMethodVisitor(ClassVisitor classVisitor, boolean supportStaticField) {
         super(MyAsmConst.ASM_API_VERSION, classVisitor);
+        this.supportStaticField = supportStaticField;
     }
 
     @Override
@@ -38,8 +41,16 @@ public class TypeAddToStringMethodVisitor extends ClassVisitor implements AsmCod
 
     @Override
     public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-        FieldDesc fieldDesc = new FieldDesc(currentOwner, access, name, descriptor);
-        fieldList.add(fieldDesc);
+        boolean isStaticField = (access & Opcodes.ACC_STATIC) != 0;
+        if (!isStaticField) {
+            FieldDesc fieldDesc = new FieldDesc(currentOwner, access, name, descriptor);
+            fieldList.add(fieldDesc);
+        }
+        else if (supportStaticField) {
+            FieldDesc fieldDesc = new FieldDesc(currentOwner, access, name, descriptor);
+            fieldList.add(fieldDesc);
+        }
+
         return super.visitField(access, name, descriptor, signature, value);
     }
 

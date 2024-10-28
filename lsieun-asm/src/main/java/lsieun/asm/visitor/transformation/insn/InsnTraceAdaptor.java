@@ -16,6 +16,7 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
 public class InsnTraceAdaptor extends AdviceAdapter {
     private final String currentOwner;
+    private boolean methodEnterHasBeenCalled = false;
 
     InsnTraceAdaptor(MethodVisitor methodVisitor,
                      String currentOwner,
@@ -37,6 +38,8 @@ public class InsnTraceAdaptor extends AdviceAdapter {
 
         // method args
         AsmInsnUtilsForMethodParameter.printParameters(mv, methodAccess, methodDesc);
+
+        methodEnterHasBeenCalled = true;
     }
 
     @Override
@@ -69,6 +72,12 @@ public class InsnTraceAdaptor extends AdviceAdapter {
             return;
         }
 
+
+        if (isNotReady()) {
+            super.visitFieldInsn(opcode, owner, name, descriptor);
+            return;
+        }
+
         String line = String.format("    %s %s::%s:%s - ",
                 OpcodeConst.getOpcodeName(opcode),
                 AsmTypeNameUtils.toClassName(owner),
@@ -94,6 +103,12 @@ public class InsnTraceAdaptor extends AdviceAdapter {
     @Override
     public void visitMethodInsn(int opcodeAndSource, String owner, String name, String descriptor, boolean isInterface) {
         if (mv == null) {
+            return;
+        }
+
+
+        if (isNotReady()) {
+            super.visitMethodInsn(opcodeAndSource, owner, name, descriptor, isInterface);
             return;
         }
 
@@ -133,6 +148,15 @@ public class InsnTraceAdaptor extends AdviceAdapter {
 
     @Override
     public void visitVarInsn(int opcode, int varIndex) {
+        if (mv == null) {
+            return;
+        }
+
+        if (isNotReady()) {
+            super.visitVarInsn(opcode, varIndex);
+            return;
+        }
+
         String line = String.format("    %s %d - ", OpcodeConst.getOpcodeName(opcode), varIndex);
         if (opcode == ISTORE) {
             AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.INT_TYPE);
@@ -187,26 +211,62 @@ public class InsnTraceAdaptor extends AdviceAdapter {
             return;
         }
 
+        if (isNotReady()) {
+            super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
+            return;
+        }
+
+        // enter
         String line = String.format("    invokedynamic %s:%s", name, descriptor);
         AsmInsnUtilsForPrint.printMessage(mv, line);
-        if (bootstrapMethodHandle != null) {
+
+        // method args
+        AsmInsnUtilsForMethodInvoke.printInvokeMethodInsnParams(mv, false, descriptor, 8);
+
+        // bootstrapMethodHandle
+        printHandle(bootstrapMethodHandle);
+
+        // other method handle
+        if (bootstrapMethodArguments != null) {
             for (Object arg : bootstrapMethodArguments) {
                 if (arg instanceof Handle) {
                     Handle handle = (Handle) arg;
-                    int tag = handle.getTag();
-                    String msg = String.format("        %s %s::%s:%s", OpcodeConst.REFERENCE_KIND_NAMES[tag],
-                            handle.getOwner(), handle.getName(), handle.getDesc());
-                    AsmInsnUtilsForPrint.printMessage(mv, msg);
+                    printHandle(handle);
                 }
             }
         }
 
         super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
+
+        // method return value
+        Type methodType = Type.getMethodType(descriptor);
+        Type returnType = methodType.getReturnType();
+
+        String postMsg = String.format("    invokedynamic %s:%s [<<<] ", name, descriptor);
+        if (AsmTypeUtils.hasValidValue(returnType)) {
+            AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
+            AsmInsnUtilsForPrint.printValueOnStack(mv, returnType, postMsg);
+        }
+        else {
+            AsmInsnUtilsForPrint.printMessage(mv, postMsg + "void");
+        }
+    }
+
+    private void printHandle(Handle handle) {
+        int tag = handle.getTag();
+        String msg = String.format("        %s %s::%s:%s", OpcodeConst.REFERENCE_KIND_NAMES[tag],
+                handle.getOwner(), handle.getName(), handle.getDesc());
+        AsmInsnUtilsForPrint.printMessage(mv, msg);
     }
 
     @Override
     public void visitJumpInsn(int opcode, Label label) {
         if (mv == null) {
+            return;
+        }
+
+        if (isNotReady()) {
+            super.visitJumpInsn(opcode, label);
             return;
         }
 
@@ -234,8 +294,21 @@ public class InsnTraceAdaptor extends AdviceAdapter {
             return;
         }
 
+        if (isNotReady()) {
+            super.visitLabel(label);
+            return;
+        }
+
         super.visitLabel(label);
 
         AsmInsnUtilsForPrint.printMessage(mv, "    Jump <---");
+    }
+
+    private boolean isReady() {
+        return methodEnterHasBeenCalled;
+    }
+
+    private boolean isNotReady() {
+        return !isReady();
     }
 }

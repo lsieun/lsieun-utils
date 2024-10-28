@@ -136,7 +136,7 @@ class ClassFileModifyUtilsTest {
     void testAddToString() {
         Class<?> clazz = HelloWorldForToString.class;
         Path path = ResourceUtils.readFilePath(clazz);
-        ByteArrayProcessor func = ClassFileModifyUtils::addToString;
+        ByteArrayProcessor func = bytes -> ClassFileModifyUtils.addToString(bytes, false);
         ByteArrayProcessorBuilder.forFile()
                 .withFile(path)
                 .withByteArrayProcessor(func)
@@ -145,6 +145,7 @@ class ClassFileModifyUtilsTest {
 
     @SuppressWarnings("all")
     static class HelloWorldForToString {
+        private static boolean staticBool = false;
         private boolean boolValue = true;
         private short shortValue = 1;
         private char charValue = 'B';

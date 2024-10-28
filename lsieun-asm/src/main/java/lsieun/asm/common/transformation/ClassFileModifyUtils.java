@@ -116,10 +116,10 @@ public class ClassFileModifyUtils {
     /**
      * @see TypeAddToStringMethodVisitor
      */
-    public static byte[] addToString(byte[] bytes) {
+    public static byte[] addToString(byte[] bytes, boolean supportStaticField) {
         ClassReader cr = new ClassReader(bytes);
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        ClassVisitor cv = new TypeAddToStringMethodVisitor(cw);
+        ClassVisitor cv = new TypeAddToStringMethodVisitor(cw, supportStaticField);
         int parsingOptions = ClassReader.EXPAND_FRAMES;
         cr.accept(cv, parsingOptions);
         return cw.toByteArray();
