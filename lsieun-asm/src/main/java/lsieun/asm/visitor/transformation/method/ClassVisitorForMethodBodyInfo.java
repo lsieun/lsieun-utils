@@ -1,6 +1,5 @@
 package lsieun.asm.visitor.transformation.method;
 
-import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.insn.method.AsmInsnUtilsForMethod;
 import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.asm.visitor.common.MethodMatchVisitor;
@@ -9,6 +8,9 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 
 import java.util.Set;
+
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.PRINT_STACK_FRAME_METHOD_DESC;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.PRINT_STACK_FRAME_METHOD_NAME;
 
 public class ClassVisitorForMethodBodyInfo extends MethodMatchVisitor {
     private final Set<MethodBodyInfoType> options;
@@ -24,7 +26,7 @@ public class ClassVisitorForMethodBodyInfo extends MethodMatchVisitor {
     protected void onVisitMethodEnter(int version, String owner,
                                       int methodAccess, String methodName, String methodDesc,
                                       String signature, String[] exceptions) {
-        if (methodName.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME) && methodDesc.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC)) {
+        if (methodName.equals(PRINT_STACK_FRAME_METHOD_NAME) && methodDesc.equals(PRINT_STACK_FRAME_METHOD_DESC)) {
             isPrintStackFrameMethodPresent = true;
         }
     }
@@ -41,7 +43,8 @@ public class ClassVisitorForMethodBodyInfo extends MethodMatchVisitor {
     public void visitEnd() {
         if (options.contains(MethodBodyInfoType.STACK_TRACE) && version >= (44 + 9) && !isPrintStackFrameMethodPresent) {
             AsmInsnUtilsForMethod.addPrintStackFrame(cv,
-                    MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME, MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC);
+                    PRINT_STACK_FRAME_METHOD_NAME,
+                    PRINT_STACK_FRAME_METHOD_DESC);
         }
 
         super.visitEnd();

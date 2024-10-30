@@ -1,8 +1,10 @@
 package lsieun.asm.insn;
 
-import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
+import lsieun.asm.insn.opcode.OpcodeForArray;
 
 import org.objectweb.asm.*;
+
+import static lsieun.asm.insn.opcode.OpcodeForBox.castPrimitive;
 
 public class InstructionAdapter {
 
@@ -242,7 +244,7 @@ public class InstructionAdapter {
      * @param to   a Type.
      */
     public void cast(final Type from, final Type to) {
-        AsmInsnUtilsForOpcode.castPrimitive(mv, from, to);
+        castPrimitive(mv, from, to);
     }
 
 
@@ -435,7 +437,7 @@ public class InstructionAdapter {
      * @param type an array Type.
      */
     public void newarray(final Type type) {
-        AsmInsnUtilsForOpcode.newArray(mv, type);
+        OpcodeForArray.newArray(mv, type);
     }
 
     public void arraylength() {

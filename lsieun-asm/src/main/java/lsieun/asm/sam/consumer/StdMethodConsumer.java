@@ -1,10 +1,12 @@
 package lsieun.asm.sam.consumer;
 
-import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.insn.code.*;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.PRINT_STACK_FRAME_METHOD_DESC;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.PRINT_STACK_FRAME_METHOD_NAME;
 
 public enum StdMethodConsumer implements MethodConsumer, Opcodes {
     ENTER {
@@ -70,8 +72,8 @@ public enum StdMethodConsumer implements MethodConsumer, Opcodes {
             }
             else {
                 AsmInsnUtilsForStackTrace.printStackTraceSinceJava9(mv, owner,
-                        MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME,
-                        MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC);
+                        PRINT_STACK_FRAME_METHOD_NAME,
+                        PRINT_STACK_FRAME_METHOD_DESC);
             }
         }
     },

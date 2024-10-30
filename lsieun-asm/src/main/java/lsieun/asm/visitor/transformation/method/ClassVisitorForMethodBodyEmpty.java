@@ -1,10 +1,11 @@
 package lsieun.asm.visitor.transformation.method;
 
-import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
 import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.asm.visitor.common.MethodMatchVisitor;
 
 import org.objectweb.asm.*;
+
+import static lsieun.asm.insn.opcode.OpcodeForConst.push;
 
 public class ClassVisitorForMethodBodyEmpty extends MethodMatchVisitor {
     private final Object returnValue;
@@ -46,19 +47,19 @@ public class ClassVisitorForMethodBodyEmpty extends MethodMatchVisitor {
                 mv.visitInsn(returnType.getOpcode(Opcodes.ICONST_0));
             }
             else if (returnValue instanceof Boolean) {
-                AsmInsnUtilsForOpcode.push(mv, (boolean) returnValue);
+                push(mv, (boolean) returnValue);
             }
             else if (returnValue instanceof Integer) {
-                AsmInsnUtilsForOpcode.push(mv, (int) returnValue);
+                push(mv, (int) returnValue);
             }
             else if (returnValue instanceof Long) {
-                AsmInsnUtilsForOpcode.push(mv, (long) returnValue);
+                push(mv, (long) returnValue);
             }
             else if (returnValue instanceof Float) {
-                AsmInsnUtilsForOpcode.push(mv, (float) returnValue);
+                push(mv, (float) returnValue);
             }
             else if (returnValue instanceof Double) {
-                AsmInsnUtilsForOpcode.push(mv, (double) returnValue);
+                push(mv, (double) returnValue);
             }
             else {
                 mv.visitInsn(returnType.getOpcode(Opcodes.ICONST_0));
@@ -70,16 +71,16 @@ public class ClassVisitorForMethodBodyEmpty extends MethodMatchVisitor {
                 mv.visitInsn(Opcodes.ACONST_NULL);
             }
             else if (returnValue instanceof String) {
-                AsmInsnUtilsForOpcode.push(mv, (String) returnValue);
+                push(mv, (String) returnValue);
             }
             else if(returnValue instanceof Type) {
-                AsmInsnUtilsForOpcode.push(mv, (Type)returnValue);
+                push(mv, (Type)returnValue);
             }
             else if (returnValue instanceof Handle) {
-                AsmInsnUtilsForOpcode.push(mv, (Handle) returnValue);
+                push(mv, (Handle) returnValue);
             }
             else if (returnValue instanceof ConstantDynamic) {
-                AsmInsnUtilsForOpcode.push(mv, (ConstantDynamic) returnValue);
+                push(mv, (ConstantDynamic) returnValue);
             }
             else {
                 mv.visitInsn(Opcodes.ACONST_NULL);

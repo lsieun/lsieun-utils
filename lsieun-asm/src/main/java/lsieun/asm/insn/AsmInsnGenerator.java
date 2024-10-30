@@ -1,7 +1,6 @@
 package lsieun.asm.insn;
 
-import lsieun.asm.cst.MyAsmConst;
-import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
+import lsieun.asm.insn.opcode.OpcodeForArray;
 
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.LocalVariablesSorter;
@@ -12,8 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static lsieun.asm.cst.MyAsmConst.*;
-import static lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode.getBoxedType;
+import static lsieun.asm.cst.MyAsmConst.Box.*;
+import static lsieun.asm.cst.MyAsmConst.CLASS_DESCRIPTOR;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.INIT_METHOD_NAME;
+import static lsieun.asm.cst.MyAsmConst.RefType.*;
+import static lsieun.asm.insn.opcode.OpcodeForBox.castPrimitive;
+import static lsieun.asm.insn.opcode.OpcodeForBox.getBoxedType;
+
 
 public class AsmInsnGenerator {
     /**
@@ -150,8 +154,6 @@ public class AsmInsnGenerator {
         }
         firstLocal = nextLocal;
     }
-
-
 
 
     public int getAccess() {
@@ -663,14 +665,13 @@ public class AsmInsnGenerator {
                     || to.getSort() > Type.DOUBLE) {
                 throw new IllegalArgumentException("Cannot cast from " + from + " to " + to);
             }
-            AsmInsnUtilsForOpcode.castPrimitive(mv, from, to);
+            castPrimitive(mv, from, to);
         }
     }
 
     // -----------------------------------------------------------------------------------------------
     // Instructions to do boxing and unboxing operations
     // -----------------------------------------------------------------------------------------------
-
 
 
     /**
@@ -700,7 +701,7 @@ public class AsmInsnGenerator {
                 dupX1();
                 swap();
             }
-            invokeConstructor(boxedType, new Method(MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, Type.VOID_TYPE, new Type[]{type}));
+            invokeConstructor(boxedType, new Method(INIT_METHOD_NAME, Type.VOID_TYPE, new Type[]{type}));
         }
     }
 
@@ -1169,7 +1170,7 @@ public class AsmInsnGenerator {
      * @param type the type of the array elements.
      */
     public void newArray(final Type type) {
-        AsmInsnUtilsForOpcode.newArray(mv, type);
+        OpcodeForArray.newArray(mv, type);
     }
 
     // -----------------------------------------------------------------------------------------------

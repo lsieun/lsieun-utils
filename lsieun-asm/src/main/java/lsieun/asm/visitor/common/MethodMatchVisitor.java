@@ -1,6 +1,5 @@
 package lsieun.asm.visitor.common;
 
-import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.description.ByteCodeElementType;
 import lsieun.asm.format.MatchFormat;
 import lsieun.asm.match.MatchState;
@@ -11,6 +10,9 @@ import lsieun.base.log.LoggerFactory;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import static lsieun.asm.cst.MyAsmConst.ASM_API_VERSION;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.*;
 
 /**
  * <pre>
@@ -28,7 +30,7 @@ public abstract class MethodMatchVisitor extends ClassVisitor implements Opcodes
     protected String currentOwner;
 
     protected MethodMatchVisitor(ClassVisitor classVisitor, MethodInfoMatch methodMatch) {
-        super(MyAsmConst.ASM_API_VERSION, classVisitor);
+        super(ASM_API_VERSION, classVisitor);
         this.methodMatch = methodMatch;
     }
 
@@ -49,11 +51,11 @@ public abstract class MethodMatchVisitor extends ClassVisitor implements Opcodes
         // match: find, modify
         boolean flag = methodMatch.test(currentOwner, access, name, descriptor, signature, exceptions);
 
-        if (name.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME) && descriptor.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC)) {
+        if (name.equals(PRINT_STACK_FRAME_METHOD_NAME) && descriptor.equals(PRINT_STACK_FRAME_METHOD_DESC)) {
             if (flag) {
                 logger.warn(() -> MatchFormat.format(
                         MatchState.SKIP, ByteCodeElementType.METHOD,
-                        MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME + ":" + MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC
+                        PRINT_STACK_FRAME_METHOD_NAME + ":" + PRINT_STACK_FRAME_METHOD_DESC
                 ));
                 flag = false;
             }
@@ -77,7 +79,7 @@ public abstract class MethodMatchVisitor extends ClassVisitor implements Opcodes
         }
 
         // (3) <init> or <clinit>, do not process
-        if (name.equals(MyAsmConst.CONSTRUCTOR_INTERNAL_NAME) || name.equals(MyAsmConst.TYPE_INITIALIZER_INTERNAL_NAME)) {
+        if (name.equals(INIT_METHOD_NAME) || name.equals(CLINIT_METHOD_NAME)) {
             logger.debug(() -> MatchFormat.format(MatchState.SKIP, ByteCodeElementType.METHOD, name));
             return mv;
         }

@@ -4,12 +4,11 @@ import lsieun.annotation.mind.logic.ThinkStep;
 import lsieun.asm.common.transformation.ClassFileModifyUtils;
 import lsieun.asm.core.AsmTypeNameUtils;
 import lsieun.asm.core.AsmTypeUtils;
-import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.cst.OpcodeConst;
 import lsieun.asm.insn.code.AsmInsnUtilsForMethodInvoke;
 import lsieun.asm.insn.code.AsmInsnUtilsForPrint;
 import lsieun.asm.insn.code.AsmInsnUtilsForStackTrace;
-import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
+import lsieun.asm.insn.opcode.OpcodeForConst;
 import lsieun.asm.sam.match.InsnInvokeMatch;
 import lsieun.asm.sam.match.MethodInfoMatch;
 
@@ -20,6 +19,11 @@ import org.objectweb.asm.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.INIT_METHOD_NAME;
+import static lsieun.asm.insn.opcode.OpcodeForStack.dupValueOnStack;
+import static lsieun.asm.insn.opcode.OpcodeForStack.popByMethodDesc;
 
 /**
  * <code>
@@ -50,7 +54,7 @@ public interface InsnInvokeConsumer {
         return ((mv, currentType, currentMethodName, currentMethodDesc,
                  opcode, owner, name, descriptor, isInterface) ->
         {
-            AsmInsnUtilsForOpcode.push(mv, val);
+            OpcodeForConst.push(mv, val);
         });
     }
 
@@ -84,11 +88,11 @@ public interface InsnInvokeConsumer {
                                String currentType, String currentMethodName, String currentMethodDesc,
                                int opcode, String owner, String name, String descriptor, boolean isInterface) {
                 if (mv != null) {
-                    if (opcode == Opcodes.INVOKESPECIAL && MyAsmConst.CONSTRUCTOR_INTERNAL_NAME.equals(name)) {
+                    if (opcode == Opcodes.INVOKESPECIAL && INIT_METHOD_NAME.equals(name)) {
                         mv.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
                     }
                     else {
-                        AsmInsnUtilsForOpcode.popByMethodDesc(mv, opcode == Opcodes.INVOKESTATIC, descriptor);
+                        popByMethodDesc(mv, opcode == Opcodes.INVOKESTATIC, descriptor);
                     }
                 }
             }
@@ -120,7 +124,7 @@ public interface InsnInvokeConsumer {
                     @ThinkStep("(1) 如果是 invokestatck 指令，说明是 static 方法，不存在 this")
                     boolean isStatic = opcode == Opcodes.INVOKESTATIC;
                     @ThinkStep("(2) 如果方法名称是 <init>，说明是 constructor 方法，此时的 receiver type 是 UNINITIALIZED_THIS")
-                    boolean isInstanceInit = MyAsmConst.CONSTRUCTOR_INTERNAL_NAME.equals(name);
+                    boolean isInstanceInit = INIT_METHOD_NAME.equals(name);
                     @ThinkStep("(3) 排除这两种情况")
                     boolean hasReceiverType = !(isStatic || isInstanceInit);
                     AsmInsnUtilsForMethodInvoke.printInvokeMethodInsnParams(mv, hasReceiverType, descriptor, 4);
@@ -141,8 +145,8 @@ public interface InsnInvokeConsumer {
                             AsmTypeNameUtils.toClassName(currentType), currentMethodName, currentMethodDesc,
                             OpcodeConst.getOpcodeName(opcode), AsmTypeNameUtils.toClassName(owner), name, descriptor);
                     if (AsmTypeUtils.hasValidValue(returnType)) {
-                        AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
-                        AsmInsnUtilsForPrint.printValueOnStack(mv, returnType, msg);
+                        dupValueOnStack(mv, returnType);
+                        AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, returnType, msg);
                     }
                     else {
                         AsmInsnUtilsForPrint.printMessage(mv, msg + "void");

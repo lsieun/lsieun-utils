@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-import static lsieun.asm.cst.MyAsmConst.*;
-import static lsieun.asm.cst.StringBuilderConst.*;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.*;
+import static lsieun.asm.cst.MyAsmConst.StringBuilderConst.*;
 import static org.objectweb.asm.Opcodes.*;
 
 /**
@@ -23,8 +23,10 @@ import static org.objectweb.asm.Opcodes.*;
  * </pre>
  */
 public class AsmInsnUtilsForStackValue {
-    public static void convertValueOnStackToString(@NotNull MethodVisitor mv, @NotNull Type t,
-                                                   @Nullable String prefix, @Nullable String suffix) {
+    public static void convertValueOnStackToString(@NotNull MethodVisitor mv,
+                                                   @NotNull Type t,
+                                                   @Nullable String prefix,
+                                                   @Nullable String suffix) {
         if (AsmTypeUtils.hasInvalidValue(t)) {
             return;
         }
@@ -32,10 +34,10 @@ public class AsmInsnUtilsForStackValue {
 
         // obj --> str: (1) str = String.valueOf(obj), (2) str = Arrays.toString(array), (3) ...
         // operand stack: obj
-        AsmInsnUtilsForStackValue.convertValueOnStackToString(mv, t);
+        convertValueOnStackToString(mv, t);
         // operand stack: str
 
-        if (prefix == null && suffix == null) {
+        if (isEmpty(prefix) && isEmpty(suffix)) {
             return;
         }
 
@@ -45,7 +47,7 @@ public class AsmInsnUtilsForStackValue {
         mv.visitTypeInsn(NEW, STRING_BUILDER_INTERNAL_NAME);
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, STRING_BUILDER_INTERNAL_NAME,
-                CONSTRUCTOR_INTERNAL_NAME, "()V", false);
+                INIT_METHOD_NAME, INIT_METHOD_DEFAULT_DESC, false);
         // operand stack: str, builder
 
         // builder.append(prefix);
@@ -84,6 +86,10 @@ public class AsmInsnUtilsForStackValue {
         mv.visitMethodInsn(INVOKEVIRTUAL, STRING_BUILDER_INTERNAL_NAME,
                 TO_STRING_METHOD_NAME, TO_STRING_METHOD_DESC, false);
         // operand stack: str
+    }
+
+    private static boolean isEmpty(final CharSequence cs) {
+        return cs == null || cs.isEmpty();
     }
 
     /**

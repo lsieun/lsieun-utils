@@ -6,6 +6,9 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AdviceAdapter;
 
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.INIT_METHOD_NAME;
+
+
 public class TransformerVisitor extends ClassVisitor {
     private String containerName;
 
@@ -38,7 +41,7 @@ public class TransformerVisitor extends ClassVisitor {
                 mv.visitInsn(DUP);
                 mv.visitVarInsn(ALOAD, 2);
                 mv.visitVarInsn(ALOAD, 5);
-                mv.visitMethodInsn(INVOKESPECIAL, containerName, MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/lang/String;[B)V", false);
+                mv.visitMethodInsn(INVOKESPECIAL, containerName, INIT_METHOD_NAME, "(Ljava/lang/String;[B)V", false);
                 mv.visitMethodInsn(INVOKESTATIC, containerName, "start", "(L" + containerName + ";)V", false);
             }
         }

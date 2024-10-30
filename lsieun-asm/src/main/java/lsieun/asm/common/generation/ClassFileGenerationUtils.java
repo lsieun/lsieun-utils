@@ -4,7 +4,6 @@ import lsieun.asm.common.analysis.ClassFileFindUtils;
 import lsieun.asm.core.AsmTypeUtils;
 import lsieun.asm.description.ByteCodeElementType;
 import lsieun.asm.format.MatchFormat;
-import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
 import lsieun.asm.match.MatchItem;
 import lsieun.asm.match.MatchState;
 import lsieun.asm.sam.match.MethodInfoMatch;
@@ -22,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static lsieun.asm.insn.opcode.OpcodeForLocalVariable.getFirstLocalSlotIndex;
 import static org.objectweb.asm.Opcodes.*;
 
 public class ClassFileGenerationUtils {
@@ -180,7 +180,7 @@ public class ClassFileGenerationUtils {
             mv.visitEnd();
         }
         {
-            int maxLocals = AsmInsnUtilsForOpcode.getFirstLocalSlotIndex(false, samMethodType.getDescriptor());
+            int maxLocals = getFirstLocalSlotIndex(false, samMethodType.getDescriptor());
             MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, samMethodName, samMethodType.getDescriptor(), null, null);
             mv.visitCode();
             mv.visitInsn(flag ? ICONST_1 : ICONST_0);

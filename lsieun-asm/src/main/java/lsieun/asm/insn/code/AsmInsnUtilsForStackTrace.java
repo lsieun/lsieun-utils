@@ -1,13 +1,13 @@
 package lsieun.asm.insn.code;
 
-import lsieun.asm.cst.MyAsmConst;
-
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.INIT_METHOD_NAME;
 import static org.objectweb.asm.Opcodes.*;
 
 public class AsmInsnUtilsForStackTrace {
@@ -15,7 +15,7 @@ public class AsmInsnUtilsForStackTrace {
         mv.visitTypeInsn(NEW, "java/lang/Exception");
         mv.visitInsn(DUP);
         mv.visitLdcInsn(msg);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Exception", MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "(Ljava/lang/String;)V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Exception", INIT_METHOD_NAME, "(Ljava/lang/String;)V", false);
         mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
         mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "(Ljava/io/PrintStream;)V", false);
     }

@@ -15,6 +15,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AdviceAdapter;
 
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.PRINT_STACK_FRAME_METHOD_DESC;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.PRINT_STACK_FRAME_METHOD_NAME;
+
 public class ClassVisitorForAdvice extends ClassVisitor {
     private static final Logger logger = LoggerFactory.getLogger(ClassVisitorForAdvice.class);
 
@@ -56,12 +59,12 @@ public class ClassVisitorForAdvice extends ClassVisitor {
         // match: find, modify
         boolean flag = methodMatch.test(currentOwner, access, name, descriptor, signature, exceptions);
 
-        if (name.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME) && descriptor.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC)) {
+        if (name.equals(PRINT_STACK_FRAME_METHOD_NAME) && descriptor.equals(PRINT_STACK_FRAME_METHOD_DESC)) {
             isPrintStackFrameMethodPresent = true;
             if (flag) {
                 logger.warn(() -> MatchFormat.format(
                         MatchState.SKIP, ByteCodeElementType.METHOD,
-                        MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME + ":" + MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC
+                        PRINT_STACK_FRAME_METHOD_NAME + ":" + PRINT_STACK_FRAME_METHOD_DESC
                 ));
                 flag = false;
             }
@@ -100,7 +103,7 @@ public class ClassVisitorForAdvice extends ClassVisitor {
     public void visitEnd() {
         if (!isPrintStackFrameMethodPresent && supportStackTrace) {
             AsmInsnUtilsForMethod.addPrintStackFrame(cv,
-                    MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME, MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC);
+                    PRINT_STACK_FRAME_METHOD_NAME, PRINT_STACK_FRAME_METHOD_DESC);
         }
 
         super.visitEnd();

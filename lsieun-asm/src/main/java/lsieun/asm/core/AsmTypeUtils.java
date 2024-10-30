@@ -67,4 +67,18 @@ public class AsmTypeUtils {
         String arrayDescriptor = "[".repeat(rank) + t.getDescriptor();
         return Type.getType(arrayDescriptor);
     }
+
+    /**
+     * Returns the internal names of the given types.
+     *
+     * @param types a set of types.
+     * @return the internal names of the given types (see {@link Type#getInternalName()}).
+     */
+    public static String[] getInternalNames(final Type[] types) {
+        String[] names = new String[types.length];
+        for (int i = 0; i < names.length; ++i) {
+            names[i] = types[i].getInternalName();
+        }
+        return names;
+    }
 }

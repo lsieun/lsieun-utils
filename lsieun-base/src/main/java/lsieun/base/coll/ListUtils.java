@@ -8,6 +8,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class ListUtils {
+    private ListUtils() {
+        throw new UnsupportedOperationException("This class is a utility class and not supposed to be instantiated");
+    }
+
     public static boolean isNullOrEmpty(final Collection<?> c) {
         return c == null || c.isEmpty();
     }

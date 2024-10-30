@@ -9,10 +9,15 @@ import lsieun.asm.format.MethodInfoFormat;
 import lsieun.asm.insn.code.AsmInsnUtilsForMethodInvoke;
 import lsieun.asm.insn.code.AsmInsnUtilsForMethodParameter;
 import lsieun.asm.insn.code.AsmInsnUtilsForPrint;
-import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
+import lsieun.asm.insn.opcode.OpcodeForArray;
 
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.AdviceAdapter;
+
+import static lsieun.asm.cst.MyAsmConst.ArrayType.OBJECT_ARRAY_TYPE;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.INIT_METHOD_NAME;
+import static lsieun.asm.cst.MyAsmConst.RefType.OBJECT_TYPE;
+import static lsieun.asm.insn.opcode.OpcodeForStack.dupValueOnStack;
 
 public class InsnTraceAdaptor extends AdviceAdapter {
     private final String currentOwner;
@@ -61,8 +66,8 @@ public class InsnTraceAdaptor extends AdviceAdapter {
             String line = MethodInfoFormat.methodExitReturn(className, methodAccess, getName(), methodDesc);
             Type methodType = Type.getMethodType(methodDesc);
             Type returnType = methodType.getReturnType();
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, returnType, line + " - [ReturnValue] ");
+            dupValueOnStack(mv, returnType);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, returnType, line + " - [ReturnValue] ");
         }
     }
 
@@ -86,8 +91,8 @@ public class InsnTraceAdaptor extends AdviceAdapter {
 
         // pre
         if (opcode == PUTFIELD || opcode == PUTSTATIC) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, fieldType);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, fieldType, line);
+            dupValueOnStack(mv, fieldType);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, fieldType, line);
         }
 
         // field op: get or put
@@ -95,8 +100,8 @@ public class InsnTraceAdaptor extends AdviceAdapter {
 
         // post
         if (opcode == GETFIELD || opcode == GETSTATIC) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, fieldType);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, fieldType, line);
+            dupValueOnStack(mv, fieldType);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, fieldType, line);
         }
     }
 
@@ -123,7 +128,7 @@ public class InsnTraceAdaptor extends AdviceAdapter {
         @ThinkStep("(1) 如果是 invokestatck 指令，说明是 static 方法，不存在 this")
         boolean isStatic = opcodeAndSource == Opcodes.INVOKESTATIC;
         @ThinkStep("(2) 如果方法名称是 <init>，说明是 constructor 方法，此时的 receiver type 是 UNINITIALIZED_THIS")
-        boolean isInstanceInit = MyAsmConst.CONSTRUCTOR_INTERNAL_NAME.equals(name);
+        boolean isInstanceInit = INIT_METHOD_NAME.equals(name);
         @ThinkStep("(3) 排除这两种情况")
         boolean hasReceiverType = !(isStatic || isInstanceInit);
         AsmInsnUtilsForMethodInvoke.printInvokeMethodInsnParams(mv, hasReceiverType, descriptor, 8);
@@ -138,8 +143,8 @@ public class InsnTraceAdaptor extends AdviceAdapter {
         String postMsg = String.format("    %s %s::%s:%s [<<<] ",
                 OpcodeConst.getOpcodeName(opcodeAndSource), AsmTypeNameUtils.toClassName(owner), name, descriptor);
         if (AsmTypeUtils.hasValidValue(returnType)) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, returnType, postMsg);
+            dupValueOnStack(mv, returnType);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, returnType, postMsg);
         }
         else {
             AsmInsnUtilsForPrint.printMessage(mv, postMsg + "void");
@@ -159,24 +164,24 @@ public class InsnTraceAdaptor extends AdviceAdapter {
 
         String line = String.format("    %s %d - ", OpcodeConst.getOpcodeName(opcode), varIndex);
         if (opcode == ISTORE) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.INT_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.INT_TYPE, line);
+            dupValueOnStack(mv, Type.INT_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, Type.INT_TYPE, line);
         }
         else if (opcode == LSTORE) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.LONG_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.LONG_TYPE, line);
+            dupValueOnStack(mv, Type.LONG_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, Type.LONG_TYPE, line);
         }
         else if (opcode == FSTORE) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.FLOAT_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.FLOAT_TYPE, line);
+            dupValueOnStack(mv, Type.FLOAT_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, Type.FLOAT_TYPE, line);
         }
         else if (opcode == DSTORE) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.DOUBLE_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.DOUBLE_TYPE, line);
+            dupValueOnStack(mv, Type.DOUBLE_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, Type.DOUBLE_TYPE, line);
         }
         else if (opcode == ASTORE) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, MyAsmConst.OBJECT_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, MyAsmConst.OBJECT_TYPE, line);
+            dupValueOnStack(mv, OBJECT_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, OBJECT_TYPE, line);
         }
 
 
@@ -184,24 +189,24 @@ public class InsnTraceAdaptor extends AdviceAdapter {
 
 
         if (opcode == ILOAD) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.INT_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.INT_TYPE, line);
+            dupValueOnStack(mv, Type.INT_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, Type.INT_TYPE, line);
         }
         else if (opcode == LLOAD) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.LONG_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.LONG_TYPE, line);
+            dupValueOnStack(mv, Type.LONG_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, Type.LONG_TYPE, line);
         }
         else if (opcode == FLOAD) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.FLOAT_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.FLOAT_TYPE, line);
+            dupValueOnStack(mv, Type.FLOAT_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, Type.FLOAT_TYPE, line);
         }
         else if (opcode == DLOAD) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.DOUBLE_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.DOUBLE_TYPE, line);
+            dupValueOnStack(mv, Type.DOUBLE_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, Type.DOUBLE_TYPE, line);
         }
         else if (opcode == ALOAD) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, MyAsmConst.OBJECT_TYPE);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, MyAsmConst.OBJECT_TYPE, line);
+            dupValueOnStack(mv, OBJECT_TYPE);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, OBJECT_TYPE, line);
         }
     }
 
@@ -244,8 +249,8 @@ public class InsnTraceAdaptor extends AdviceAdapter {
 
         String postMsg = String.format("    invokedynamic %s:%s [<<<] ", name, descriptor);
         if (AsmTypeUtils.hasValidValue(returnType)) {
-            AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
-            AsmInsnUtilsForPrint.printValueOnStack(mv, returnType, postMsg);
+            dupValueOnStack(mv, returnType);
+            AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, returnType, postMsg);
         }
         else {
             AsmInsnUtilsForPrint.printMessage(mv, postMsg + "void");
@@ -270,22 +275,51 @@ public class InsnTraceAdaptor extends AdviceAdapter {
             return;
         }
 
-//        String line = "    " + OpcodeConst.getOpcodeName(opcode);
-//        if (
-//                opcode == Opcodes.IFEQ || opcode == Opcodes.IFNE ||
-//                        opcode == Opcodes.IFLT || opcode == Opcodes.IFGE ||
-//                        opcode == Opcodes.IFGT || opcode == Opcodes.IFLE
-//        ) {
-//            AsmInsnUtilsForOpcode.dupValueOnStack(mv, Type.INT_TYPE);
-//            AsmInsnUtilsForPrint.printValueOnStack(mv, Type.INT_TYPE, line + " - ");
-//        }
+        String line = "    " + OpcodeConst.getOpcodeName(opcode) + " ---> Jump";
+        if (
+                opcode == Opcodes.IFEQ || opcode == Opcodes.IFNE ||
+                        opcode == Opcodes.IFLT || opcode == Opcodes.IFGE ||
+                        opcode == Opcodes.IFGT || opcode == Opcodes.IFLE
+        ) {
+            AsmInsnUtilsForPrint.dupAndPrintValueOnStack(mv, Type.INT_TYPE, line + " - ", null);
+        }
+        else if (
+                opcode == Opcodes.IF_ICMPEQ || opcode == Opcodes.IF_ICMPNE ||
+                        opcode == Opcodes.IF_ICMPLT || opcode == Opcodes.IF_ICMPGE ||
+                        opcode == Opcodes.IF_ICMPGT || opcode == Opcodes.IF_ICMPLE
+        ) {
+            Type[] types = {Type.INT_TYPE, Type.INT_TYPE};
+            // operand stack: int, int
+            OpcodeForArray.arrayFromStack(mv, types);
+            // operand stack: array
+            AsmInsnUtilsForPrint.dupAndPrintValueOnStack(mv, OBJECT_ARRAY_TYPE, line + " - ", null);
+            // operand stack: array
+            OpcodeForArray.arrayToStack(mv, types, true);
+            // operand stack: int, int
+        }
+        else if (opcode == Opcodes.IF_ACMPEQ || opcode == Opcodes.IF_ACMPNE) {
+            Type[] types = {OBJECT_TYPE, OBJECT_TYPE};
+            // operand stack: obj, obj
+            OpcodeForArray.arrayFromStack(mv, types);
+            // operand stack: array
+            AsmInsnUtilsForPrint.dupAndPrintValueOnStack(mv, OBJECT_ARRAY_TYPE, line + " - ", null);
+            // operand stack: array
+            OpcodeForArray.arrayToStack(mv, types, true);
+            // operand stack: obj, obj
+        }
+        else if (opcode == Opcodes.IFNULL || opcode == Opcodes.IFNONNULL) {
+            AsmInsnUtilsForPrint.dupAndPrintValueOnStack(mv, OBJECT_TYPE, line + " - ", null);
+        }
+        else {
+            AsmInsnUtilsForPrint.printMessage(mv, "    " + OpcodeConst.getOpcodeName(opcode) + " ---> Jump");
+        }
 
-
-        AsmInsnUtilsForPrint.printMessage(mv, "    " + OpcodeConst.getOpcodeName(opcode) + " ---> Jump");
 
         super.visitJumpInsn(opcode, label);
 
-        AsmInsnUtilsForPrint.printMessage(mv, "    " + OpcodeConst.getOpcodeName(opcode) + " ---> XXXX");
+        if (opcode != Opcodes.GOTO) {
+            AsmInsnUtilsForPrint.printMessage(mv, "    " + OpcodeConst.getOpcodeName(opcode) + " ---> XXXX");
+        }
     }
 
     @Override

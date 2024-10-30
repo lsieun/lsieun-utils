@@ -9,7 +9,8 @@ import org.objectweb.asm.Type;
 import java.lang.invoke.MethodHandles;
 import java.util.function.Predicate;
 
-import static lsieun.asm.cst.MyAsmConst.*;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.*;
+
 
 @FunctionalInterface
 public interface MethodInfoMatch {
@@ -93,7 +94,7 @@ public interface MethodInfoMatch {
             public boolean test(String owner,
                                 int methodAccess, String methodName, String methodDesc,
                                 String signature, String[] exceptions) {
-                return CONSTRUCTOR_INTERNAL_NAME.equals(methodName);
+                return INIT_METHOD_NAME.equals(methodName);
             }
         },
         CLASS_INIT {
@@ -101,7 +102,7 @@ public interface MethodInfoMatch {
             public boolean test(String owner,
                                 int methodAccess, String methodName, String methodDesc,
                                 String signature, String[] exceptions) {
-                return TYPE_INITIALIZER_INTERNAL_NAME.equals(methodName);
+                return CLINIT_METHOD_NAME.equals(methodName);
             }
         },
         HASH_CODE {
@@ -149,8 +150,8 @@ public interface MethodInfoMatch {
             public boolean test(String owner,
                                 int methodAccess, String methodName, String methodDesc,
                                 String signature, String[] exceptions) {
-                return !(CONSTRUCTOR_INTERNAL_NAME.equals(methodName)
-                        || TYPE_INITIALIZER_INTERNAL_NAME.equals(methodName));
+                return !(INIT_METHOD_NAME.equals(methodName)
+                        || CLINIT_METHOD_NAME.equals(methodName));
             }
         },
         TO_STRING {

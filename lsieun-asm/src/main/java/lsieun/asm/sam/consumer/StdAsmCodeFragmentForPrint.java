@@ -1,13 +1,11 @@
 package lsieun.asm.sam.consumer;
 
 import lsieun.asm.core.AsmTypeUtils;
-import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.format.MethodInfoFormat;
 import lsieun.asm.insn.code.AsmInsnUtilsForMethodParameter;
 import lsieun.asm.insn.code.AsmInsnUtilsForPrint;
 import lsieun.asm.insn.code.AsmInsnUtilsForStackTrace;
 import lsieun.asm.insn.code.AsmInsnUtilsForThread;
-import lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode;
 import lsieun.asm.tag.AsmCodeTag;
 import lsieun.base.thread.stacktrace.StackTraceFormat;
 
@@ -16,6 +14,10 @@ import org.objectweb.asm.Type;
 
 import java.util.EnumSet;
 import java.util.Set;
+
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.PRINT_STACK_FRAME_METHOD_DESC;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.PRINT_STACK_FRAME_METHOD_NAME;
+import static lsieun.asm.insn.opcode.OpcodeForStack.dupValueOnStack;
 
 /**
  * @see AsmCodeFragment
@@ -61,8 +63,8 @@ public enum StdAsmCodeFragmentForPrint implements AsmCodeFragment {
 //            AsmInsnUtilsForCodeSegment.printMessage(mv, title);
             AsmInsnUtilsForThread.printCurrentThreadInfo(mv);
             AsmInsnUtilsForStackTrace.printStackTraceSinceJava9(mv, currentType,
-                    MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME,
-                    MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC);
+                    PRINT_STACK_FRAME_METHOD_NAME,
+                    PRINT_STACK_FRAME_METHOD_DESC);
         }
     },
     EXIT_RETURN_SIMPLE {
@@ -83,8 +85,8 @@ public enum StdAsmCodeFragmentForPrint implements AsmCodeFragment {
             Type methodType = Type.getMethodType(methodDesc);
             Type returnType = methodType.getReturnType();
             if (AsmTypeUtils.hasValidValue(returnType)) {
-                AsmInsnUtilsForOpcode.dupValueOnStack(mv, returnType);
-                AsmInsnUtilsForPrint.printValueOnStack(mv, returnType, line + " - [ReturnValue] ");
+                dupValueOnStack(mv, returnType);
+                AsmInsnUtilsForPrint.printValueOnStackWithPrefix(mv, returnType, line + " - [ReturnValue] ");
             }
             else {
                 AsmInsnUtilsForPrint.printMessage(mv, line);

@@ -1,7 +1,6 @@
 package lsieun.asm.visitor.transformation.method;
 
 
-import lsieun.asm.cst.MyAsmConst;
 import lsieun.asm.insn.method.AsmInsnUtilsForMethod;
 import lsieun.asm.sam.match.MethodInfoMatch;
 
@@ -10,6 +9,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import java.util.Set;
+
+import static lsieun.asm.cst.MyAsmConst.ASM_API_VERSION;
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.*;
 
 public class ClassVisitorForMethodBodyInfoV1 extends ClassVisitor implements Opcodes {
     private final MethodInfoMatch match;
@@ -21,7 +23,7 @@ public class ClassVisitorForMethodBodyInfoV1 extends ClassVisitor implements Opc
 
 
     public ClassVisitorForMethodBodyInfoV1(ClassVisitor classVisitor, MethodInfoMatch match, Set<MethodBodyInfoType> options) {
-        super(MyAsmConst.ASM_API_VERSION, classVisitor);
+        super(ASM_API_VERSION, classVisitor);
         this.match = match;
         this.options = options;
     }
@@ -35,7 +37,7 @@ public class ClassVisitorForMethodBodyInfoV1 extends ClassVisitor implements Opc
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        if (name.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME) && descriptor.equals(MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC)) {
+        if (name.equals(PRINT_STACK_FRAME_METHOD_NAME) && descriptor.equals(PRINT_STACK_FRAME_METHOD_DESC)) {
             isPrintStackFrameMethodPresent = true;
         }
 
@@ -50,7 +52,7 @@ public class ClassVisitorForMethodBodyInfoV1 extends ClassVisitor implements Opc
         if (isAbstract || isNative) return mv;
 
         // (3) 如果是 <init> 方法或 <clinit> 方法，不处理
-        if (name.equals(MyAsmConst.CONSTRUCTOR_INTERNAL_NAME) || name.equals(MyAsmConst.TYPE_INITIALIZER_INTERNAL_NAME)) return mv;
+        if (name.equals(INIT_METHOD_NAME) || name.equals(CLINIT_METHOD_NAME)) return mv;
 
         // (4) 如果符合条件，则进行处理
         boolean flag = match.test(owner, access, name, descriptor, signature, exceptions);
@@ -67,7 +69,7 @@ public class ClassVisitorForMethodBodyInfoV1 extends ClassVisitor implements Opc
     public void visitEnd() {
         if (options.contains(MethodBodyInfoType.STACK_TRACE) && version >= (44 + 9) && !isPrintStackFrameMethodPresent) {
             AsmInsnUtilsForMethod.addPrintStackFrame(cv,
-                    MyAsmConst.PRINT_STACK_FRAME_METHOD_NAME, MyAsmConst.PRINT_STACK_FRAME_METHOD_DESC);
+                    PRINT_STACK_FRAME_METHOD_NAME, PRINT_STACK_FRAME_METHOD_DESC);
         }
 
         super.visitEnd();

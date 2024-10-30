@@ -1,7 +1,5 @@
 package lsieun.asm.insn.code;
 
-import lsieun.asm.cst.MyAsmConst;
-
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -9,6 +7,8 @@ import org.objectweb.asm.Type;
 
 import java.lang.reflect.Modifier;
 
+
+import static lsieun.asm.cst.MyAsmConst.MethodNameAndDescConst.INIT_METHOD_NAME;
 import static org.objectweb.asm.Opcodes.*;
 
 public class AsmInsnUtilsForThread {
@@ -53,7 +53,7 @@ public class AsmInsnUtilsForThread {
         // Formatter fm = new Formatter();
         mv.visitTypeInsn(NEW, "java/util/Formatter");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/util/Formatter", MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "java/util/Formatter", INIT_METHOD_NAME, "()V", false);
         mv.visitVarInsn(ASTORE, slotIndexForFormatter);
 
 
@@ -228,7 +228,7 @@ public class AsmInsnUtilsForThread {
         mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
         mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", MyAsmConst.CONSTRUCTOR_INTERNAL_NAME, "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", INIT_METHOD_NAME, "()V", false);
         mv.visitLdcInsn("Thread Id: ");
         mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);

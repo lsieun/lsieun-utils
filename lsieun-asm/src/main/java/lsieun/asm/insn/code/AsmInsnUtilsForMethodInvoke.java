@@ -6,9 +6,13 @@ import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-import static lsieun.asm.cst.MyAsmConst.OBJECT_TYPE;
-import static lsieun.asm.insn.code.AsmInsnUtilsForPrint.printValueOnStack;
-import static lsieun.asm.insn.opcode.AsmInsnUtilsForOpcode.*;
+import static lsieun.asm.cst.MyAsmConst.RefType.OBJECT_TYPE;
+import static lsieun.asm.insn.code.AsmInsnUtilsForPrint.printValueOnStackWithPrefix;
+import static lsieun.asm.insn.opcode.OpcodeForArray.arrayFromStackByMethodDesc;
+import static lsieun.asm.insn.opcode.OpcodeForArray.arrayLoad;
+import static lsieun.asm.insn.opcode.OpcodeForBox.unbox;
+import static lsieun.asm.insn.opcode.OpcodeForConst.push;
+import static lsieun.asm.insn.opcode.OpcodeForStack.*;
 
 public class AsmInsnUtilsForMethodInvoke {
 
@@ -27,7 +31,7 @@ public class AsmInsnUtilsForMethodInvoke {
             AsmInsnUtilsForStackValue.convertValueOnStackToTypeName(mv);
             // operand stack: [..., receiver, array, str]
             String prefix = String.format("%s[receiver] - ", StrConst.SPACE.repeat(spaceCount));
-            printValueOnStack(mv, Type.getType(String.class), prefix);
+            printValueOnStackWithPrefix(mv, Type.getType(String.class), prefix);
             // operand stack: [..., receiver, array]
         }
 
@@ -47,7 +51,7 @@ public class AsmInsnUtilsForMethodInvoke {
             unbox(mv, argumentType);
             // operand stack: [x, array, arg]
             String prefix = String.format("%sargs[%d] - ", StrConst.SPACE.repeat(spaceCount), i);
-            printValueOnStack(mv, argumentType, prefix);
+            printValueOnStackWithPrefix(mv, argumentType, prefix);
             // operand stack: [x, array]
         }
 
