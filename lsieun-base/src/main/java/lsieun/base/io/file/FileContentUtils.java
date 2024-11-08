@@ -1,9 +1,10 @@
 package lsieun.base.io.file;
 
-import org.jetbrains.annotations.NotNull;
 import lsieun.annotation.type.UtilityClass;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,8 +12,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
-import static lsieun.base.io.file.FileOperation.READ;
-import static lsieun.base.io.file.FileOperation.WRITE;
 
 @UtilityClass
 public class FileContentUtils {
@@ -31,19 +30,19 @@ public class FileContentUtils {
 
         try {
             byte[] bytes = Files.readAllBytes(filepath);
-            logger.info(() -> FileFormatUtils.format(filepath, READ));
+            logger.info(() -> FileFormatUtils.format(filepath, FileOperation.READ));
             return bytes;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void writeBytes(@NotNull Path filepath, @NotNull byte[] bytes) {
+    public static void writeBytes(@NotNull Path filepath, byte @NotNull [] bytes) {
         try {
             prepareWrite(filepath);
 
             Files.write(filepath, bytes);
-            logger.info(() -> FileFormatUtils.format(filepath, WRITE));
+            logger.info(() -> FileFormatUtils.format(filepath, FileOperation.WRITE));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,7 +57,7 @@ public class FileContentUtils {
 
         try {
             List<String> lines = Files.readAllLines(path);
-            logger.info(() -> FileFormatUtils.format(path, READ));
+            logger.info(() -> FileFormatUtils.format(path, FileOperation.READ));
             return lines;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -73,7 +72,7 @@ public class FileContentUtils {
             prepareWrite(path);
 
             Files.write(path, lines);
-            logger.info(() -> FileFormatUtils.format(path, WRITE));
+            logger.info(() -> FileFormatUtils.format(path, FileOperation.WRITE));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

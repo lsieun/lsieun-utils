@@ -3,10 +3,24 @@ package lsieun.base.io.dir;
 import lsieun.base.io.file.FileUtils;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class DirectoryUtils {
 
+    private static Path getCodeLocation() {
+        try {
+            URL url = FileUtils.class.getProtectionDomain().getCodeSource().getLocation();
+            URI uri = url.toURI();
+            return Paths.get(uri);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static List<File> findAllFileInDirectory(String dirPath) {
         return findAllFileInDirectory(dirPath, true);

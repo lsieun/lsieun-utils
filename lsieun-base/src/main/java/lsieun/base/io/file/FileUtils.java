@@ -61,9 +61,8 @@ public class FileUtils {
             }
             return bao.toByteArray();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new UncheckedIOException(ex);
         }
-        return null;
     }
 
     public static void writeBytes(String filepath, byte[] bytes) {
@@ -75,8 +74,8 @@ public class FileUtils {
              BufferedOutputStream buff = new BufferedOutputStream(out)) {
             buff.write(bytes);
             buff.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
         }
     }
 
@@ -101,10 +100,9 @@ public class FileUtils {
                 list.add(line);
             }
             return list;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
         }
-        return null;
     }
 
     public static void writeLines(String filepath, List<String> lines) {
@@ -126,8 +124,8 @@ public class FileUtils {
                 bufferedWriter.newLine();
             }
             bufferedWriter.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
         }
     }
 
@@ -173,7 +171,7 @@ public class FileUtils {
             }
             bos.flush();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new UncheckedIOException(ex);
         }
     }
 
@@ -204,7 +202,7 @@ public class FileUtils {
             }
             bos.flush();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new UncheckedIOException(ex);
         }
     }
 
@@ -218,7 +216,7 @@ public class FileUtils {
             throw new IllegalArgumentException("inputStream is null!!!");
         }
 
-        try {
+        try (in) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buf = new byte[BUFFER_SIZE];
             int len;
@@ -227,15 +225,9 @@ public class FileUtils {
             }
             return out.toByteArray();
         } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                //
-            }
+            throw new UncheckedIOException(ex);
         }
-        return null;
+        //
     }
 
     public static InputStream getInputStream(String className) {
