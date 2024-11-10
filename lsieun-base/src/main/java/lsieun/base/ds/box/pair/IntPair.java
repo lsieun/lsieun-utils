@@ -1,4 +1,4 @@
-package lsieun.base.ds.pair;
+package lsieun.base.ds.box.pair;
 
 public final class IntPair {
     public final int first;

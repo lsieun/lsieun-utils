@@ -3,7 +3,7 @@ package lsieun.task.jar;
 import lsieun.annotation.method.MethodParamExample;
 import lsieun.annotation.mind.blueprint.Intention;
 import lsieun.base.archive.zip.ZipFindNioUtilsForMultiple;
-import lsieun.base.ds.pair.Pair;
+import lsieun.base.ds.box.pair.Pair;
 import lsieun.base.io.dir.DirNioUtils;
 import lsieun.base.io.file.FileNioUtils;
 

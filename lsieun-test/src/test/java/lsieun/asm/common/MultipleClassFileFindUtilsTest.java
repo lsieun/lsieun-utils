@@ -7,7 +7,7 @@ import lsieun.asm.sam.match.AsmTypeMatch;
 import lsieun.asm.sam.match.InsnInvokeMatch;
 import lsieun.asm.sam.match.MethodInfoMatch;
 import lsieun.asm.match.MatchItem;
-import lsieun.base.ds.pair.Pair;
+import lsieun.base.ds.box.pair.Pair;
 import lsieun.core.match.LogicAssistant;
 import lsieun.core.sam.match.text.TextMatch;
 

@@ -1,4 +1,4 @@
-package lsieun.base.ds.pair;
+package lsieun.base.ds.box.pair;
 
 import java.util.HashMap;
 import java.util.List;

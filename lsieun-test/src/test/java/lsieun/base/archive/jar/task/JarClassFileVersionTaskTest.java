@@ -1,6 +1,6 @@
 package lsieun.base.archive.jar.task;
 
-import lsieun.base.ds.pair.Pair;
+import lsieun.base.ds.box.pair.Pair;
 import lsieun.base.io.dir.DirNioUtils;
 import lsieun.task.jar.JarClassFileVersionTask;
 import org.junit.jupiter.api.Test;

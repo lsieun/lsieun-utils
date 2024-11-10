@@ -1,6 +1,6 @@
 package lsieun.base.archive.zip;
 
-import lsieun.base.ds.pair.Pair;
+import lsieun.base.ds.box.pair.Pair;
 
 import java.io.IOException;
 import java.nio.file.Files;

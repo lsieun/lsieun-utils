@@ -1,7 +1,7 @@
 package lsieun.base.archive.zip;
 
 import lsieun.annotation.mind.blueprint.Intention;
-import lsieun.base.ds.pair.Pair;
+import lsieun.base.ds.box.pair.Pair;
 import lsieun.base.log.Logger;
 import lsieun.base.log.LoggerFactory;
 

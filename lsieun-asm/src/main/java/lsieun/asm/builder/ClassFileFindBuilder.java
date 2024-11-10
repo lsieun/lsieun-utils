@@ -9,7 +9,7 @@ import lsieun.asm.sam.match.ClassInfoMatch;
 import lsieun.asm.sam.match.FieldInfoMatch;
 import lsieun.asm.sam.match.InsnInvokeMatch;
 import lsieun.asm.sam.match.MethodInfoMatch;
-import lsieun.base.ds.pair.Pair;
+import lsieun.base.ds.box.pair.Pair;
 import lsieun.base.io.dir.DirNioUtils;
 import lsieun.core.match.LogicAssistant;
 import lsieun.core.sam.match.text.TextMatch;

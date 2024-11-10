@@ -154,6 +154,10 @@ public class ValueUtils {
     }
 
     private static String formatObject(Object obj) {
+        if (obj == null) {
+            return "null";
+        }
+
         Class<?> clazz = obj.getClass();
         if (clazz.isPrimitive()) {
             return String.valueOf(obj);

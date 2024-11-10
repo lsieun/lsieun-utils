@@ -1,6 +1,6 @@
 package lsieun.base.archive.zip;
 
-import lsieun.base.ds.pair.Pair;
+import lsieun.base.ds.box.pair.Pair;
 import lsieun.base.io.dir.DirNioUtils;
 import lsieun.base.log.LogLevel;
 import lsieun.base.log.Logger;
