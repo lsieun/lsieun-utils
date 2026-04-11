@@ -32,7 +32,7 @@ public class DirNioUtils {
                                                     int maxDepth,
                                                     @MethodParamExample({".md", ".java"}) String ext) {
         BiPredicate<Path, BasicFileAttributes> predicate = (path, attrs) ->
-                attrs.isRegularFile() && path.getFileName().toString().endsWith(ext);
+                attrs.isRegularFile() && path.getFileName().toString().toLowerCase().endsWith(ext.toLowerCase());
         return findFileListInDir(dirPath, maxDepth, predicate);
     }
 
